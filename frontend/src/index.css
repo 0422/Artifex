@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* 自定义 CSS 变量（品牌色） */
+:root {
+  --color-primary: #6366f1;     /* Indigo-500 */
+  --color-primary-dark: #4f46e5;/* Indigo-600 */
+  --color-success: #22c55e;     /* Green-500 */
+  --color-warning: #f59e0b;     /* Amber-500 */
+  --color-danger: #ef4444;      /* Red-500 */
+}
+
+body {
+  @apply bg-slate-950 text-slate-100 antialiased;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply bg-slate-700 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-slate-600; }

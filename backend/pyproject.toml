@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["川 李 <2045598236@qq.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["standard"], version = "^0.141.1"}
+uvicorn = {extras = ["standard"], version = "^0.52.2"}
+pydantic-settings = "^2.15.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.52"}
+asyncpg = "^0.31.0"
+alembic = "^1.19.1"
+psycopg2-binary = "^2.9.12"
+pgvector = "^0.5.0"
+python-jose = {extras = ["cryptography"], version = "^3.5.0"}
+python-multipart = "^0.0.32"
+openai = "^3.0.0"
+httpx = "^0.28.1"
+python-dotenv = "^1.2.2"
+celery = {version = "^5.6", extras = ["redis"]}
+fsrs = "^6.3.2"
+bcrypt = "^5.0.0"
+anthropic = "^0.122.0"
+beautifulsoup4 = "^4.15.0"
+pypdf = "^6.16.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.1.1"
+pytest-asyncio = "^1.4.0"
+httpx = "^0.28.1"
+black = "^26.5.1"
+ruff = "^0.16.2"
+mypy = "^2.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
