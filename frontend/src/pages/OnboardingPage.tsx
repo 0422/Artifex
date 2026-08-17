@@ -28,7 +28,7 @@ export default function OnboardingPage() {
       const rest = { ...answers }
       delete rest.domain
       await pathApi.completeOnboarding(domain, rest)
-      navigate('/path')
+      navigate('/tools/learning-path')
     } finally {
       setLoading(false)
     }

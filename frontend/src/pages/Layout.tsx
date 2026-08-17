@@ -1,4 +1,4 @@
-import { BarChart3, Languages, Library, LogOut, Route, ScanText } from 'lucide-react'
+import { BarChart3, Languages, Library, LogOut, Wrench } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 
@@ -9,8 +9,7 @@ const NAV = [
   { to: '/chat', label: '情境对话', icon: Languages },
   { to: '/knowledge', label: '知识库', icon: Library },
   { to: '/dashboard', label: '仪表盘', icon: BarChart3 },
-  { to: '/capture', label: '内容捕获', icon: ScanText },
-  { to: '/path', label: '学习路径', icon: Route },
+  { to: '/tools', label: '工具库', icon: Wrench },
 ]
 
 const SIDEBAR_WIDTH_KEY = 'artifex_sidebar_width'

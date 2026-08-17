@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>集装箱装载计算器</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #1a1d2e;
+  /* 2026-08-08 V4新增：侧栏/底部统计条的独立底色，用于让侧栏整体从画布中"浮起"，
+     形成 画布 < 侧栏 < 分组卡片 < 交互控件 的四级层次 */
+  /* 2026-08-08 V4三次修改：二次修改把色阶调得太亮、蓝色饱和度也偏高，实际效果发荧光蓝，很违和。
+     改回原始的低饱和度深色配色（与初版一致），层次感改由投影（box-shadow）和结构调整来实现，
+     不再单纯依赖把颜色调亮/调蓝 */
+  --surface: #1e2235;
+  --panel: #232838;
+  --panel2: #2a3045;
+  --border: #3a4055;
+  --text: #e4e6ef;
+  --text2: #9ca3b8;
+  --text3: #6b7280;
+  --accent: #4a9eff;
+  --accent2: #2d6fd4;
+  --green: #1D9E75;
+  --amber: #BA7517;
+  --coral: #D85A30;
+  --radius: 8px;
+}
+body {
+  font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 13px;
+}
+/* 2026-08-08 V4二次修改：加投影，让顶部标题栏有"浮在主体内容之上"的层次感 */
+/* 2026-08-08 V4四次修改：标题栏改为真正的"卡片"——四周留白+四角圆角+完整描边，
+   不再是贴边通栏（原 border-bottom 改为四周 border） */
+header {
+  height: 48px;
+  margin: 10px 12px 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  position: relative;
+  z-index: 20;
+}
+header h1 { font-size: 15px; font-weight: 500; }
+/* 2026-08-08 移除：标题后的副标题文字样式（HTML中已移除该元素） */
+/* header .subtitle { color: var(--text3); font-size: 12px; } */
+/* 2026-08-08 移除：btn-calc/btn-repack 已从 header 移至画布右上角操作栏（.right-toolbar），
+   样式改为不带 header 前缀，定义见下方 .right-toolbar 相关样式 */
+/* 2026-08-08 V4六次修改：左中右现在都已经是卡片布局，不再需要用 gap 间隙的底色画一条分隔线，
+   去掉 background，让 gap 区域直接透出 body 底色（--bg），观感上不再有明显的竖线 */
+main {
+  flex: 1;
+  display: grid;
+  /* 2026-08-08 修改：左栏加宽以容纳"折减率"与"有效容积"并列显示 */
+  grid-template-columns: 290px 1fr 245px;
+  gap: 1px;
+  overflow: hidden;
+}
+section.center { background: var(--bg); overflow-y: auto; }
+/* 2026-08-08 V4修改：侧栏底色由 var(--bg) 改为 var(--surface)，与中间画布区分出"分区"层次，
+   不再依赖 1px 网格线作为左右栏与画布之间唯一的视觉分隔 */
+/* 2026-08-08 V4五次修改：内边距从12px收窄到10px，配合下面几处间距压缩，
+   目的是让左栏四组卡片尽量在不滚动的情况下完整显示到最底部的按钮组 */
+aside { background: var(--surface); padding: 10px; overflow-y: auto; }
+/* 2026-08-08 新增：右侧栏改为纵向 flex 容器，使内部唯一的 ai-panel 能撑满剩余高度 */
+aside.right { display: flex; flex-direction: column; }
+/* 2026-08-08 V4修改：每个 panel-group 改为独立卡片（底色/边框/圆角/内边距），
+   让"集装箱/货物SKU/约束设置/AI解释"四组内容互相区隔，而不是仅靠外边距分隔 */
+/* 2026-08-08 V4五次修改：margin-bottom/padding 都收窄（12→8 / 10,12→8,10），
+   压缩卡片间距与卡片内边距 */
+.panel-group {
+  margin-bottom: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  /* 2026-08-08 V4二次修改：加投影强化"卡片浮起"的观感，弥补纯色阶差异在小屏/压缩图上不够明显的问题 */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+}
+/* 2026-08-08 V4五次修改：栏内最后一张卡片不需要底部外边距（省下来的空间用来让底部按钮组尽量露出） */
+.panel-group:last-child { margin-bottom: 0; }
+.panel-title {
+  font-size: 11px;
+  color: var(--text2);
+  /* 2026-08-08 V4五次修改：8px→6px */
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+/* 2026-08-08 V4修改：底色由 var(--panel) 改为 var(--panel2)，
+   因输入框现在大多嵌套在 var(--panel) 分组卡片内部，需比卡片本身更亮一级才能被区分出来 */
+select, input[type="text"], input[type="number"] {
+  width: 100%;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  outline: none;
+}
+select:focus, input:focus { border-color: var(--accent); }
+select:disabled, input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* 2026-08-08 V4修改：底色改为 var(--panel2)，理由同上（现嵌套在"货物SKU"分组卡片内） */
+/* 2026-08-08 V4五次修改：padding/margin-bottom 收窄，压缩单个SKU卡片的高度 */
+.sku-row {
+  background: var(--panel2);
+  border-radius: 6px;
+  padding: 6px;
+  margin-bottom: 4px;
+  border-left: 3px solid var(--accent);
+  position: relative;
+}
+.sku-row .sku-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.sku-row .sku-name {
+  font-weight: 500;
+  font-size: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  flex: 1;
+  padding: 0;
+}
+.sku-row .sku-name:focus { border: none; }
+.sku-row .sku-qty { width: 60px; text-align: right; }
+.sku-row .sku-qty-label {
+  font-size: 10px;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.sku-row .sku-dims {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  /* 2026-08-08 V4五次修改：4px→3px */
+  margin-bottom: 3px;
+}
+.sku-row .sku-dims input { padding: 4px 6px; font-size: 11px; }
+.sku-row .sku-meta { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); }
+.sku-row .sku-meta input { width: 55px; padding: 4px 6px; font-size: 11px; }
+/* 2026-08-08 新增：每个SKU单独的"自动计算最大数量"勾选行样式 */
+/* 2026-08-08 V4五次修改：margin-bottom 4px→3px */
+.sku-row .sku-auto { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); margin-bottom: 3px; }
+.sku-row .sku-auto label { cursor: pointer; display: flex; align-items: center; gap: 4px; }
+.sku-row .sku-auto input[type="checkbox"] { width: auto; }
+.sku-row .del-btn {
+  position: absolute;
+  top: 6px; right: 6px;
+  background: none; border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 15px; line-height: 1;
+}
+.sku-row .del-btn:hover { color: var(--coral); }
+.add-sku {
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 7px;
+  text-align: center;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 12px;
+  background: transparent;
+  width: 100%;
+}
+.add-sku:hover { border-color: var(--accent); color: var(--accent); }
+/* 2026-08-08 V4五次修改：padding 5px→4px */
+.constraint-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 4px 0;
+}
+.constraint-row label { cursor: pointer; }
+/* 自定义集装箱列表 */
+/* 2026-08-08 V4修改：底色改为 var(--panel2)，理由同上（现嵌套在"集装箱"分组卡片内） */
+.custom-container-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px;
+  font-size: 11px;
+  background: var(--panel2);
+  border-radius: 4px;
+  margin-bottom: 3px;
+}
+.custom-container-item .cc-name { color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.custom-container-item .cc-dims { color: var(--text2); font-size: 10px; margin: 0 4px; white-space: nowrap; }
+.custom-container-item .cc-del {
+  background: none; border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+}
+.custom-container-item .cc-del:hover { color: var(--coral); }
+/* 模态弹窗 */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.55);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  width: 360px;
+  max-width: 90vw;
+}
+.modal-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.modal-body { margin-bottom: 16px; }
+.modal-body .form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+.modal-body .form-row label {
+  width: 80px;
+  font-size: 12px;
+  color: var(--text2);
+  flex-shrink: 0;
+  text-align: right;
+}
+.modal-body .form-row input {
+  flex: 1;
+}
+.modal-body .form-row .unit {
+  font-size: 11px;
+  color: var(--text3);
+  width: 22px;
+  flex-shrink: 0;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.modal-footer button {
+  padding: 7px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.modal-footer .btn-cancel {
+  background: var(--panel2);
+  color: var(--text);
+}
+.modal-footer .btn-save {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.modal-footer .btn-save:hover { background: var(--accent2); }
+.modal-footer .btn-cancel:hover { border-color: var(--text3); }
+section.center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+/* 2026-08-08 V4四次修改：可视化区域改为卡片——四周留白+底色+描边+圆角+投影，
+   overflow:hidden 让内部 canvas 的直角被卡片圆角裁切成圆角。
+   注意：.view-toolbar 已从 section.center 移到本容器内部（见 HTML），
+   这样它 top:8/left:8 的绝对定位是相对本卡片计算的，才能始终贴在卡片左上角，
+   不会因为本容器加了外边距而跟卡片"脱节"漂到外面 */
+#canvas-container {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  margin: 0 12px 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+}
+canvas { display: block; }
+/* 2026-08-08 V4修改：等距/正视/侧视/俯视/分层剖切 原先是5个各自独立描边的悬浮小方块，
+   现改为合并成一整条毛玻璃工具条，内部按钮改为无边框贴合，视觉上是"一个整体"而不是"五个碎片"。
+   旧样式整体注释保留在下方，仅作记录 */
+/* 2026-08-08 V4二次修改：原 rgba(35,40,56,.8) 叠加在画布深色背景上混合后几乎和画布同色，
+   工具条完全"隐形"。 */
+/* 2026-08-08 V4三次修改：二次修改时顺手把底色调蓝调亮了，看起来"荧光蓝"，改回原色相
+   rgba(35,40,56,...)，只提高不透明度 + 加投影来解决"隐形"问题，不改变颜色饱和度/色相 */
+.view-toolbar {
+  position: absolute;
+  top: 8px; left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  z-index: 10;
+  background: rgba(35,40,56,0.94);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+/* 2026-08-08 V4修改：分层剖切与前面四个视图按钮之间改用竖向分隔线区隔（而非仅靠外边距），
+   因两者已同处一条工具条内，需要更明确的边界表示"功能分组不同" */
+.view-toolbar .layer-control {
+  margin-left: 6px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+/* 2026-08-08 V4修改：按钮不再各自描边，改为透明底、仅 hover/active 时才显示底色，
+   贴合"同一条工具条内的按钮组"观感 */
+.view-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text2);
+  padding: 4px 12px;
+  border-radius: 5px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.view-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+.view-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+/*
+2026-08-08 V4 之前的旧版按钮描边样式（保留记录）：
+.view-toolbar {
+  position: absolute;
+  top: 8px; left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+}
+.view-toolbar .layer-control { margin-left: 8px; }
+.view-btn {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 4px 12px;
+  border-radius: 5px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.view-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+*/
+/* 2026-08-08 修改：画布右上角操作栏，"计算装载方案/按SKU重排/分层剖切"三者尺寸宽度、
+   高度、配色统一为同一种"面板风格"（深色面板背景+边框），不再用蓝色高亮区分主次 */
+/* 2026-08-08 移除：.right-toolbar 悬浮层已不再使用，三个控件已分散移到画布左上角操作栏与左侧栏底部 */
+/*
+.right-toolbar {
+  position: absolute;
+  top: 8px; right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+  width: 130px;
+}
+.right-toolbar button, .right-toolbar .layer-control {
+  width: 100%;
+  box-sizing: border-box;
+}
+.right-toolbar button {
+  padding: 7px 0;
+  border-radius: var(--radius);
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.right-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.right-toolbar button:disabled { opacity: 0.4; cursor: not-allowed; }
+*/
+/* 2026-08-08 移除：底部区域最右列功能按钮组不再使用，计算装载方案/按SKU重排/导出截图/导出清单
+   改为移到左侧栏底部 2x2 排布（.left-actions），分层剖切改为移到画布左上角 .view-toolbar 内 */
+/*
+.below-canvas-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 130px;
+  flex-shrink: 0;
+}
+.below-canvas-actions .btn-calc, .below-canvas-actions .btn-repack {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 0;
+  border-radius: var(--radius);
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.below-canvas-actions .btn-calc:hover, .below-canvas-actions .btn-repack:hover { border-color: var(--accent); color: var(--accent); }
+.below-canvas-actions .btn-repack:disabled { opacity: 0.4; cursor: not-allowed; }
+.below-canvas-actions .layer-control { margin: 0; }
+.below-canvas-actions .btn-export { margin-top: 0; }
+*/
+/* 2026-08-08 修改：分层剖切移到画布左上角操作栏，与等距/正视/侧视/俯视四个按钮同一行、同高度，
+   label/滑动条/百分比水平排列（原来是卡片式竖排，改为贴合 view-btn 的紧凑横条样式） */
+/* 2026-08-08 V4修改：不再自带底色/边框（改由 .view-toolbar 整体的毛玻璃底色 + 左侧分隔线提供区隔） */
+.layer-control {
+  padding: 4px 0;
+  font-size: 11px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.layer-control input[type="range"] { width: 90px; }
+.layer-control #layerLabel { color: var(--text); min-width: 32px; }
+/* 2026-08-08 新增：左侧栏底部"计算装载方案/按SKU重排/导出截图/导出清单"四个按钮 2x2 排布，
+   四者尺寸、字体、配色统一为同一种"面板风格" */
+/* 2026-08-08 V4修改：这四个按钮曾改为"顶部分隔线代替卡片"，但实际效果和上面三组分组区隔不明显，
+   视觉上不统一。V4二次修改：改回和其余三组一致的卡片样式（沿用 .panel-group 的底色/边框/投影），
+   这里只补充按钮自身的网格排布 */
+/* 2026-08-08 V4五次修改：gap 8px→6px */
+.left-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.left-actions button {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0;
+  /* 2026-08-08 V4五次修改：padding 7px→6px */
+  padding: 6px 4px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.left-actions button:hover { border-color: var(--accent); color: var(--accent); }
+.left-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+.stat-card {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+/* 2026-08-08 V4四次修改：装载统计/装载清单现在各自是 var(--panel) 卡片（见下方 .below-canvas-stats
+   HTML 改动），其内部的 .stat-card 需要升一级到 var(--panel2)，否则和外层卡片同色会糊在一起 */
+.below-canvas-stats .stat-card { background: var(--panel2); }
+.stat-card .label { font-size: 11px; color: var(--text2); }
+.stat-card .value { font-size: 22px; font-weight: 500; margin-top: 2px; }
+.stat-card .value span { font-size: 12px; color: var(--text2); }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+.stat-grid .stat-card .value { font-size: 16px; }
+/* 2026-08-08 新增：可视化区域下方的装载统计条，四个统计卡横向平铀排列 */
+/* 2026-08-08 修改：加粗分割线并增加顶部内边距，避免"装载统计/装载清单/操作按钮"标题贴着画布区域 */
+/* 2026-08-08 V4修改：底色由 var(--bg) 改为 var(--surface)，与左右侧栏一致，
+   让这条底部统计区从画布中"浮起"成独立分区，而不是和画布共用同一底色 */
+/* 2026-08-08 V4六次修改：去掉 border-top 分割线——可视化区域（#canvas-container）现在自带
+   卡片边框+投影，与下方统计区之间已经靠"卡片间的留白"区隔，不需要再画一条线 */
+.below-canvas-stats {
+  flex-shrink: 0;
+  padding: 12px 12px 10px;
+  background: var(--surface);
+}
+.below-canvas-stats .panel-title { margin-bottom: 6px; }
+/* 2026-08-08 移除：体积/重量利用率/总件数不再单独用一列纵向堆叠，与"货物占用空间"一起铺平成一行 */
+/*
+.stat-grid-4 .stat-col { display: flex; flex-direction: column; gap: 8px; width: 160px; flex-shrink: 0; }
+*/
+/* 2026-08-08 修改：体积利用率/重量利用率/总件数 三张卡片水平排布成一行 */
+.stat-grid-4 { display: flex; gap: 8px; }
+.stat-grid-4 .stat-card { margin-bottom: 0; flex-shrink: 0; }
+.stat-grid-4 .stat-card .value { font-size: 16px; }
+/* 2026-08-08 移除："货物占用空间"卡片已移出 stat-grid-4，改为 #canvas-container 内的 .space-overlay */
+/* .stat-grid-4 #spaceCard { flex: 1; min-width: 200px; flex-shrink: 1; } */
+/* 2026-08-08 新增："货物占用空间"这行字改为悬浮在可视化区域底部居中显示 */
+/* 2026-08-08 V4修改：加毛玻璃模糊，与画布左上角的 .view-toolbar 悬浮工具条风格统一 */
+/* 2026-08-08 V4三次修改：底色改回原色相 rgba(35,40,56,...)，仅提高不透明度，理由同 .view-toolbar */
+.space-overlay {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  background: rgba(35,40,56,0.94);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  font-size: 12px;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 8;
+}
+/* 2026-08-08 新增：装载统计与装载清单之间的竖向分割线 */
+.stats-divider { width: 1px; background: var(--border); flex-shrink: 0; align-self: stretch; }
+/* 2026-08-08 修改：装载清单从垂直堆叠列表改为单行横向排列，多个SKU超宽时横向滚动；
+   每个SKU改用和装载统计一致的 stat-card 卡片样式展示 */
+.load-list { font-size: 11px; display: flex; align-items: stretch; gap: 8px; overflow-x: auto; white-space: nowrap; }
+.load-list-item.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+.load-list-item .label { display: flex; align-items: center; gap: 4px; }
+/* 2026-08-08 新增：装载清单卡片 value 字号与"装载统计"卡片（.stat-grid-4 .stat-card .value）保持一致 */
+.load-list-item.stat-card .value { font-size: 16px; }
+.color-dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; vertical-align: middle; }
+.btn-export {
+  width: 100%;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 6px;
+}
+.btn-export:hover { border-color: var(--accent); color: var(--accent); }
+/* 2026-08-08 新增：AI 解释面板样式 */
+/* 2026-08-08 修改：ai-panel 撑满 aside.right 剩余高度，内部提问框（ai-input-row）随之扩充占据剩余高度 */
+/* 2026-08-08 V4修改：ai-panel 本身已是 .panel-group（现带卡片底色/边框），此处清零其
+   margin-bottom，避免在 flex:1 撑满布局下多出一段不必要的底部留白 */
+.ai-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; margin-bottom: 0; }
+/* 2026-08-08 V4修改：底色改为 var(--panel2)（同上方输入框改动的理由：现嵌套在 var(--panel) 的 AI 解释卡片内） */
+.ai-chat-log {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  height: 260px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.ai-msg { margin-bottom: 8px; white-space: pre-wrap; }
+.ai-msg-user { color: var(--accent); }
+.ai-msg-user::before { content: "我: "; color: var(--text3); }
+.ai-msg-bot::before { content: "AI: "; color: var(--text3); }
+.ai-msg-error { color: var(--coral); }
+/* 2026-08-08 修改：提问输入行占据 ai-panel 剩余高度；textarea 独占整行宽度（与上方 AI 回复区域同宽），
+   发送按钮改为绝对定位悬浮在 textarea 右下角内部，不再单独占一列宽度 */
+/* 2026-08-08 V4修改：加顶部分隔线，把"AI回复历史"与"提问输入"分成上下两段，
+   与"装载统计/装载清单"之间用竖线分隔的做法呼应 */
+.ai-input-row {
+  position: relative;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  flex: 1;
+  min-height: 0;
+}
+/* 2026-08-08 V4修改：底色改为 var(--panel2)（理由同 .ai-chat-log） */
+.ai-input-row textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 8px;
+  /* 给右下角的发送按钮留出空间，避免文字被遮挡 */
+  padding-right: 60px;
+  padding-bottom: 34px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+.ai-input-row textarea:focus { border-color: var(--accent); }
+.ai-input-row button {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.ai-input-row button:hover { border-color: var(--accent); color: var(--accent); }
+/* 2026-08-08 修改：提示信息框从底部居中移到顶部居中显示 */
+/* 2026-08-08 V4七次修改：标题栏改成卡片后不再贴顶（margin-top:10px，height:48px），
+   原来 top:24px 是按旧的贴边通栏算的，现在框体偏下、底边超出卡片范围。
+   改成 top:34px（= 10 + 48/2，标题栏卡片的垂直中心）+ translate(-50%,-50%) 让提示框始终
+   以标题栏卡片中心为基准垂直居中，不再依赖自身高度精确计算 */
+.toast {
+  position: fixed;
+  top: 34px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--panel2);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 100;
+  display: none;
+}
+.empty-hint {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  color: var(--text3);
+  font-size: 14px;
+  text-align: center;
+  z-index: 5;
+  pointer-events: none;
+}
+.dim-label { font-size: 10px; color: var(--text3); text-align: center; }
+.form-hint {
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>集装箱装载计算器</h1>
+  <!-- 2026-08-08 移除：标题后的"WebGL 3D 装载方案"副标题文字 -->
+  <!-- <span class="subtitle">WebGL 3D 装载方案</span> -->
+</header>
+<main>
+  <aside class="left">
+    <div class="panel-group">
+      <!-- 2026-08-08 修改："集装箱"标题、规格下拉框、添加自定义集装箱按钮改为一行左中右排布 -->
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="panel-title" style="margin-bottom:0;flex-shrink:0;">集装箱</div>
+        <select id="containerSelect" style="flex:1;min-width:0;"></select>
+        <button class="add-sku" id="btnAddContainer" style="width:auto;flex-shrink:0;padding:6px 8px;white-space:nowrap;">+ 添加规格</button>
+      </div>
+      <!-- 2026-08-08 重新加回内径/理论容积文字后，margin-top 恢复为6px留出呼吸空间 -->
+      <div id="containerInfo" style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.7;"></div>
+      <!-- 2026-08-08 新增：装载折减率输入框从"约束设置"移到此处，与有效容积并列展示 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:3px;">
+        <div style="display:flex;align-items:center;gap:4px;">
+          <label for="inputDiscount" style="font-size:11px;color:var(--amber);white-space:nowrap;">折减率</label>
+          <input type="number" id="inputDiscount" value="85" min="50" max="100" style="width:48px;text-align:right;padding:4px 6px;font-size:11px;">
+          <span style="font-size:11px;color:var(--text3);">%</span>
+        </div>
+        <span id="effVolInfo" style="font-size:11px;color:var(--amber);"></span>
+      </div>
+      <!-- 2026-08-08 移除：折减率说明文字（100% = 理论容积；85% ≈ 扣除间隙/凸起/门端损耗）不再显示 -->
+      <!-- <div class="form-hint">100% = 理论容积；85% ≈ 扣除间隙/凸起/门端损耗</div> -->
+      <div id="customContainerList" style="margin-top:4px;"></div>
+      <!-- 2026-08-08 移除："添加自定义集装箱"按钮已移到面板标题行，与"集装箱"文本、规格下拉框并排 -->
+      <!-- <button class="add-sku" id="btnAddContainer" style="margin-top:6px;">+ 添加自定义集装箱</button> -->
+    </div>
+    <div class="panel-group">
+      <!-- 2026-08-08 修改："货物 SKU"标题与"添加 SKU"按钮改为一行，按钮放在文本右侧 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="panel-title" style="margin-bottom:0;">货物 SKU</div>
+        <button class="add-sku" id="btnAddSku" style="width:auto;padding:4px 10px;font-size:11px;">+ 添加 SKU</button>
+      </div>
+      <!-- 2026-08-08 修改：SKU 列表最多显示2个，超过则滚动查看剩余 SKU 详情 -->
+      <!-- 2026-08-08 V4五次修改：max-height 248→210，margin-top 8→6，为底部按钮组腾出空间 -->
+      <div id="skuList" style="max-height:210px;overflow-y:auto;padding-right:4px;margin-top:6px;"></div>
+    </div>
+    <div class="panel-group">
+      <div class="panel-title">约束设置</div>
+      <div class="constraint-row"><label for="cbOrient">允许旋转朝向</label><input type="checkbox" id="cbOrient" checked></div>
+      <div class="constraint-row"><label for="cbWeight">总重限制校验</label><input type="checkbox" id="cbWeight" checked></div>
+      <div class="constraint-row"><label for="cbSupport">堆叠支撑校验</label><input type="checkbox" id="cbSupport" checked></div>
+      <!-- 2026-08-08 移除：全局自动计算勾选框，改为每个SKU单独设置（见 skuList 内 sku-auto） -->
+      <!--
+      <div class="constraint-row" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">
+        <label for="cbAutoCalc" style="color:var(--accent);">自动计算最大装载量</label>
+        <input type="checkbox" id="cbAutoCalc">
+      </div>
+      <div class="form-hint" id="autoCalcHint" style="display:none;">开启后将忽略手动数量，自动尝试装入尽可能多的货物</div>
+      -->
+      <!-- 2026-08-08 移除：实际装载折减率卡片整体不要了，折减率输入框移动到"集装箱"面板的有效容积行 -->
+      <!--
+      <div class="constraint-row" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">
+        <label for="inputDiscount" style="color:var(--amber);">实际装载折减率</label>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input type="number" id="inputDiscount" value="85" min="50" max="100" style="width:55px;text-align:right;padding:4px 6px;font-size:11px;">
+          <span style="font-size:11px;color:var(--text3);">%</span>
+        </div>
+      </div>
+      <div class="form-hint">100% = 理论容积；85% ≈ 扣除间隙/凸起/门端损耗</div>
+      -->
+    </div>
+    <!-- 2026-08-08 新增：计算装载方案/按SKU重排/导出截图/导出清单 移到左侧栏底部，2x2 排布 -->
+    <!-- 2026-08-08 V4六次修改：这四个按钮的卡片整体移到中间画布下方"装载统计"左边（见 below-canvas-stats），
+         腾出空间给"装载清单"，也顺带减少左栏高度、减少滚动 -->
+    <!--
+    <div class="panel-group left-actions">
+      <button class="btn-calc" id="btnCalc">计算装载方案</button>
+      <button class="btn-repack" id="btnRepack">按SKU重排</button>
+      <button class="btn-export" id="btnShot">导出截图 (PNG)</button>
+      <button class="btn-export" id="btnCsv">导出清单 (CSV)</button>
+    </div>
+    -->
+  </aside>
+  <section class="center">
+    <!-- 2026-08-08 修改：分层剖切移回画布左上角操作栏，放在等距/正视/侧视/俯视四个按钮后面，
+         保持同一行高度（label/滑动条/百分比水平排列） -->
+    <!-- 2026-08-08 V4四次修改：.view-toolbar 从 section.center 移到 #canvas-container 内部，
+         原因见上方 CSS 注释——可视化区域现在是带外边距的卡片，工具条的绝对定位需要相对这个卡片本身 -->
+    <div id="canvas-container">
+      <div class="view-toolbar">
+        <button class="view-btn active" data-view="iso">等距</button>
+        <button class="view-btn" data-view="front">正视</button>
+        <button class="view-btn" data-view="side">侧视</button>
+        <button class="view-btn" data-view="top">俯视</button>
+        <div class="layer-control">
+          <span>分层剖切</span>
+          <input type="range" id="layerSlider" min="0" max="100" value="100">
+          <span id="layerLabel">100%</span>
+        </div>
+      </div>
+      <div class="empty-hint" id="emptyHint">选择集装箱与货物后，点击「计算装载方案」生成 3D 视图</div>
+      <!-- 2026-08-08 修改："货物占用空间"这行字从装载统计区域移到可视化区域底部居中显示 -->
+      <div id="spaceCard" class="space-overlay" style="display:none;">
+        <span id="statSpace">&mdash;</span>
+      </div>
+    </div>
+    <!-- 2026-08-08 新增：装载统计从右侧栏移到可视化区域下方 -->
+    <!-- 2026-08-08 V4四次修改："装载统计"和"装载清单"分别改为独立卡片（.panel-group），
+         不再用一条竖向分割线（.stats-divider）共享同一个背景区块 -->
+    <div class="below-canvas-stats">
+      <!-- 2026-08-08 修改：右侧栏"装载清单"移到此处，与装载统计并排放在底部空余区域 -->
+      <!-- 2026-08-08 移除：原新增的最右列功能按钮组已拆分——计算装载方案/按SKU重排/导出截图/导出清单
+           移到左侧栏底部（.left-actions），分层剖切移到画布左上角（.view-toolbar），此处只剩统计与清单两列 -->
+      <div style="display:flex;gap:12px;">
+        <!-- 2026-08-08 V4六次修改：计算装载方案/按SKU重排/导出截图/导出清单 从左侧栏移到这里，
+             放在"装载统计"左边，同时缩减"装载清单"占据的宽度 -->
+        <div class="panel-group left-actions" style="margin-bottom:0;flex-shrink:0;">
+          <button class="btn-calc" id="btnCalc">计算装载方案</button>
+          <!-- 2026-08-08 修改：取消 disabled，按钮始终可点击，未计算时点击由 btnRepack.onclick 内的
+               currentResult 判断弹出提示，保持与另外三个按钮视觉一致 -->
+          <button class="btn-repack" id="btnRepack">按SKU重排</button>
+          <button class="btn-export" id="btnShot">导出截图 (PNG)</button>
+          <button class="btn-export" id="btnCsv">导出清单 (CSV)</button>
+        </div>
+        <div class="panel-group" style="margin-bottom:0;flex-shrink:0;">
+          <div class="panel-title">装载统计</div>
+          <!-- 2026-08-08 修改：体积利用率/重量利用率/总件数 三张卡片水平排布，"货物占用空间"已移到可视化区域底部 -->
+          <div class="stat-grid-4">
+            <div class="stat-card">
+              <div class="label">体积利用率</div>
+              <div class="value" id="statVol">&mdash; <span>%</span></div>
+            </div>
+            <div class="stat-card"><div class="label">重量利用率</div><div class="value" id="statWeight">&mdash;<span>%</span></div></div>
+            <div class="stat-card"><div class="label">总件数</div><div class="value" id="statCount">&mdash;</div></div>
+          </div>
+        </div>
+        <!-- 2026-08-08 移除：改用两张独立卡片后不再需要竖向分割线 -->
+        <!-- <div class="stats-divider"></div> -->
+        <div class="panel-group" style="flex:1;min-width:0;margin-bottom:0;">
+          <div class="panel-title">装载清单</div>
+          <div class="load-list" id="loadList"><div style="color:var(--text3);font-size:12px;">暂无数据</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <aside class="right">
+    <!-- 2026-08-08 新增：AI 解释装载结果面板，占用原"装载统计"腾出的位置 -->
+    <div class="panel-group ai-panel">
+      <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>AI 解释</span>
+        <button id="btnAiSettings" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;" title="配置 AI 接口">⚙</button>
+      </div>
+      <div id="aiChatLog" class="ai-chat-log">
+        <!-- 2026-08-08 修改：原提示文案提到的"下方按钮"（AI解释本次结果）已移除，改为提示直接在输入框提问 -->
+        <div class="ai-msg ai-msg-bot">计算完成后可在下方输入框向 AI 提问，让 AI 解释本次装载结果。</div>
+      </div>
+      <!-- 2026-08-08 修改："尚未配置AI接口"提示移到 AI 解释文本（aiChatLog）后面 -->
+      <div class="form-hint" id="aiConfigHint"></div>
+      <!-- 2026-08-08 移除："AI 解释本次结果"按钮不要了 -->
+      <!-- <button class="btn-export" id="btnAiExplain">AI 解释本次结果</button> -->
+      <!-- 2026-08-08 修改：提问输入框从单行 input 改为多行 textarea，扩充占据面板剩余高度；
+           发送按钮改为悬浮在 textarea 右下角内部，不再单独占用一列宽度，使 textarea 与上方 AI 回复区域同宽 -->
+      <div class="ai-input-row">
+        <textarea id="aiQuestionInput" placeholder="向 AI 提问装载方案...（Enter 发送，Shift+Enter 换行）"></textarea>
+        <button id="btnAiAsk">发送</button>
+      </div>
+    </div>
+    <!-- 2026-08-08 移除：装载清单面板移到画布下方的 below-canvas-stats 区域，与装载统计并排 -->
+    <!-- 2026-08-08 移除：导出截图/导出清单按钮移到画布下方 below-canvas-stats 最右列的功能按钮组 -->
+  </aside>
+</main>
+
+<!-- 自定义集装箱模态弹窗 -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title">添加自定义集装箱</div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>名称</label>
+        <input type="text" id="ccName" placeholder="例如：定制40尺柜">
+      </div>
+      <div class="form-row">
+        <label>内长</label>
+        <input type="number" id="ccL" min="1" step="1" placeholder="mm">
+        <span class="unit">mm</span>
+      </div>
+      <div class="form-row">
+        <label>内宽</label>
+        <input type="number" id="ccW" min="1" step="1" placeholder="mm">
+        <span class="unit">mm</span>
+      </div>
+      <div class="form-row">
+        <label>内高</label>
+        <input type="number" id="ccH" min="1" step="1" placeholder="mm">
+        <span class="unit">mm</span>
+      </div>
+      <div class="form-row">
+        <label>最大载重</label>
+        <input type="number" id="ccMaxWt" min="1" step="1" placeholder="kg">
+        <span class="unit">kg</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="btnModalCancel">取消</button>
+      <button class="btn-save" id="btnModalSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2026-08-08 新增：AI 接口配置模态弹窗（兼容 OpenAI 请求格式，可填第三方/Claude 中转地址）。
+     配置保存在浏览器 localStorage（因本页面是双击直接打开的 file:// 页面，无法用 fetch 读取本地 config.json） -->
+<div class="modal-overlay hidden" id="aiSettingsOverlay">
+  <div class="modal">
+    <div class="modal-title">AI 接口配置</div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Base URL</label>
+        <input type="text" id="aiBaseUrl" placeholder="例如：https://api.openai.com/v1">
+      </div>
+      <div class="form-row">
+        <label>API Key</label>
+        <input type="password" id="aiApiKey" placeholder="ANTHROPIC_AUTH_TOKEN / API Key">
+      </div>
+      <div class="form-row">
+        <label>模型</label>
+        <input type="text" id="aiModel" placeholder="例如：claude-sonnet-4-5 / gpt-4o">
+      </div>
+    </div>
+    <div class="form-hint" style="margin:0 0 12px 4px;">兼容 OpenAI Chat Completions 接口格式（/chat/completions），配置仅保存在本机浏览器中</div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="btnAiSettingsCancel">取消</button>
+      <button class="btn-save" id="btnAiSettingsSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ====== 集装箱规格数据（内径 mm，载重 kg）======
+const CONTAINERS = {
+  '20GP': { name:'20GP', l:5890, w:2350, h:2390, maxWeight:28200 },
+  '40GP': { name:'40GP', l:12000, w:2350, h:2390, maxWeight:28800 },
+  '40HQ': { name:'40HQ', l:12000, w:2350, h:2690, maxWeight:30480 },
+};
+
+// 用户自定义集装箱
+const CUSTOM_CONTAINERS = {};
+
+// 统一获取集装箱（先查预设，再查自定义）
+function getContainer(key) {
+  return CONTAINERS[key] || CUSTOM_CONTAINERS[key] || null;
+}
+
+// 获取所有集装箱键列表
+function getAllContainerKeys() {
+  return [...Object.keys(CONTAINERS), ...Object.keys(CUSTOM_CONTAINERS)];
+}
+
+// 按折减率计算有效集装箱（比例缩减内径，模拟间隙/凸起/门端损耗）
+function getEffectiveContainer(key, discountPct) {
+  const c = getContainer(key);
+  if (!c) return null;
+  if (discountPct >= 100) return c;
+  const ratio = Math.max(discountPct, 50) / 100;
+  const scale = Math.cbrt(ratio); // 立方根：三维度等比缩放使体积 = ratio
+  return {
+    ...c,
+    l: Math.floor(c.l * scale),
+    w: Math.floor(c.w * scale),
+    h: Math.floor(c.h * scale),
+    isEffective: true,
+    effectivePct: discountPct,
+    theoretical: { l: c.l, w: c.w, h: c.h }
+  };
+}
+
+// 2026-08-08 修改：原调色板中珊瑚色(#D85A30)与琥珀色(#BA7517)色相太接近，多SKU时难以区分，换成色相间隔更大的一组颜色
+const COLORS = ['#1D9E75','#378ADD','#D8383A','#C9A227','#8B5AC8','#2FB5C4','#D8578E','#5C7A29','#E0742A','#4658C9'];
+
+let skuCounter = 0;
+let skus = [];
+let currentResult = null;
+
+// ====== SKU 管理 ======
+const skuListEl = document.getElementById('skuList');
+// 2026-08-08 移除：全局自动计算勾选框相关引用（改为每个SKU单独的 auto 字段）
+// const cbAutoCalc = document.getElementById('cbAutoCalc');
+// const autoCalcHint = document.getElementById('autoCalcHint');
+
+function addSku(data = {}) {
+  const id = 'sku_' + (++skuCounter);
+  const color = COLORS[(skuCounter - 1) % COLORS.length];
+  skus.push({
+    id, color,
+    name: data.name || '产品' + skuCounter,
+    l: data.l || 600, w: data.w || 400, h: data.h || 500,
+    quantity: data.quantity || 100,
+    weight: data.weight || 12,
+    auto: data.auto || false, // 2026-08-08 新增：单个SKU是否自动计算最大数量
+  });
+  renderSkuList();
+}
+function removeSku(id) {
+  skus = skus.filter(s => s.id !== id);
+  renderSkuList();
+}
+function renderSkuList() {
+  // 2026-08-08 改为按每个SKU的 auto 字段单独判断，不再有全局开关
+  skuListEl.innerHTML = '';
+  skus.forEach(sku => {
+    const row = document.createElement('div');
+    row.className = 'sku-row';
+    row.style.borderLeftColor = sku.color;
+    const autoCalc = !!sku.auto;
+    const qtyDisabled = autoCalc ? ' disabled' : '';
+    const qtyHint = autoCalc ? ' (自动)' : '';
+    const autoChecked = autoCalc ? ' checked' : '';
+    row.innerHTML =
+      '<div class="sku-auto">' +
+        '<label><input type="checkbox" data-id="' + sku.id + '" data-field="auto"' + autoChecked + '> 自动计算最大数量</label>' +
+      '</div>' +
+      '<div class="sku-head">' +
+        '<input class="sku-name" type="text" value="' + sku.name + '" data-id="' + sku.id + '" data-field="name">' +
+        '<input class="sku-qty" type="number" value="' + sku.quantity + '" min="1" data-id="' + sku.id + '" data-field="quantity"' + qtyDisabled + '>' +
+        '<span class="sku-qty-label">件' + qtyHint + '</span>' +
+      '</div>' +
+      '<div class="sku-dims">' +
+        '<input type="number" value="' + sku.l + '" min="1" data-id="' + sku.id + '" data-field="l">' +
+        '<input type="number" value="' + sku.w + '" min="1" data-id="' + sku.id + '" data-field="w">' +
+        '<input type="number" value="' + sku.h + '" min="1" data-id="' + sku.id + '" data-field="h">' +
+      '</div>' +
+      '<div class="sku-meta">毛重 <input type="number" value="' + sku.weight + '" min="0" step="0.1" data-id="' + sku.id + '" data-field="weight"> kg &middot; mm</div>' +
+      '<button class="del-btn" data-del="' + sku.id + '">&times;</button>';
+    skuListEl.appendChild(row);
+  });
+}
+skuListEl.addEventListener('input', e => {
+  const id = e.target.dataset.id, field = e.target.dataset.field;
+  if (!id || field === 'auto') return; // auto 字段由 change 事件（checkbox）处理
+  const sku = skus.find(s => s.id === id);
+  if (!sku) return;
+  sku[field] = field === 'name' ? e.target.value : Number(e.target.value);
+});
+// 2026-08-08 新增：监听每个SKU的"自动计算最大数量"勾选框变化，重渲染以切换数量输入框禁用状态
+skuListEl.addEventListener('change', e => {
+  const id = e.target.dataset.id, field = e.target.dataset.field;
+  if (!id || field !== 'auto') return;
+  const sku = skus.find(s => s.id === id);
+  if (!sku) return;
+  sku.auto = e.target.checked;
+  renderSkuList();
+});
+skuListEl.addEventListener('click', e => {
+  if (e.target.dataset.del) removeSku(e.target.dataset.del);
+});
+document.getElementById('btnAddSku').onclick = () => addSku();
+
+// 2026-08-08 移除：全局自动计算开关逻辑（改为每个SKU独立控制，见上方 change 监听）
+// cbAutoCalc.onchange = () => {
+//   autoCalcHint.style.display = cbAutoCalc.checked ? 'block' : 'none';
+//   renderSkuList();
+// };
+
+// 默认示例
+addSku({ name:'产品A', l:600, w:400, h:500, quantity:200, weight:12 });
+addSku({ name:'产品B', l:500, w:300, h:400, quantity:150, weight:8 });
+addSku({ name:'产品C', l:450, w:350, h:300, quantity:100, weight:6 });
+
+// ====== 集装箱下拉框管理 ======
+const containerSelect = document.getElementById('containerSelect');
+
+function rebuildContainerDropdown(selectKey) {
+  // save current selection
+  const currentVal = containerSelect.value;
+  containerSelect.innerHTML = '';
+  const allKeys = getAllContainerKeys();
+  allKeys.forEach(key => {
+    const c = getContainer(key);
+    if (!c) return;
+    const opt = document.createElement('option');
+    opt.value = key;
+    const vol = (c.l * c.w * c.h / 1e9).toFixed(1);
+    const isCustom = !!CUSTOM_CONTAINERS[key];
+    opt.textContent = c.name + (isCustom ? ' (自定义)' : '') + ' · ' + vol + ' m³';
+    containerSelect.appendChild(opt);
+  });
+  // restore selection, or fall back to first
+  if (getContainer(currentVal)) {
+    containerSelect.value = currentVal;
+  } else if (selectKey && getContainer(selectKey)) {
+    containerSelect.value = selectKey;
+  }
+}
+
+function renderCustomContainerList() {
+  const listEl = document.getElementById('customContainerList');
+  const keys = Object.keys(CUSTOM_CONTAINERS);
+  if (keys.length === 0) {
+    listEl.innerHTML = '';
+    return;
+  }
+  listEl.innerHTML = keys.map(key => {
+    const c = CUSTOM_CONTAINERS[key];
+    return '<div class="custom-container-item">' +
+      '<span class="cc-name">' + c.name + '</span>' +
+      '<span class="cc-dims">' + c.l + '×' + c.w + '×' + c.h + ' mm</span>' +
+      '<button class="cc-del" data-cc-del="' + key + '">&times;</button>' +
+      '</div>';
+  }).join('');
+}
+
+document.getElementById('customContainerList').addEventListener('click', e => {
+  const key = e.target.dataset.ccDel;
+  if (!key) return;
+  delete CUSTOM_CONTAINERS[key];
+  rebuildContainerDropdown();
+  renderCustomContainerList();
+  updateContainerInfo();
+  clearResult();
+  showToast('已删除自定义集装箱：' + key);
+});
+
+// 集装箱信息显示
+const containerInfoEl = document.getElementById('containerInfo');
+function updateContainerInfo() {
+  const c = getContainer(containerSelect.value);
+  if (!c) return;
+  // 2026-08-08 移除："内径 xxx mm"、"理论容积 xxx m³ / 载重 xxx kg" 这两行文字不再显示
+  // 2026-08-08 重新加回：用户要求把这两行文字重新显示在"折减率"卡片（集装箱面板）里
+  const theoVol = (c.l * c.w * c.h / 1e9).toFixed(1);
+  let html = '内径 ' + c.l + ' x ' + c.w + ' x ' + c.h + ' mm<br>' +
+             '理论容积 ' + theoVol + ' m³ / 载重 ' + c.maxWeight + ' kg';
+  containerInfoEl.innerHTML = html;
+  // 2026-08-08 修改：有效容积不再拼接在 containerInfo 内，改为写入独立的 #effVolInfo，与折减率输入框并列
+  const discountPct = parseFloat(document.getElementById('inputDiscount').value) || 100;
+  const effVolInfoEl = document.getElementById('effVolInfo');
+  if (discountPct < 100) {
+    const ec = getEffectiveContainer(containerSelect.value, discountPct);
+    const effVol = (ec.l * ec.w * ec.h / 1e9).toFixed(1);
+    effVolInfoEl.textContent = '有效容积 ' + effVol + ' m³';
+  } else {
+    effVolInfoEl.textContent = '';
+  }
+}
+
+containerSelect.onchange = () => {
+  updateContainerInfo();
+  drawContainer();
+  if (currentResult) {
+    clearResult();
+  }
+};
+
+// 折减率变化时刷新显示
+document.getElementById('inputDiscount').addEventListener('input', () => {
+  updateContainerInfo();
+  drawContainer();
+  if (currentResult) clearResult();
+});
+
+// 清空当前结果
+function clearResult() {
+  currentResult = null;
+  // 2026-08-08 移除：不再禁用"按SKU重排"按钮（保持与其他按钮视觉一致），
+  // 未计算/结果已清空时点击由 btnRepack.onclick 内的 currentResult 判断弹出提示即可
+  // const btnRepackEl = document.getElementById('btnRepack');
+  // if (btnRepackEl) btnRepackEl.disabled = true;
+  while (cargoGroup.children.length) {
+    const m = cargoGroup.children[0];
+    cargoGroup.remove(m);
+    if (m.geometry) m.geometry.dispose();
+    if (m.material) m.material.dispose();
+    for (const child of m.children) {
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) child.material.dispose();
+    }
+  }
+  cargoMeshes = [];
+  document.getElementById('emptyHint').style.display = 'block';
+  resetStats();
+}
+
+function resetStats() {
+  document.querySelector('.stat-card .label').textContent = '体积利用率';
+  document.getElementById('statVol').innerHTML = '&mdash; <span>%</span>';
+  document.getElementById('statWeight').innerHTML = '&mdash;<span>%</span>';
+  document.getElementById('statCount').textContent = '&mdash;';
+  document.getElementById('spaceCard').style.display = 'none';
+  document.getElementById('loadList').innerHTML = '<div style="color:var(--text3);font-size:12px;">暂无数据</div>';
+}
+
+// ====== 自定义集装箱模态弹窗 ======
+const modalOverlay = document.getElementById('modalOverlay');
+const btnAddContainer = document.getElementById('btnAddContainer');
+const btnModalCancel = document.getElementById('btnModalCancel');
+const btnModalSave = document.getElementById('btnModalSave');
+
+function openModal() {
+  modalOverlay.classList.remove('hidden');
+  document.getElementById('ccName').value = '';
+  document.getElementById('ccL').value = '';
+  document.getElementById('ccW').value = '';
+  document.getElementById('ccH').value = '';
+  document.getElementById('ccMaxWt').value = '';
+  document.getElementById('ccName').focus();
+}
+
+function closeModal() {
+  modalOverlay.classList.add('hidden');
+}
+
+function saveCustomContainer() {
+  const name = document.getElementById('ccName').value.trim();
+  const l = parseInt(document.getElementById('ccL').value);
+  const w = parseInt(document.getElementById('ccW').value);
+  const h = parseInt(document.getElementById('ccH').value);
+  const maxWeight = parseInt(document.getElementById('ccMaxWt').value) || 30000;
+
+  if (!name) { showToast('请输入集装箱名称'); return; }
+  if (!l || l <= 0 || !w || w <= 0 || !h || h <= 0) { showToast('请输入有效的内径尺寸（mm）'); return; }
+  if (!maxWeight || maxWeight <= 0) { showToast('请输入有效的最大载重（kg）'); return; }
+
+  // 生成唯一 key
+  const baseKey = name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
+  let key = baseKey;
+  let idx = 1;
+  while (getContainer(key)) {
+    key = baseKey + '_' + (idx++);
+  }
+
+  CUSTOM_CONTAINERS[key] = { name, l, w, h, maxWeight };
+  rebuildContainerDropdown(key);
+  renderCustomContainerList();
+  updateContainerInfo();
+  clearResult();
+  closeModal();
+  showToast('已添加自定义集装箱：' + name + ' (' + l + '×' + w + '×' + h + ' mm)');
+}
+
+btnAddContainer.onclick = openModal;
+btnModalCancel.onclick = closeModal;
+modalOverlay.addEventListener('click', e => {
+  if (e.target === modalOverlay) closeModal();
+});
+btnModalSave.onclick = saveCustomContainer;
+
+// 键盘快捷键
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) {
+    closeModal();
+  }
+  if (e.key === 'Enter' && !modalOverlay.classList.contains('hidden')) {
+    saveCustomContainer();
+  }
+});
+
+// 初始构建下拉框
+rebuildContainerDropdown('40HQ');
+updateContainerInfo();
+
+// ====== 装载算法（层式 EMS 启发式）======
+// 坐标：x=长, y=高(向上), z=宽；货物维度 l=沿x, h=沿y, w=沿z
+function getOrientations(item, allowRotate) {
+  const l = item.l, w = item.w, h = item.h;
+  if (!allowRotate) return [{ l, w, h }];
+  const seen = new Set();
+  const oris = [];
+  const perms = [[l,w,h],[l,h,w],[w,l,h],[w,h,l],[h,l,w],[h,w,l]];
+  for (const p of perms) {
+    const key = p[0] + ',' + p[1] + ',' + p[2];
+    if (!seen.has(key)) { seen.add(key); oris.push({ l:p[0], w:p[1], h:p[2] }); }
+  }
+  return oris;
+}
+
+function findPosition(container, ori, occupied, checkSupport) {
+  const yLevels = new Set([0]);
+  for (const o of occupied) yLevels.add(o.y + o.h);
+  const ySorted = [...yLevels].sort((a,b) => a - b);
+
+  for (const y of ySorted) {
+    if (y + ori.h > container.h + 0.5) continue;
+    const xzCands = [{ x:0, z:0 }];
+    for (const o of occupied) {
+      if (o.y < y + ori.h - 0.5 && o.y + o.h > y + 0.5) {
+        xzCands.push({ x: o.x + o.l, z: o.z });
+        xzCands.push({ x: o.x, z: o.z + o.w });
+      }
+    }
+    xzCands.sort((a,b) => a.z - b.z || a.x - b.x);
+
+    for (const c of xzCands) {
+      if (c.x + ori.l > container.l + 0.5) continue;
+      if (c.z + ori.w > container.w + 0.5) continue;
+      let overlap = false;
+      for (const o of occupied) {
+        if (o.y < y + ori.h - 0.5 && o.y + o.h > y + 0.5) {
+          if (c.x < o.x + o.l && c.x + ori.l > o.x && c.z < o.z + o.w && c.z + ori.w > o.z) {
+            overlap = true; break;
+          }
+        }
+      }
+      if (overlap) continue;
+      if (checkSupport && y > 0.5) {
+        let supported = false;
+        for (const o of occupied) {
+          if (Math.abs(o.y + o.h - y) < 1) {
+            if (c.x < o.x + o.l && c.x + ori.l > o.x && c.z < o.z + o.w && c.z + ori.w > o.z) {
+              supported = true; break;
+            }
+          }
+        }
+        if (!supported) continue;
+      }
+      return { x: c.x, y, z: c.z };
+    }
+  }
+  return null;
+}
+
+// 2026-08-08 新增：贪心摆放循环提取为公共函数，供 calculateLoading() 和
+// repackContiguous()（"按SKU重排"按钮）共用，避免重复实现
+function packItems(container, allItems, opts) {
+  const { allowRotate, weightLimit, checkSupport } = opts;
+  const placements = [];
+  const occupied = [];
+  let totalWeight = 0;
+  const loaded = {};
+
+  for (const item of allItems) {
+    if (weightLimit && totalWeight + item.weight > container.maxWeight) continue;
+    const oris = getOrientations(item, allowRotate);
+    for (const ori of oris) {
+      const pos = findPosition(container, ori, occupied, checkSupport);
+      if (pos) {
+        placements.push({
+          x: pos.x, y: pos.y, z: pos.z,
+          l: ori.l, w: ori.w, h: ori.h,
+          color: item.color, name: item.name, id: item.id, weight: item.weight
+        });
+        occupied.push({ x: pos.x, y: pos.y, z: pos.z, l: ori.l, w: ori.w, h: ori.h });
+        totalWeight += item.weight;
+        loaded[item.id] = (loaded[item.id] || 0) + 1;
+        break;
+      }
+    }
+  }
+  return { placements, loaded, totalWeight };
+}
+
+// 2026-08-08 新增：真实集装箱装载惯例是"一段一段"分区——沿长度方向把集装箱切成若干段，
+// 每一段整段（贯穿宽度和高度）只装一种SKU，装完这一种再往后挪到下一段装下一种SKU，
+// 不会出现同一高度层里混装多种货、也不会出现"下面一层是A、上面一层是B"这种按高度分层混装的情况。
+// 原来"按SKU重排"复用的 packItems() 是按高度层贪心摆放（EMS），多个SKU会在不同高度层交错，
+// 不符合这个实际装箱习惯，因此单独写这个"按SKU分段摆放"的函数，只给"按SKU重排"按钮使用。
+function packBySkuBlocks(container, skuList, quantities, opts) {
+  const { allowRotate, weightLimit } = opts;
+  const placements = [];
+  const loaded = {};
+  let totalWeight = 0;
+  let xOffset = 0;
+
+  for (const sku of skuList) {
+    const qtyNeeded = quantities[sku.id] || 0;
+    if (qtyNeeded <= 0 || sku.l <= 0 || sku.w <= 0 || sku.h <= 0) { loaded[sku.id] = 0; continue; }
+
+    // 整个SKU的这一段只用同一种朝向摆放（不会一件横放一件竖放），
+    // 在所有朝向里选"能让宽×高截面摆下最多件数"的那种，尽量把集装箱横截面铺满
+    const oris = getOrientations(sku, allowRotate);
+    let best = null;
+    for (const ori of oris) {
+      if (ori.w > container.w + 0.5 || ori.h > container.h + 0.5 || ori.l > container.l + 0.5) continue;
+      const cols = Math.floor((container.w + 0.5) / ori.w);
+      const rows = Math.floor((container.h + 0.5) / ori.h);
+      if (cols <= 0 || rows <= 0) continue;
+      const perSlice = cols * rows;
+      if (!best || perSlice > best.perSlice) best = { ori, cols, rows, perSlice };
+    }
+    if (!best) { loaded[sku.id] = 0; continue; }
+
+    const { ori, cols, rows, perSlice } = best;
+    let placedCount = 0;
+    let slices = 0;
+    while (placedCount < qtyNeeded) {
+      const sliceX = xOffset + slices * ori.l;
+      if (sliceX + ori.l > container.l + 0.5) break; // 集装箱长度已经用完
+      let placedInSlice = 0;
+      let weightBlocked = false;
+      for (let r = 0; r < rows && placedCount < qtyNeeded && !weightBlocked; r++) {
+        for (let c = 0; c < cols && placedCount < qtyNeeded; c++) {
+          if (weightLimit && totalWeight + sku.weight > container.maxWeight) { weightBlocked = true; break; }
+          placements.push({
+            x: sliceX, y: r * ori.h, z: c * ori.w,
+            l: ori.l, w: ori.w, h: ori.h,
+            color: sku.color, name: sku.name, id: sku.id, weight: sku.weight
+          });
+          totalWeight += sku.weight;
+          placedCount++;
+          placedInSlice++;
+        }
+      }
+      if (placedInSlice === 0) break; // 这一段一件都放不下（多半是超重），停止继续往后挪
+      slices++;
+    }
+    loaded[sku.id] = placedCount;
+    xOffset += slices * ori.l; // 这一种SKU实际用掉的长度，下一种SKU从这里接着往后摆
+  }
+
+  return { placements, loaded, totalWeight };
+}
+
+function calculateLoading() {
+  const discountPct = parseFloat(document.getElementById('inputDiscount').value) || 100;
+  const container = getEffectiveContainer(containerSelect.value, discountPct);
+  if (!container) { showToast('请选择有效的集装箱'); return null; }
+
+  const allowRotate = document.getElementById('cbOrient').checked;
+  const weightLimit = document.getElementById('cbWeight').checked;
+  const checkSupport = document.getElementById('cbSupport').checked;
+  // 2026-08-08 移除：全局自动计算开关，改为读取每个 SKU 自身的 auto 字段
+  // const autoCalc = document.getElementById('cbAutoCalc').checked;
+  const autoCalc = skus.some(s => s.auto); // 供统计/清单展示判断是否存在自动SKU
+
+  const contVol = container.l * container.w * container.h;
+
+  // 2026-08-08 修改：按每个 SKU 的 auto 字段分别确定尝试数量
+  const skuQuantities = {};
+  skus.forEach(sku => {
+    if (sku.auto) {
+      // 体积上限估算，加上 20% 冗余确保尝试足够
+      const volBound = Math.ceil(contVol / (sku.l * sku.w * sku.h));
+      const wtBound = weightLimit ? Math.ceil(container.maxWeight / (sku.weight || 1)) : Infinity;
+      // 上限 800，兼顾性能与覆盖范围
+      skuQuantities[sku.id] = Math.min(Math.min(volBound, wtBound) + Math.ceil(volBound * 0.2), 800);
+    } else {
+      skuQuantities[sku.id] = sku.quantity;
+    }
+  });
+
+  // 2026-08-08 修改：手动指定数量的SKU优先装箱（保证其尽量装满请求数量），
+  // 自动计算的SKU排在后面，去填充剩余空间，避免和手动SKU抢空间
+  let manualItems = [], autoItems = [];
+  for (const sku of skus) {
+    if (sku.l <= 0 || sku.w <= 0 || sku.h <= 0 || skuQuantities[sku.id] <= 0) continue;
+    const bucket = sku.auto ? autoItems : manualItems;
+    for (let i = 0; i < skuQuantities[sku.id]; i++) bucket.push({ ...sku });
+  }
+  manualItems.sort((a,b) => (b.l * b.w) - (a.l * a.w));
+  // 2026-08-08 修改：多个"自动"SKU不再逐件轮流（会导致空间上红蓝相间的碎片纹理，
+  // 不利于实际装卸）。改为"分批轮流"：每轮各SKU连续摆放一批（BATCH件），再切换
+  // 到下一个SKU，兼顾"块内聚集摆放"与"块间公平轮流"，避免某个自动SKU被完全挤空。
+  const AUTO_BATCH = 20;
+  const autoGroups = {};
+  const autoOrder = [];
+  for (const item of autoItems) {
+    if (!autoGroups[item.id]) { autoGroups[item.id] = []; autoOrder.push(item.id); }
+    autoGroups[item.id].push(item);
+  }
+  // 组间起始顺序按底面积从大到小，利于摆放算法优先处理大件
+  autoOrder.sort((a,b) => {
+    const ga = autoGroups[a][0], gb = autoGroups[b][0];
+    return (gb.l * gb.w) - (ga.l * ga.w);
+  });
+  const batchedAuto = [];
+  let remaining = true;
+  while (remaining) {
+    remaining = false;
+    for (const id of autoOrder) {
+      const q = autoGroups[id];
+      if (q.length) { batchedAuto.push(...q.splice(0, AUTO_BATCH)); remaining = true; }
+    }
+  }
+  let allItems = manualItems.concat(batchedAuto);
+
+  // 2026-08-08 修改：贪心摆放循环提取为公共函数 packItems()（定义见上方），
+  // 供"按SKU重排"按钮（btnRepack.onclick）复用，避免重复实现摆放逻辑
+  const packed = packItems(container, allItems, { allowRotate, weightLimit, checkSupport });
+  const placements = packed.placements;
+  const loaded = packed.loaded;
+  const totalWeight = packed.totalWeight;
+  const requested = {};
+  skus.forEach(s => {
+    requested[s.id] = skuQuantities[s.id];
+    if (!(s.id in loaded)) loaded[s.id] = 0;
+  });
+
+  const cargoVol = placements.reduce((s,p) => s + p.l * p.w * p.h, 0);
+
+  // 空间范围与超限检测
+  let maxX = 0, maxY = 0, maxZ = 0, outOfBoundsCount = 0;
+  for (const p of placements) {
+    const px = p.x + p.l, py = p.y + p.h, pz = p.z + p.w;
+    if (px > maxX) maxX = px;
+    if (py > maxY) maxY = py;
+    if (pz > maxZ) maxZ = pz;
+    if (px > container.l + 0.5 || pz > container.w + 0.5 || py > container.h + 0.5) {
+      p.outOfBounds = true;
+      outOfBoundsCount++;
+    }
+  }
+
+  currentResult = { placements, loaded, requested, totalWeight, cargoVol, contVol, container,
+                    maxX, maxY, maxZ, outOfBoundsCount, autoCalc };
+  return currentResult;
+}
+
+// ====== Three.js 场景 ======
+let scene, camera, renderer, controls, cargoGroup, containerGroup;
+// 2026-08-08 新增：gridHelper 改为按当前集装箱尺寸动态重建（见 updateGrid），
+// axesScene/axesCamera/rendererW/rendererH 用于右下角 XYZ 轴指示小图标
+let gridHelper = null;
+let axesScene, axesCamera;
+let rendererW = 800, rendererH = 600;
+const canvasContainer = document.getElementById('canvas-container');
+const emptyHint = document.getElementById('emptyHint');
+
+function initThree() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1a1d2e);
+
+  const w = canvasContainer.clientWidth || 800;
+  const h = canvasContainer.clientHeight || 600;
+  camera = new THREE.PerspectiveCamera(45, w / h, 100, 50000);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  canvasContainer.appendChild(renderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.75);
+  dir.position.set(5000, 9000, 5000);
+  scene.add(dir);
+  const dir2 = new THREE.DirectionalLight(0x8899bb, 0.3);
+  dir2.position.set(-5000, 4000, -5000);
+  scene.add(dir2);
+
+  // 2026-08-08 移除：固定 20000 大小的网格不再在此创建，改为在 drawContainer() 里按当前集装箱尺寸
+  // 动态重建（updateGrid），避免容器超过网格范围时看起来"箱体超出网格"
+  // const grid = new THREE.GridHelper(20000, 20, 0x3a4055, 0x2a3045);
+  // grid.position.y = -2;
+  // scene.add(grid);
+
+  cargoGroup = new THREE.Group();
+  scene.add(cargoGroup);
+  containerGroup = new THREE.Group();
+  scene.add(containerGroup);
+
+  // 2026-08-08 移除：右下角 XYZ 轴指示小图标效果不好看，去掉
+  // axesScene = new THREE.Scene();
+  // axesCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
+  // axesCamera.position.set(0, 0, 3);
+  // axesScene.add(new THREE.AxesHelper(1.5));
+
+  drawContainer();
+  setView('iso');
+  window.addEventListener('resize', onResize);
+  rendererW = w; rendererH = h;
+  animate();
+}
+function onResize() {
+  const w = canvasContainer.clientWidth, h = canvasContainer.clientHeight;
+  if (w === 0 || h === 0) return;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+  rendererW = w; rendererH = h;
+}
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+  // 2026-08-08 移除：右下角 XYZ 轴指示小图标的叠加渲染逻辑一并去掉
+  // const gizmoSize = 90, margin = 10;
+  // axesCamera.quaternion.copy(camera.quaternion);
+  // renderer.setViewport(rendererW - gizmoSize - margin, margin, gizmoSize, gizmoSize);
+  // renderer.setScissor(rendererW - gizmoSize - margin, margin, gizmoSize, gizmoSize);
+  // renderer.setScissorTest(true);
+  // renderer.clearDepth();
+  // renderer.render(axesScene, axesCamera);
+  // renderer.setScissorTest(false);
+}
+
+// 2026-08-08 新增：按集装箱底面尺寸（长c.l/宽c.w）动态重建地面网格，
+// 网格居中于容器底面正下方且留出余量，避免容器超出网格范围显得"箱体超出网格"
+function updateGrid(c) {
+  if (gridHelper) {
+    scene.remove(gridHelper);
+    gridHelper.geometry.dispose();
+    gridHelper.material.dispose();
+  }
+  const maxDim = Math.max(c.l, c.w);
+  const size = Math.ceil(maxDim * 1.6 / 1000) * 1000;
+  const divisions = Math.max(10, Math.round(size / 1000));
+  gridHelper = new THREE.GridHelper(size, divisions, 0x3a4055, 0x2a3045);
+  gridHelper.position.set(c.l / 2, -2, c.w / 2);
+  scene.add(gridHelper);
+}
+
+function drawContainer() {
+  while (containerGroup.children.length) {
+    const m = containerGroup.children[0];
+    containerGroup.remove(m);
+    if (m.geometry) m.geometry.dispose();
+    if (m.material) m.material.dispose();
+  }
+  const c = getContainer(containerSelect.value);
+  if (!c) return;
+  updateGrid(c);
+
+  // 理论集装箱（蓝色实线）
+  const geo = new THREE.BoxGeometry(c.l, c.h, c.w);
+  const edges = new THREE.EdgesGeometry(geo);
+  const lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x4a9eff }));
+  lines.position.set(c.l / 2, c.h / 2, c.w / 2);
+  containerGroup.add(lines);
+
+  const faceMat = new THREE.MeshBasicMaterial({ color: 0x4a9eff, transparent: true, opacity: 0.035, side: THREE.DoubleSide, depthWrite: false });
+  const face = new THREE.Mesh(geo, faceMat);
+  face.position.copy(lines.position);
+  containerGroup.add(face);
+
+  // 有效装箱区域（琥珀色虚线），仅当折减 < 100% 时绘制
+  const discountPct = parseFloat(document.getElementById('inputDiscount').value) || 100;
+  if (discountPct < 100) {
+    const ec = getEffectiveContainer(containerSelect.value, discountPct);
+    if (ec) {
+      const effGeo = new THREE.BoxGeometry(ec.l, ec.h, ec.w);
+      const effEdges = new THREE.EdgesGeometry(effGeo);
+      const effMat = new THREE.LineDashedMaterial({ color: 0xBA7517, dashSize: 150, gapSize: 80 });
+      const effLines = new THREE.LineSegments(effEdges, effMat);
+      effLines.computeLineDistances();
+      effLines.position.set(ec.l / 2, ec.h / 2, ec.w / 2);
+      containerGroup.add(effLines);
+
+      const effFaceMat = new THREE.MeshBasicMaterial({ color: 0xBA7517, transparent: true, opacity: 0.02, side: THREE.DoubleSide, depthWrite: false });
+      const effFace = new THREE.Mesh(effGeo, effFaceMat);
+      effFace.position.copy(effLines.position);
+      containerGroup.add(effFace);
+    }
+  }
+}
+
+let cargoMeshes = [];
+
+function renderCargo(result) {
+  while (cargoGroup.children.length) {
+    const m = cargoGroup.children[0];
+    cargoGroup.remove(m);
+    if (m.geometry) m.geometry.dispose();
+    if (m.material) m.material.dispose();
+    for (const child of m.children) {
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) child.material.dispose();
+    }
+  }
+  cargoMeshes = [];
+
+  const matCache = {};
+  result.placements.forEach(p => {
+    const geo = new THREE.BoxGeometry(p.l, p.h, p.w);
+    const color = p.outOfBounds ? '#ff3333' : p.color;
+    if (!matCache[color]) {
+      matCache[color] = new THREE.MeshLambertMaterial({ color: color });
+    }
+    const mesh = new THREE.Mesh(geo, matCache[color]);
+    mesh.position.set(p.x + p.l / 2, p.y + p.h / 2, p.z + p.w / 2);
+    const edges = new THREE.EdgesGeometry(geo);
+    const lineColor = p.outOfBounds ? 0xff0000 : 0x0a0a0a;
+    const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: lineColor }));
+    line.scale.set(1.002, 1.002, 1.002);
+    mesh.add(line);
+    cargoGroup.add(mesh);
+    cargoMeshes.push({ mesh, y: p.y, h: p.h });
+  });
+  applyLayerCut();
+}
+
+function applyLayerCut() {
+  const layerPct = document.getElementById('layerSlider').value / 100;
+  const c = getContainer(containerSelect.value);
+  if (!c) return;
+  const cutY = c.h * layerPct;
+  const hideCut = layerPct < 0.999;
+  for (const m of cargoMeshes) {
+    m.mesh.visible = !(hideCut && (m.y + m.h > cutY + 0.5));
+  }
+}
+
+function setView(view) {
+  const c = getContainer(containerSelect.value);
+  if (!c) return;
+  const cx = c.l / 2, cy = c.h / 2, cz = c.w / 2;
+  const d = Math.max(c.l, c.h, c.w);
+  if (view === 'iso') camera.position.set(cx + d * 0.85, cy + d * 0.65, cz + d * 0.85);
+  else if (view === 'front') camera.position.set(cx, cy, cz + d * 1.3);
+  else if (view === 'side') camera.position.set(cx + d * 1.3, cy, cz);
+  else if (view === 'top') camera.position.set(cx, cy + d * 1.4, cz + 1);
+  controls.target.set(cx, cy, cz);
+  controls.update();
+}
+
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    setView(btn.dataset.view);
+  };
+});
+
+const layerSlider = document.getElementById('layerSlider');
+const layerLabel = document.getElementById('layerLabel');
+layerSlider.oninput = () => {
+  layerLabel.textContent = layerSlider.value + '%';
+  if (cargoMeshes.length) applyLayerCut();
+};
+
+// ====== 计算按钮 ======
+const btnRepack = document.getElementById('btnRepack');
+document.getElementById('btnCalc').onclick = () => {
+  showToast('正在计算装载方案...');
+  setTimeout(() => {
+    const t0 = performance.now();
+    const result = calculateLoading();
+    if (!result) return;
+    const t1 = performance.now();
+    renderCargo(result);
+    updateStats(result);
+    emptyHint.style.display = 'none';
+    const label = result.autoCalc ? '自动计算完成 / ' : '计算完成 / ';
+    showToast(label + result.placements.length + ' 件 / 耗时 ' + Math.round(t1 - t0) + 'ms');
+    // 2026-08-08 移除：不再根据是否存在自动SKU来控制"按SKU重排"按钮的禁用状态，
+    // 该按钮始终可点击（重排逻辑本身不依赖 autoCalc，仅需要 currentResult 存在）
+    // btnRepack.disabled = !result.autoCalc;
+  }, 60);
+};
+
+// 2026-08-08 新增："按SKU重排"按钮 —— 用上一次计算得到的各SKU数量（loaded），
+// 按SKU整块连续摆放（不再分批轮流），使每个自动SKU在空间上聚成一整块，
+// 便于对应实际按SKU顺序卸货的场景。摆放函数复用上方的 packItems()
+// 2026-08-08 改为调用 packBySkuBlocks()：原来的 packItems() 是按高度层贪心摆放，
+// 会出现"下面一层A、中间一层B、上面一层C"这种混装，不符合真实集装箱"一段一种货、
+// 一段贯穿宽高摆满"的装箱方式，见 packBySkuBlocks() 顶部注释
+btnRepack.onclick = () => {
+  if (!currentResult) { showToast('请先计算装载方案'); return; }
+  const container = currentResult.container;
+  const allowRotate = document.getElementById('cbOrient').checked;
+  const weightLimit = document.getElementById('cbWeight').checked;
+
+  // 按底面积从大到小排序SKU，决定各自占用的"段"从集装箱前端到后端的先后顺序
+  const orderedSkus = skus.filter(s => (currentResult.loaded[s.id] || 0) > 0)
+    .sort((a,b) => (b.l * b.w) - (a.l * a.w));
+  const quantities = {};
+  skus.forEach(s => { quantities[s.id] = currentResult.loaded[s.id] || 0; });
+
+  const packed = packBySkuBlocks(container, orderedSkus, quantities, { allowRotate, weightLimit });
+  const cargoVol = packed.placements.reduce((s,p) => s + p.l * p.w * p.h, 0);
+
+  let maxX = 0, maxY = 0, maxZ = 0, outOfBoundsCount = 0;
+  for (const p of packed.placements) {
+    const px = p.x + p.l, py = p.y + p.h, pz = p.z + p.w;
+    if (px > maxX) maxX = px;
+    if (py > maxY) maxY = py;
+    if (pz > maxZ) maxZ = pz;
+    if (px > container.l + 0.5 || pz > container.w + 0.5 || py > container.h + 0.5) {
+      p.outOfBounds = true;
+      outOfBoundsCount++;
+    }
+  }
+
+  const requested = {};
+  skus.forEach(s => { requested[s.id] = currentResult.requested[s.id]; });
+  currentResult = {
+    placements: packed.placements, loaded: packed.loaded, requested,
+    totalWeight: packed.totalWeight, cargoVol, contVol: currentResult.contVol, container,
+    maxX, maxY, maxZ, outOfBoundsCount, autoCalc: currentResult.autoCalc
+  };
+
+  renderCargo(currentResult);
+  updateStats(currentResult);
+  showToast('已按SKU重排 / ' + packed.placements.length + ' 件');
+};
+
+function updateStats(result) {
+  const c = result.container;
+  const volUtil = (result.cargoVol / result.contVol * 100).toFixed(1);
+  const wtUtil = (result.totalWeight / c.maxWeight * 100).toFixed(1);
+
+  // 体积利用率标签：折减模式下标注"有效"
+  const volLabel = c.isEffective ? '有效体积利用率' : '体积利用率';
+  document.querySelector('.stat-card .label').textContent = volLabel;
+  document.getElementById('statVol').innerHTML = volUtil + ' <span>%</span>';
+  // 2026-08-08 移除："有效体积利用率"卡片不再追加"理论利用率xx%·折减xx%"这行小字
+  // if (c.isEffective && c.theoretical) {
+  //   const theoVol = c.theoretical.l * c.theoretical.w * c.theoretical.h;
+  //   const theoUtil = (result.cargoVol / theoVol * 100).toFixed(1);
+  //   document.getElementById('statVol').innerHTML =
+  //     volUtil + ' <span>%</span>' +
+  //     '<div style="font-size:10px;color:var(--text3);margin-top:2px;">理论利用率 ' + theoUtil + '% · 折减 ' + c.effectivePct + '%</div>';
+  // }
+
+  document.getElementById('statWeight').innerHTML = wtUtil + '<span>%</span>';
+  document.getElementById('statCount').textContent = result.placements.length;
+
+  // 2026-08-08 修改："货物占用空间"卡片原本是 标题/尺寸/状态 三行，合并成一行显示（用 title 属性放完整文本，避免过窄时截断看不到）
+  const spaceCard = document.getElementById('spaceCard');
+  const statSpace = document.getElementById('statSpace');
+  const outOfBounds = result.outOfBoundsCount || 0;
+  const maxX = Math.round(result.maxX || 0);
+  const maxY = Math.round(result.maxY || 0);
+  const maxZ = Math.round(result.maxZ || 0);
+  spaceCard.style.display = 'block';
+  const dimsText = maxX + ' × ' + maxZ + ' × ' + maxY + ' mm';
+
+  let statusHtml;
+  if (outOfBounds > 0) {
+    statusHtml = '<span style="color:var(--coral)">⚠ 有 ' + outOfBounds + ' 件货物超出集装箱边界</span>';
+  } else {
+    const dimStr = c.isEffective
+      ? '有效 ' + c.l + ' × ' + c.w + ' × ' + c.h + ' mm（理论 ' + c.theoretical.l + ' × ' + c.theoretical.w + ' × ' + c.theoretical.h + '）'
+      : c.l + ' × ' + c.w + ' × ' + c.h + ' mm';
+    statusHtml = '<span style="color:var(--green)">✓ 未超集装箱 ' + dimStr + '</span>';
+  }
+  statSpace.innerHTML = '货物占用空间 ' + dimsText + ' &middot; ' + statusHtml;
+  statSpace.title = statSpace.textContent;
+
+  const listEl = document.getElementById('loadList');
+  listEl.innerHTML = '';
+  // 2026-08-08 修改：按每个SKU自身的 auto 字段判断展示"最大可装"还是"已装/请求"
+  // 2026-08-08 修改：每个SKU改用与"装载统计"一致的 stat-card 卡片样式（label 行 + value 行）
+  // 2026-08-08 修改：value 不再按 auto/超量单独上色，字号与颜色都与"装载统计"卡片保持一致（仅靠 color-dot 区分SKU）
+  skus.forEach(s => {
+    const ld = result.loaded[s.id] || 0;
+    const req = result.requested[s.id] || 0;
+    const valueText = s.auto ? ('最大可装 ' + ld + ' 件') : (ld + '/' + req);
+    const item = document.createElement('div');
+    item.className = 'load-list-item stat-card';
+    item.innerHTML =
+      '<div class="label"><span class="color-dot" style="background:' + s.color + '"></span>' + s.name + '</div>' +
+      '<div class="value">' + valueText + '</div>';
+    listEl.appendChild(item);
+  });
+}
+
+// ====== 导出 ======
+document.getElementById('btnShot').onclick = () => {
+  if (!currentResult) { showToast('请先计算装载方案'); return; }
+  renderer.render(scene, camera);
+  const link = document.createElement('a');
+  link.download = '装载方案截图.png';
+  link.href = renderer.domElement.toDataURL('image/png');
+  link.click();
+  showToast('截图已导出');
+};
+document.getElementById('btnCsv').onclick = () => {
+  if (!currentResult) { showToast('请先计算装载方案'); return; }
+  let csv = 'SKU,装入数量,请求数量,单件重量kg\n';
+  // 2026-08-08 修改：自动SKU的"请求数量"列显示"自动"，不再显示估算的尝试数量
+  skus.forEach(s => {
+    const ld = currentResult.loaded[s.id] || 0;
+    const req = s.auto ? '自动' : (currentResult.requested[s.id] || 0);
+    csv += s.name + ',' + ld + ',' + req + ',' + s.weight + '\n';
+  });
+  csv += '\n明细,SKU,X(mm),Y(mm),Z(mm),长(mm),宽(mm),高(mm)\n';
+  currentResult.placements.forEach(p => {
+    csv += p.name + ',' + Math.round(p.x) + ',' + Math.round(p.y) + ',' + Math.round(p.z) + ',' +
+           Math.round(p.l) + ',' + Math.round(p.w) + ',' + Math.round(p.h) + '\n';
+  });
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const link = document.createElement('a');
+  link.download = '装载清单.csv';
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  showToast('清单已导出');
+};
+
+// ====== AI 解释装载结果 ======
+// 2026-08-08 新增：AI 接口配置读写。因本页面通过 file:// 双击直接打开，
+// 浏览器出于 CORS 限制无法用 fetch 读取本地 config.json 文件，
+// 故改为页面内设置弹窗，配置保存在浏览器 localStorage（仅本机可见）
+const AI_CONFIG_KEY = 'stowit3d_ai_config';
+function loadAiConfig() {
+  try { return JSON.parse(localStorage.getItem(AI_CONFIG_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveAiConfig(cfg) {
+  localStorage.setItem(AI_CONFIG_KEY, JSON.stringify(cfg));
+}
+
+const aiSettingsOverlay = document.getElementById('aiSettingsOverlay');
+const btnAiSettings = document.getElementById('btnAiSettings');
+const btnAiSettingsCancel = document.getElementById('btnAiSettingsCancel');
+const btnAiSettingsSave = document.getElementById('btnAiSettingsSave');
+const aiConfigHint = document.getElementById('aiConfigHint');
+
+function refreshAiConfigHint() {
+  const cfg = loadAiConfig();
+  aiConfigHint.textContent = (cfg.baseUrl && cfg.apiKey)
+    ? '已配置：' + cfg.baseUrl + ' · ' + (cfg.model || '未指定模型')
+    : '尚未配置 AI 接口，点击右上角 ⚙ 配置';
+}
+function openAiSettings() {
+  const cfg = loadAiConfig();
+  document.getElementById('aiBaseUrl').value = cfg.baseUrl || '';
+  document.getElementById('aiApiKey').value = cfg.apiKey || '';
+  document.getElementById('aiModel').value = cfg.model || '';
+  aiSettingsOverlay.classList.remove('hidden');
+}
+function closeAiSettings() { aiSettingsOverlay.classList.add('hidden'); }
+btnAiSettings.onclick = openAiSettings;
+btnAiSettingsCancel.onclick = closeAiSettings;
+aiSettingsOverlay.addEventListener('click', e => {
+  if (e.target === aiSettingsOverlay) closeAiSettings();
+});
+btnAiSettingsSave.onclick = () => {
+  const baseUrl = document.getElementById('aiBaseUrl').value.trim().replace(/\/$/, '');
+  const apiKey = document.getElementById('aiApiKey').value.trim();
+  const model = document.getElementById('aiModel').value.trim();
+  if (!baseUrl || !apiKey) { showToast('请填写 Base URL 和 API Key'); return; }
+  saveAiConfig({ baseUrl, apiKey, model });
+  refreshAiConfigHint();
+  closeAiSettings();
+  showToast('AI 接口配置已保存');
+};
+refreshAiConfigHint();
+
+// 2026-08-08 新增：AI 对话记录与消息渲染
+const aiChatLog = document.getElementById('aiChatLog');
+let aiChatHistory = []; // [{role:'user'|'assistant', content:string}]
+
+function appendAiMsg(role, text) {
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + (role === 'user' ? 'ai-msg-user' : role === 'error' ? 'ai-msg-error' : 'ai-msg-bot');
+  div.textContent = text;
+  aiChatLog.appendChild(div);
+  aiChatLog.scrollTop = aiChatLog.scrollHeight;
+}
+
+// 把当前装载结果整理成一段结构化文本，作为AI的上下文
+function buildResultSummary() {
+  if (!currentResult) return null;
+  const r = currentResult;
+  const c = r.container;
+  const volUtil = (r.cargoVol / r.contVol * 100).toFixed(1);
+  const wtUtil = (r.totalWeight / c.maxWeight * 100).toFixed(1);
+  let lines = [];
+  lines.push('集装箱：' + c.name + '，内径 ' + c.l + '×' + c.w + '×' + c.h + ' mm，最大载重 ' + c.maxWeight + ' kg');
+  lines.push('体积利用率 ' + volUtil + '%，重量利用率 ' + wtUtil + '%，总件数 ' + r.placements.length + '，总重 ' + r.totalWeight.toFixed(1) + ' kg');
+  if (r.outOfBoundsCount > 0) lines.push('警告：有 ' + r.outOfBoundsCount + ' 件货物超出集装箱边界');
+  lines.push('各SKU装载情况：');
+  skus.forEach(s => {
+    const ld = r.loaded[s.id] || 0;
+    const req = r.requested[s.id] || 0;
+    lines.push('- ' + s.name + '（' + s.l + '×' + s.w + '×' + s.h + ' mm，' + s.weight + ' kg/件）：' +
+      (s.auto ? '自动计算，最大可装 ' + ld + ' 件' : '装入 ' + ld + ' / 请求 ' + req + ' 件'));
+  });
+  return lines.join('\n');
+}
+
+// 2026-08-08 新增：调用兼容 OpenAI 格式的 /chat/completions 接口（可指向第三方中转/Claude等）
+async function callAiChat(messages) {
+  const cfg = loadAiConfig();
+  if (!cfg.baseUrl || !cfg.apiKey) throw new Error('尚未配置 AI 接口，请点击 ⚙ 进行配置');
+  const resp = await fetch(cfg.baseUrl + '/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + cfg.apiKey,
+    },
+    body: JSON.stringify({
+      model: cfg.model || 'gpt-4o',
+      messages,
+    }),
+  });
+  if (!resp.ok) {
+    const errText = await resp.text().catch(() => '');
+    throw new Error('接口请求失败 (' + resp.status + ')：' + errText.slice(0, 200));
+  }
+  const data = await resp.json();
+  const content = data?.choices?.[0]?.message?.content;
+  if (!content) throw new Error('接口返回格式异常，未获取到回复内容');
+  return content;
+}
+
+const SYSTEM_PROMPT = '你是集装箱装载方案分析助手。用户会给你装载计算的结构化结果，请用简洁的中文分析装载效率、空间利用情况、是否有优化空间，并直接回答用户的问题。';
+
+async function sendAiRequest(userText, includeSummary) {
+  const summary = buildResultSummary();
+  if (includeSummary && !summary) { showToast('请先计算装载方案'); return; }
+
+  let userContent = userText;
+  if (includeSummary) userContent = '以下是本次装载计算结果：\n' + summary + '\n\n' + (userText || '请解释这份装载结果，指出效率和潜在优化点。');
+
+  appendAiMsg('user', userText || 'AI 解释本次结果');
+  aiChatHistory.push({ role: 'user', content: userContent });
+
+  const thinkingDiv = document.createElement('div');
+  thinkingDiv.className = 'ai-msg ai-msg-bot';
+  thinkingDiv.textContent = 'AI 正在思考...';
+  aiChatLog.appendChild(thinkingDiv);
+  aiChatLog.scrollTop = aiChatLog.scrollHeight;
+
+  try {
+    const reply = await callAiChat([{ role: 'system', content: SYSTEM_PROMPT }, ...aiChatHistory]);
+    thinkingDiv.remove();
+    appendAiMsg('assistant', reply);
+    aiChatHistory.push({ role: 'assistant', content: reply });
+  } catch (err) {
+    thinkingDiv.remove();
+    appendAiMsg('error', String(err.message || err));
+    aiChatHistory.pop(); // 请求失败，撤销刚才push的用户消息，避免污染上下文
+  }
+}
+
+// 2026-08-08 移除："AI 解释本次结果"按钮已去掉，不再单独绑定该点击事件
+// document.getElementById('btnAiExplain').onclick = () => sendAiRequest('', true);
+document.getElementById('btnAiAsk').onclick = () => {
+  const input = document.getElementById('aiQuestionInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  sendAiRequest(text, !!currentResult);
+};
+// 2026-08-08 修改：提问框改为 textarea 后，Enter 发送、Shift+Enter 换行（原单行 input 直接 Enter 发送即可）
+document.getElementById('aiQuestionInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    document.getElementById('btnAiAsk').click();
+  }
+});
+
+// ====== Toast ======
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.style.display = 'none', 2800);
+}
+
+// ====== 初始化 ======
+initThree();
+</script>
+</body>
+</html>

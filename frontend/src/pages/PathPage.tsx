@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 
 import { pathApi } from '../services/api'
@@ -33,6 +34,7 @@ export default function PathPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
+      <Link to="/tools" title="返回工具库" aria-label="返回工具库" className="icon-button mb-5"><ArrowLeft size={19} /></Link>
       <h1 className="mb-1 text-2xl font-semibold text-slate-100">{path.title}</h1>
       <p className="mb-6 text-sm text-slate-400">基于你的引导结果自动生成</p>
 

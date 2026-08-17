@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ArrowLeft } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { captureApi } from '../services/api'
 import type { Concept, Domain } from '../lib/types'
@@ -50,6 +52,7 @@ export default function CapturePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
+      <Link to="/tools" title="返回工具库" aria-label="返回工具库" className="icon-button mb-5"><ArrowLeft size={19} /></Link>
       <h1 className="mb-1 text-2xl font-semibold text-slate-100">内容捕获</h1>
       <p className="mb-6 text-sm text-slate-400">
         粘贴文章，Artifex 会自动提取关键概念、生成记忆卡片。

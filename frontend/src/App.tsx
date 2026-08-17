@@ -6,11 +6,14 @@ import { useAuthStore } from './stores/authStore'
 import AuthPage from './pages/AuthPage'
 import CapturePage from './pages/CapturePage'
 import ChatPage from './pages/ChatPage'
+import ContainerLoadingCalculatorPage from './pages/ContainerLoadingCalculatorPage'
 import DashboardPage from './pages/DashboardPage'
 import Layout from './pages/Layout'
 import KnowledgePage from './pages/KnowledgePage'
 import OnboardingPage from './pages/OnboardingPage'
 import PathPage from './pages/PathPage'
+import ToolLibraryPage from './pages/ToolLibraryPage'
+import ToolPage from './pages/ToolPage'
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((state) => state.accessToken)
@@ -41,8 +44,13 @@ export default function App() {
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/knowledge" element={<KnowledgePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/capture" element={<CapturePage />} />
-          <Route path="/path" element={<PathPage />} />
+          <Route path="/tools" element={<ToolLibraryPage />} />
+          <Route path="/tools/learning-path" element={<PathPage />} />
+          <Route path="/tools/content-capture" element={<CapturePage />} />
+          <Route path="/tools/container-loading-calculator" element={<ContainerLoadingCalculatorPage />} />
+          <Route path="/tools/:toolId" element={<ToolPage />} />
+          <Route path="/capture" element={<Navigate to="/tools/content-capture" replace />} />
+          <Route path="/path" element={<Navigate to="/tools/learning-path" replace />} />
         </Route>
         <Route path="/" element={<Navigate to="/chat" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
