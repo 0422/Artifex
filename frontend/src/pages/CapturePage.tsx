@@ -52,7 +52,7 @@ export default function CapturePage() {
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="mb-1 text-2xl font-semibold text-slate-100">内容捕获</h1>
       <p className="mb-6 text-sm text-slate-400">
-        粘贴文章，灵犀会自动提取关键概念、生成记忆卡片。
+        粘贴文章，Artifex 会自动提取关键概念、生成记忆卡片。
       </p>
 
       <textarea

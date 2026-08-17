@@ -6,7 +6,14 @@ import type {
   CaptureSourceType,
   Domain,
   LearningPath,
+  KnowledgeCategory,
+  KnowledgeCategoryInput,
   OnboardingQuestion,
+  DashboardOverview,
+  DashboardSessionDetail,
+  DashboardSessionPage,
+  Scenario,
+  ScenarioInput,
   User,
 } from '../lib/types'
 
@@ -58,4 +65,43 @@ export const pathApi = {
       .then((r) => r.data),
 
   getCurrent: () => http.get<LearningPath>('/path/current').then((r) => r.data),
+}
+
+// ---- Scenarios ----
+export const scenarioApi = {
+  list: (includeInactive = false, filters?: { domain?: string; category_id?: string; q?: string }) =>
+    http.get<Scenario[]>('/scenarios', { params: { include_inactive: includeInactive, ...filters } }).then((r) => r.data),
+
+  create: (input: ScenarioInput) =>
+    http.post<Scenario>('/scenarios', input).then((r) => r.data),
+
+  update: (id: string, input: Partial<ScenarioInput>) =>
+    http.put<Scenario>(`/scenarios/${id}`, input).then((r) => r.data),
+
+  remove: (id: string) => http.delete(`/scenarios/${id}`),
+}
+
+// ---- Knowledge library ----
+export const knowledgeApi = {
+  categoryTree: () =>
+    http.get<KnowledgeCategory[]>('/knowledge/categories/tree').then((r) => r.data),
+
+  createCategory: (input: KnowledgeCategoryInput) =>
+    http.post<KnowledgeCategory>('/knowledge/categories', input).then((r) => r.data),
+
+  updateCategory: (id: string, input: Partial<KnowledgeCategoryInput>) =>
+    http.put<KnowledgeCategory>(`/knowledge/categories/${id}`, input).then((r) => r.data),
+
+  archiveCategory: (id: string) => http.delete(`/knowledge/categories/${id}`),
+}
+
+// ---- Dashboard ----
+export const dashboardApi = {
+  overview: () => http.get<DashboardOverview>('/dashboard/overview').then((r) => r.data),
+
+  sessions: (page = 1, pageSize = 20) =>
+    http.get<DashboardSessionPage>('/dashboard/sessions', { params: { page, page_size: pageSize } }).then((r) => r.data),
+
+  session: (id: string) =>
+    http.get<DashboardSessionDetail>(`/dashboard/sessions/${id}`).then((r) => r.data),
 }

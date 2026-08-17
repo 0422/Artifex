@@ -11,8 +11,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: '灵犀 LinguaLearner',
-        short_name: '灵犀',
+        name: 'Artifex',
+        short_name: 'Artifex',
         description: '全领域AI学习伙伴',
         theme_color: '#6366f1',       // Indigo-500
         background_color: '#0f172a',  // Slate-900
@@ -43,9 +43,6 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-      },
-      '/ws': {
-        target: 'ws://localhost:8000',
         ws: true,
       },
     },

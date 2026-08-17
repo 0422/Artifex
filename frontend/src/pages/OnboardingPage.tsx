@@ -37,7 +37,7 @@ export default function OnboardingPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
       <h1 className="mb-2 text-2xl font-semibold text-slate-100">5 分钟引导</h1>
-      <p className="mb-8 text-sm text-slate-400">回答几个问题，灵犀会为你生成专属学习起点报告和路径。</p>
+      <p className="mb-8 text-sm text-slate-400">回答几个问题，Artifex 会为你生成专属学习起点报告和路径。</p>
 
       <div className="space-y-6">
         {questions.map((q) => (

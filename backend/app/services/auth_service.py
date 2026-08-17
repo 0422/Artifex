@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.security import hash_password, verify_password
 from app.models.user import User, UserProfile
 from app.schemas.auth import RegisterRequest
+from app.services.scenario_service import create_seed_scenarios
 
 
 class EmailAlreadyRegisteredError(Exception):
@@ -38,6 +39,7 @@ async def register_user(db: AsyncSession, payload: RegisterRequest) -> User:
     await db.flush()
 
     db.add(UserProfile(user_id=user.id))
+    await create_seed_scenarios(db, user.id)
     await db.commit()
     await db.refresh(user)
     return user
