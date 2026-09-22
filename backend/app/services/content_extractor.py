@@ -24,7 +24,8 @@ def _truncate(text: str) -> str:
 async def extract_from_url(url: str) -> str:
     try:
         async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
-            resp = await client.get(url, headers={"User-Agent": "Mozilla/5.0 (LinguaLearner)"})
+            # 2026-09-22 项目更名为 Artifex，抓取 UA 中的产品名同步更新（原 LinguaLearner）
+            resp = await client.get(url, headers={"User-Agent": "Mozilla/5.0 (Artifex)"})
             resp.raise_for_status()
     except httpx.HTTPError as exc:
         raise ContentExtractionError(f"URL 抓取失败: {exc}") from exc

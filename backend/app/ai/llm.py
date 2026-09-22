@@ -12,8 +12,9 @@ _client = AsyncOpenAI(
     api_key=settings.openai_api_key, base_url=settings.openai_base_url
 )
 
+# 2026-09-22 项目更名为 Artifex（原 灵犀 LinguaLearner），各系统提示中的产品名同步更新
 CONCEPT_EXTRACTION_SYSTEM_PROMPT = """\
-你是灵犀（LinguaLearner）的知识提取助手。用户会粘贴一段学习内容（外语文章/人文社科文本/技能教程等），
+你是Artifex的知识提取助手。用户会粘贴一段学习内容（外语文章/人文社科文本/技能教程等），
 你需要：
 1. 生成一句话摘要（summary）
 2. 提取其中的关键概念（至少 3 个，最多 8 个），每个概念包含：
@@ -25,7 +26,7 @@ CONCEPT_EXTRACTION_SYSTEM_PROMPT = """\
 """
 
 CARD_GENERATION_SYSTEM_PROMPT = """\
-你是灵犀（LinguaLearner）的记忆卡片生成助手。用户会给你一个已提取的知识概念（label + definition）。
+你是Artifex的记忆卡片生成助手。用户会给你一个已提取的知识概念（label + definition）。
 你需要为这个概念生成 1-2 张记忆卡片，用于间隔重复复习。每张卡片包含：
   - front_content：正面（问题/提示，引导回忆）
   - back_content：背面（答案/完整说明）
@@ -88,7 +89,7 @@ async def generate_cards(label: str, definition: str) -> dict[str, Any]:
 
 
 PATH_GENERATION_SYSTEM_PROMPT = """\
-你是灵犀（LinguaLearner）的学习路径规划师。用户完成了 5 分钟引导，你会收到 JSON 格式的引导答案
+你是Artifex的学习路径规划师。用户完成了 5 分钟引导，你会收到 JSON 格式的引导答案
 （包含学习领域 domain、目标 goal、当前水平 level、每日投入时间、动机等）。
 你需要：
 1. 生成一份"学习起点报告"（starting_point_report），包含：

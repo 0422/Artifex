@@ -10,7 +10,7 @@
 - 路由设计（React Router）
 - 状态管理（TanStack Query）
 - 组件架构
-- UI设计系统（灵犀设计规范）
+- UI设计系统（Artifex 设计规范）
 - API请求封装
 - 性能优化策略
 

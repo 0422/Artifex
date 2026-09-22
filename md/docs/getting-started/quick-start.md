@@ -1,4 +1,4 @@
-# 灵犀（LinguaLearner）— 项目初始化指南
+# Artifex — 项目初始化指南
 
 **日期**：2026-08-09
 **基于**：产品需求规格书 v1.0 + 技术架构设计 v1.0
@@ -271,8 +271,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: '灵犀 LinguaLearner',
-        short_name: '灵犀',
+        name: 'Artifex',
+        short_name: 'Artifex',
         description: '全领域AI学习伙伴',
         theme_color: '#6366f1',       // Indigo-500
         background_color: '#0f172a',  // Slate-900
@@ -375,7 +375,7 @@ cd ..
 `backend/.env.example`：
 ```ini
 # ========== 应用 ==========
-APP_NAME=灵犀 LinguaLearner
+APP_NAME=Artifex
 APP_ENV=development
 DEBUG=true
 SECRET_KEY=change-me-in-production-use-openssl-rand-hex-32
@@ -421,7 +421,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # 应用
-    app_name: str = "灵犀 LinguaLearner"
+    app_name: str = "Artifex"
     app_env: str = "development"
     debug: bool = True
     secret_key: str
@@ -891,4 +891,4 @@ docker compose ps        # 查看状态
 
 ---
 
-> 以上是灵犀项目"从零到能跑"的完整初始化指南。环境搭好后，Swagger UI 能看到空 API 列表、前端能看到空白的 Vite 页面，就是脚手架就绪的信号。接下来按 M1 里程碑——先做 P0-1（内容捕获）和 P0-5（学习路径）的业务代码。
+> 以上是 Artifex 项目"从零到能跑"的完整初始化指南。环境搭好后，Swagger UI 能看到空 API 列表、前端能看到空白的 Vite 页面，就是脚手架就绪的信号。接下来按 M1 里程碑——先做 P0-1（内容捕获）和 P0-5（学习路径）的业务代码。

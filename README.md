@@ -1,4 +1,4 @@
-# 灵犀（LinguaLearner）
+# Artifex
 
 > **全领域AI学习伙伴** — 从内容捕获到智能复习，一个 Agent 管三个世界。
 

@@ -1,4 +1,4 @@
-# 灵犀（LinguaLearner）— Nanobot 集成架构设计
+# Artifex — Nanobot 集成架构设计
 
 **日期**：2026-08-14
 **基于**：产品需求规格书 v1.0 / 技术架构设计 v1.1
@@ -9,7 +9,7 @@
 
 ## 0. 文档目的
 
-本文档系统化分析灵犀项目中所有 LLM 交互点，评估哪些适合通过 nanobot（HKUDS 超轻量 AI Agent 框架）处理，哪些应保留在现有 FastAPI 架构中，并给出最终集成方案与实现细节。
+本文档系统化分析 Artifex 项目中所有 LLM 交互点，评估哪些适合通过 nanobot（HKUDS 超轻量 AI Agent 框架）处理，哪些应保留在现有 FastAPI 架构中，并给出最终集成方案与实现细节。
 
 **核心结论**：不引入 nanobot 作为独立服务，而是在 FastAPI 内部自建轻量 Agent Loop 模块，复用现有 LLM Router 和数据基础设施。nanobot 的源码（~4000 行）作为 Agent Loop 设计参考。
 
@@ -30,7 +30,7 @@
 
 ### 1.2 核心能力
 
-| 能力 | 说明 | 灵犀是否已有等价物 |
+| 能力 | 说明 | Artifex 是否已有等价物 |
 |------|------|:--:|
 | **Agent Loop** | LLM 自主多步推理 + 工具调用循环 | ❌ 无（需新增） |
 | **Skills 系统** | Python 函数注册为可被 LLM 调用的工具 | ❌ 无（需新增） |
@@ -64,11 +64,11 @@ nanobot 的核心是 Agent Loop——LLM 在推理过程中可以自主决定调
 
 ---
 
-## 2. 灵犀 LLM 交互点全景清单
+## 2. Artifex LLM 交互点全景清单
 
 ### 2.1 交互点枚举
 
-基于产品需求规格书和技术架构设计，灵犀共有 **13 个 LLM 交互点**：
+基于产品需求规格书和技术架构设计，Artifex 共有 **13 个 LLM 交互点**：
 
 | # | 交互点 | 所属需求 | 所属模块 | LLM 交互模式 | 延迟要求 |
 |---|--------|---------|---------|-------------|---------|
@@ -200,7 +200,7 @@ nanobot 的核心是 Agent Loop——LLM 在推理过程中可以自主决定调
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        灵犀系统架构                              │
+│                        Artifex                                   │
 │                                                                 │
 │  ┌──────────────┐         ┌──────────────────────┐             │
 │  │  PWA 前端     │ ←WS/HTTP→│     FastAPI 后端      │             │
@@ -237,7 +237,7 @@ nanobot 的核心是 Agent Loop——LLM 在推理过程中可以自主决定调
 
 **劣势**：
 - 多一个服务进程，多一层 HTTP 调用延迟（~20-50ms/次）
-- nanobot 的 Cron/Memory/Provider 与灵犀现有 Celery/Redis/LLM Router **大量功能重叠**
+- nanobot 的 Cron/Memory/Provider 与 Artifex 现有 Celery/Redis/LLM Router **大量功能重叠**
 - 双 AI 编排层维护成本高——两个系统都要维护 LLM 路由、成本追踪、错误处理
 - Skills 通过 HTTP 调用 FastAPI，增加网络开销和故障点
 
@@ -245,7 +245,7 @@ nanobot 的核心是 Agent Loop——LLM 在推理过程中可以自主决定调
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        灵犀系统架构                              │
+│                        Artifex                                   │
 │                                                                 │
 │  ┌──────────────┐         ┌──────────────────────────────────┐ │
 │  │  PWA 前端     │ ←WS/HTTP→│         FastAPI 后端              │ │
@@ -304,7 +304,7 @@ nanobot 的核心是 Agent Loop——LLM 在推理过程中可以自主决定调
 | 错误处理 | 跨服务边界复杂 | 进程内统一处理 |
 | 扩展性 | 中 | 高 |
 
-**决策**：采用方案 B。核心原因——灵犀已有完整的 AI 基础设施（FastAPI + Celery + Redis + LLM Router + Cost Tracker），引入 nanobot 不是填补空白，而是引入功能重叠的第二个 AI 编排层。
+**决策**：采用方案 B。核心原因——Artifex 已有完整的 AI 基础设施（FastAPI + Celery + Redis + LLM Router + Cost Tracker），引入 nanobot 不是填补空白，而是引入功能重叠的第二个 AI 编排层。
 
 ---
 
@@ -331,7 +331,7 @@ backend/app/ai/
 
 """
 轻量 Agent Loop 引擎。
-参考 nanobot 的 Agent Loop 设计，但完全复用灵犀现有基础设施。
+参考 nanobot 的 Agent Loop 设计，但完全复用 Artifex 现有基础设施。
 核心流程：LLM 推理 → 判断是否调用工具 → 调用 → 注入结果 → 继续推理。
 """
 
@@ -805,7 +805,7 @@ Agent Loop 各任务的 System Prompt。
 每个 prompt 定义 Agent 的角色、任务目标、可用工具使用规则。
 """
 
-DAILY_DIGEST_PROMPT = """你是灵犀学习平台的日终小结助手。
+DAILY_DIGEST_PROMPT = """你是 Artifex 学习平台的日终小结助手。
 
 你的任务是为用户生成今日学习小结，步骤如下：
 1. 调用 get_learning_events 获取用户今日所有学习事件
@@ -826,7 +826,7 @@ DAILY_DIGEST_PROMPT = """你是灵犀学习平台的日终小结助手。
 - 语气温暖但不过度夸张
 """
 
-ONBOARDING_PROMPT = """你是灵犀学习平台的学习顾问。
+ONBOARDING_PROMPT = """你是 Artifex 学习平台的学习顾问。
 
 你的任务是通过 5 分钟对话了解新用户的学习目标。对话规则：
 1. 每次只问一个问题，自然引导对话
@@ -847,7 +847,7 @@ ONBOARDING_PROMPT = """你是灵犀学习平台的学习顾问。
 - 如果用户表达不确定，给出选项帮助决策
 """
 
-PATH_ADAPTIVE_PROMPT = """你是灵犀学习平台的路径调整顾问。
+PATH_ADAPTIVE_PROMPT = """你是 Artifex 学习平台的路径调整顾问。
 
 触发条件：用户 MHI 下降或连续偏离学习计划。
 
@@ -1248,7 +1248,7 @@ Agent Loop 日均额外成本/用户:
 
 ### 决策依据
 
-1. **功能重叠**：nanobot 的 Cron/Memory/Provider 与灵犀现有 Celery/Redis/LLM Router 大量重叠，引入后等于维护双 AI 编排层
+1. **功能重叠**：nanobot 的 Cron/Memory/Provider 与 Artifex 现有 Celery/Redis/LLM Router 大量重叠，引入后等于维护双 AI 编排层
 2. **成本可控**：自建 Agent Loop ~200 行 Python，参考 nanobot 源码实现，完全可控
 3. **零网络开销**：工具函数进程内直调，无 HTTP 调用延迟
 4. **复用现有设施**：LLM Router、Cost Tracker、数据库、Celery 全部复用

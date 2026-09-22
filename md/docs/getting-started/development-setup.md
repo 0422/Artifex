@@ -78,7 +78,7 @@ copy .env.example .env
 poetry run uvicorn app.main:app --reload
 
 # 验证：
-#   浏览器访问 http://localhost:8000/health   应返回 {"status":"ok","app":"灵犀 LinguaLearner"}
+#   浏览器访问 http://localhost:8000/health   应返回 {"status":"ok","app":"Artifex"}
 #   浏览器访问 http://localhost:8000/docs     应看到 FastAPI 自动生成的 Swagger 文档（暂时是空的）
 ```
 
@@ -170,7 +170,7 @@ cd ..
 # ====== 7. 验证 ======
 pnpm run typecheck   # 应无报错，说明配置文件类型正确
 pnpm run dev          # 启动开发服务器
-# 浏览器访问 http://localhost:5173  应看到深色背景 + "灵犀 LinguaLearner" 靛蓝色标题
+# 浏览器访问 http://localhost:5173  应看到深色背景 + "Artifex" 靛蓝色标题
 # 确认 Tailwind、PWA 插件都正常生效（终端无报错）
 ```
 
