@@ -36,7 +36,7 @@ echo "Docker Compose: $(docker compose version 2>&1)"
 ## 2. 项目目录搭建
 
 ```file:基于架构文档第5章
-lingua-learner/                    # 项目根目录
+Artifex/                         # 项目根目录
 │
 ├── frontend/                      # React PWA — Vite + TypeScript
 │   ├── public/                    # 静态资源（favicon、PWA manifest 图标）
@@ -156,12 +156,12 @@ lingua-learner/                    # 项目根目录
 └── README.md
 ```
 
-> 项目脚手架搭建 —— 逐步命令——以下命令在项目根目录 `lingua-learner/` 下执行。
+> 项目脚手架搭建 —— 逐步命令——以下命令在项目根目录 `Artifex/` 下执行。
 
 ### 阶段一：创建项目根目录 + Git 初始化
 
 ```bash
-mkdir lingua-learner && cd lingua-learner
+mkdir Artifex && cd Artifex
 git init
 
 # 根目录 .gitignore
@@ -343,7 +343,7 @@ body {
 ### 阶段三：后端项目 — FastAPI + Poetry
 
 ```bash
-cd lingua-learner    # 回到项目根目录
+cd Artifex    # 回到项目根目录
 
 # 用 Poetry 初始化 Python 项目
 poetry new backend --name app
@@ -508,7 +508,7 @@ async def health_check():
 ### 阶段四：Docker 全家桶 — 本地开发基础设施
 
 ```bash
-cd lingua-learner    # 项目根目录
+cd Artifex    # 项目根目录
 
 # 创建 docker 相关目录
 mkdir -p docker/postgres docker/nginx
@@ -758,7 +758,7 @@ jobs:
 
 ## 4. 一键启动开发环境
 
-在项目根目录 `lingua-learner/` 下执行：
+在项目根目录 `Artifex/` 下执行：
 
 ```bash
 # ====== 第一次启动 ======

@@ -1,14 +1,18 @@
-import { BarChart3, Languages, Library, LogOut, Wrench } from 'lucide-react'
+import { BarChart3, Cpu, Languages, Library, LogOut, Wrench } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 
 import { authApi } from '../services/api'
+// 2026-09-29 产品名改由 constants.ts 的 PRODUCT_NAME 统一提供
+import { PRODUCT_NAME } from '../lib/constants'
 import { useAuthStore } from '../stores/authStore'
 
 const NAV = [
   { to: '/chat', label: '情境对话', icon: Languages },
   { to: '/knowledge', label: '知识库', icon: Library },
   { to: '/dashboard', label: '仪表盘', icon: BarChart3 },
+  // 2026-09-30 新增边缘设备管理模块入口
+  { to: '/edge-devices', label: '边缘管理', icon: Cpu },
   { to: '/tools', label: '工具库', icon: Wrench },
 ]
 
@@ -56,7 +60,7 @@ export default function Layout() {
       <aside style={{ width: sidebarWidth }} className={`relative hidden shrink-0 flex-col border-r border-zinc-800 bg-zinc-950 md:flex ${resizing ? '' : 'transition-[width]'}`}>
         <div className={`flex h-14 items-center border-b border-zinc-800 ${collapsed ? 'justify-center px-2' : 'px-4'}`}>
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-teal-500 text-sm font-semibold text-teal-300">李</span>
-          {!collapsed && <span className="ml-3 whitespace-nowrap font-semibold">Artifex</span>}
+          {!collapsed && <span className="ml-3 whitespace-nowrap font-semibold">{PRODUCT_NAME}</span>}
         </div>
         <nav className="flex-1 space-y-1 p-3">
           {NAV.map(({ to, label, icon: Icon }) => (

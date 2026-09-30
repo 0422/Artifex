@@ -1,8 +1,15 @@
 __pycache__/
 *.pyc
-.env
+**/.env
 config.py
 .vscode/
 .idea/
 *.log
 *.db
+
+# 2026-09-30 边缘设备管理模块：固件仓库只保留目录占位，二进制不入库
+backend/firmware/*
+!backend/firmware/.gitkeep
+
+# 2026-09-30 雅思口语抓取脚本 dump 的中间 HTML
+backend/dump_part*.html

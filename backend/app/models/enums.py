@@ -84,3 +84,20 @@ class PathMilestoneStatus(str, enum.Enum):
     COMPLETED = "completed"
     CURRENT = "current"
     LOCKED = "locked"
+
+
+# 2026-09-30 新增边缘设备管理模块：设备在线状态。unknown = 档案刚建、尚未扫描过。
+class EdgeDeviceStatus(str, enum.Enum):
+    ONLINE = "online"
+    OFFLINE = "offline"
+    UNKNOWN = "unknown"
+
+
+# 2026-09-30 新增边缘设备管理模块：OTA 任务生命周期。canceled 由用户手动取消，
+# failed 覆盖设备不支持 OTA / 设备不可达 / 校验不通过等各类失败。
+class EdgeOtaTaskStatus(str, enum.Enum):
+    PENDING = "pending"
+    RUNNING = "running"
+    SUCCESS = "success"
+    FAILED = "failed"
+    CANCELED = "canceled"

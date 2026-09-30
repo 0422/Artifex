@@ -32,10 +32,13 @@ scenario_category_links = Table(
 class KnowledgeCategory(UUIDMixin, TimestampMixin, Base):
     __tablename__ = "knowledge_categories"
 
-    user_id: Mapped[uuid.UUID] = mapped_column(
+    # 2026-09-30 雅思口语真题库为全局共享：user_id 为空表示官方题库，
+    # 所有用户可见但不可改；用户自建分类仍归属本人，行为不变。
+    # 注意：需要挂载到共享父分类下的私有分类，其 parent_id 可指向 user_id 为空的行。
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,
         index=True,
     )
     parent_id: Mapped[uuid.UUID | None] = mapped_column(

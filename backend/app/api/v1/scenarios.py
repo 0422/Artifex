@@ -52,7 +52,13 @@ async def update_scenario(
     scenario = await scenario_service.get_scenario(db, scenario_id, current_user.id)
     if scenario is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="场景不存在")
-    scenario = await scenario_service.update_scenario(db, scenario, payload)
+    try:
+        scenario = await scenario_service.update_scenario(db, scenario, payload)
+    except scenario_service.SharedReadOnlyError as error:
+        # 2026-09-30 官方共享真题对所有人只读
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=str(error)
+        ) from error
     return ScenarioRead.model_validate(scenario)
 
 
@@ -65,5 +71,10 @@ async def delete_scenario(
     scenario = await scenario_service.get_scenario(db, scenario_id, current_user.id)
     if scenario is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="场景不存在")
-    await scenario_service.deactivate_scenario(db, scenario)
+    try:
+        await scenario_service.deactivate_scenario(db, scenario)
+    except scenario_service.SharedReadOnlyError as error:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=str(error)
+        ) from error
     return Response(status_code=status.HTTP_204_NO_CONTENT)

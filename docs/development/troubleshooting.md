@@ -53,5 +53,5 @@
 **寻求帮助**:
 
 - 📧 邮件: support@lingualearner.com 🚧
-- 💬 讨论区: https://github.com/your-repo/lingua-learner/discussions 🚧
-- 🐛 问题反馈: https://github.com/your-repo/lingua-learner/issues 🚧
+- 💬 讨论区: https://github.com/0422/Artifex/discussions 🚧
+- 🐛 问题反馈: https://github.com/0422/Artifex/issues 🚧

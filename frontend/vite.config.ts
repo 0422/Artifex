@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+// 2026-09-29 PWA manifest 的产品名改由 constants.ts 的 PRODUCT_NAME 统一提供
+import { PRODUCT_NAME } from './src/lib/constants'
 
 export default defineConfig({
   plugins: [
@@ -11,8 +13,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Artifex',
-        short_name: 'Artifex',
+        name: PRODUCT_NAME,
+        short_name: PRODUCT_NAME,
         description: '全领域AI学习伙伴',
         theme_color: '#6366f1',       // Indigo-500
         background_color: '#0f172a',  // Slate-900

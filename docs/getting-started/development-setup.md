@@ -12,7 +12,7 @@ poetry --version
 poetry config virtualenvs.create false
 
 # ====== 2. 创建项目根目录 + Git 初始化 ======
-mkdir lingua-learner && cd lingua-learner
+mkdir Artifex && cd Artifex
 git init
 
 # ====== 3. 用 Poetry 创建 backend 包（会自动生成 pyproject.toml + app/ + tests/） ======
@@ -88,7 +88,7 @@ node --version   # 需 22.x+
 pnpm --version    # 需 9.x+
 
 # ====== 2. 用 Vite 脚手架创建项目 ======
-cd E:\pySpace\lingua-learner
+cd E:\workspace\Artifex
 pnpm create vite frontend --template react-ts
 # 交互式提问：
 #   Which linter to use?          -> 选 ESLint（不选 Oxlint，和后面的 package.json scripts 保持一致）
@@ -180,7 +180,7 @@ docker --version          # 需 26+
 docker compose version
 
 # ====== 2. 创建 Docker 相关目录 ======
-cd E:\pySpace\lingua-learner
+cd E:\workspace\Artifex
 mkdir docker\postgres
 mkdir docker\nginx
 
@@ -241,12 +241,12 @@ docker compose down -v     # 连同数据卷一起删除（会清空数据库/Re
 
 ```file:启动前端、后端、docker
 终端 1 — 后端(在 backend 目录,conda learner 环境已激活):
-  cd E:\pySpace\lingua-learner\backend
+  cd E:\workspace\Artifex\backend
   poetry run uvicorn app.main:app --reload --port 8000
   看到 Application startup complete 就绪。
 
 终端 2 — 前端(在 frontend 目录):
-  cd E:\pySpace\lingua-learner\frontend
+  cd E:\workspace\Artifex\frontend
   pnpm run dev
   看到 Local: http://localhost:5173/ 就绪。
   

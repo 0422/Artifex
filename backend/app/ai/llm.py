@@ -1,9 +1,11 @@
 import json
+from string import Template
 from typing import Any
 
 from openai import AsyncOpenAI
 
 from app.core.config import get_settings
+from app.core.constants import PRODUCT_NAME
 
 settings = get_settings()
 
@@ -12,9 +14,10 @@ _client = AsyncOpenAI(
     api_key=settings.openai_api_key, base_url=settings.openai_base_url
 )
 
-# 2026-09-22 项目更名为 Artifex（原 灵犀 LinguaLearner），各系统提示中的产品名同步更新
-CONCEPT_EXTRACTION_SYSTEM_PROMPT = """\
-你是Artifex的知识提取助手。用户会粘贴一段学习内容（外语文章/人文社科文本/技能教程等），
+# 2026-09-29 系统提示词中的产品名改用 PRODUCT_NAME 注入；
+# 提示词内含大量 JSON 花括号，故用 string.Template 而非 f-string
+CONCEPT_EXTRACTION_SYSTEM_PROMPT = Template("""\
+你是$product_name的知识提取助手。用户会粘贴一段学习内容（外语文章/人文社科文本/技能教程等），
 你需要：
 1. 生成一句话摘要（summary）
 2. 提取其中的关键概念（至少 3 个，最多 8 个），每个概念包含：
@@ -23,17 +26,17 @@ CONCEPT_EXTRACTION_SYSTEM_PROMPT = """\
 
 只返回严格的 JSON，格式如下，不要有任何多余文字：
 {"summary": "...", "concepts": [{"label": "...", "definition": "..."}]}
-"""
+""").substitute(product_name=PRODUCT_NAME)
 
-CARD_GENERATION_SYSTEM_PROMPT = """\
-你是Artifex的记忆卡片生成助手。用户会给你一个已提取的知识概念（label + definition）。
+CARD_GENERATION_SYSTEM_PROMPT = Template("""\
+你是$product_name的记忆卡片生成助手。用户会给你一个已提取的知识概念（label + definition）。
 你需要为这个概念生成 1-2 张记忆卡片，用于间隔重复复习。每张卡片包含：
   - front_content：正面（问题/提示，引导回忆）
   - back_content：背面（答案/完整说明）
 
 只返回严格的 JSON，格式如下，不要有任何多余文字：
 {"cards": [{"front_content": "...", "back_content": "..."}]}
-"""
+""").substitute(product_name=PRODUCT_NAME)
 
 
 def _extract_json_text(text: str) -> str:
@@ -88,8 +91,8 @@ async def generate_cards(label: str, definition: str) -> dict[str, Any]:
     )
 
 
-PATH_GENERATION_SYSTEM_PROMPT = """\
-你是Artifex的学习路径规划师。用户完成了 5 分钟引导，你会收到 JSON 格式的引导答案
+PATH_GENERATION_SYSTEM_PROMPT = Template("""\
+你是$product_name的学习路径规划师。用户完成了 5 分钟引导，你会收到 JSON 格式的引导答案
 （包含学习领域 domain、目标 goal、当前水平 level、每日投入时间、动机等）。
 你需要：
 1. 生成一份"学习起点报告"（starting_point_report），包含：
@@ -114,7 +117,7 @@ PATH_GENERATION_SYSTEM_PROMPT = """\
     "milestones": [{"title": "...", "description": "..."}]
   }
 }
-"""
+""").substitute(product_name=PRODUCT_NAME)
 
 
 async def generate_learning_path(onboarding_answers: dict[str, Any]) -> dict[str, Any]:

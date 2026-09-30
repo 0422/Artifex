@@ -16,10 +16,12 @@ if TYPE_CHECKING:
 class ScenarioCard(UUIDMixin, TimestampMixin, Base):
     __tablename__ = "scenario_cards"
 
-    user_id: Mapped[uuid.UUID] = mapped_column(
+    # 2026-09-30 雅思口语真题库为全局共享：user_id 为空表示官方题库，
+    # 所有用户可见但不可改；用户自建场景仍归属本人，行为不变。
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,
         index=True,
     )
     title: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -37,6 +39,11 @@ class ScenarioCard(UUIDMixin, TimestampMixin, Base):
         String(40), default="role_play", nullable=False, server_default="role_play"
     )
     estimated_minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # 2026-09-30 雅思口语场景库：ielts_part 非空时走雅思专属 prompt 与开场白分支，
+    # 分别对应 Part 1 考官追问 / Part 2 题卡独白 / Part 3 抽象追问。
+    # cue_card 存 Part 2 的题卡正文，UI 单独展示、prompt 单独注入，不混在 description 里。
+    ielts_part: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    cue_card: Mapped[str | None] = mapped_column(Text, nullable=True)
     tags: Mapped[list[str]] = mapped_column(
         JSONB, default=list, nullable=False, server_default="[]"
     )

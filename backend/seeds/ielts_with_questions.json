@@ -1,0 +1,1934 @@
+{
+  "part1": {
+    "个人信息类": [
+      {
+        "title": "Neighbours",
+        "_book": "剑雅14 Test 3",
+        "_raw_title": "Neighbours",
+        "_question_id": "6651",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How often do you see your neighbours? [Why/Why not?]\nDo you invite your neighbours to your home? [Why/Why not?]\nDo you think you are a good neighbour? [Why/Why not?]\nHas a neighbour ever helped you? [Why/Why not?]"
+      },
+      {
+        "title": "Your neighbourhood",
+        "_book": "剑雅14 Test 4",
+        "_raw_title": "Your neighbourhood",
+        "_question_id": "6667",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you like the neighbourhood you live in? [Why/Why not?]\nWhat do you do in your neighbourhood in your free time? [Why/why not?]\nWhat new things would you like to have in your neighbourhood? [Why/Why not?]\nWould you like to live in another neighbourhood in your town or city? [Why/Why not?]"
+      },
+      {
+        "title": "Age",
+        "_book": "剑雅13 Test 2",
+        "_raw_title": "Age",
+        "_question_id": "6685",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Are you happy to be the age you are now? [Why/Why not?]\nWhen you were a child, did you think a lot about your future? [Why/Why not?] ?\nDo you think you have changed as you have got older? [Why/Why not?]\nWhat will be different about your life in the future? [Why]"
+      },
+      {
+        "title": "Money",
+        "_book": "剑雅13 Test 3",
+        "_raw_title": "Money",
+        "_question_id": "6698",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "When you go shopping, do you prefer to pay for things in cash or by card? [Why?]\nDo you ever save money to buy special things? [Why/Why not?]\nWould you ever take a job which had low pay? [Why/Why not?]\nWould winning a lot of money make a big difference to your life? [Why/Why not?]"
+      },
+      {
+        "title": "Animals",
+        "_book": "剑雅13 Test 4",
+        "_raw_title": "Animals",
+        "_question_id": "6730",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Are there many animals or birds where you live? [Why/Why not?]\nHow often do you watch programmes or read articles about wild animals? [Why?]\nHave you ever been to a zoo or a wildlife park? [Why/Why not?]\nWould you like to have a job working with animals? [Why/Why not?]"
+      },
+      {
+        "title": "Clothes",
+        "_book": "剑雅12 Test 7",
+        "_raw_title": "Clothes",
+        "_question_id": "6764",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Where do you buy most of your clothes? [Why?]\nHow often do you buy new clothes for yourself? [Why?]\nHow do you decide which clothes to buy? [Why?]\nHave the kinds of clothes you like changed in recent years? [Why?/Why not?]"
+      },
+      {
+        "title": "Art",
+        "_book": "剑雅12 Test 8",
+        "_raw_title": "Art",
+        "_question_id": "6773",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Did you enjoy doing art lessons when you were a child? [Why?Why not?]\nDo you ever draw or paint pictures now? [Why?Why not?]\nWhen was the last time you went to an art gallery or exhibition? [Why?]\nWhat kind of pictures do you like having in your home? [Why?]"
+      },
+      {
+        "title": "Names",
+        "_book": "剑雅11 Test 4",
+        "_raw_title": "Names",
+        "_question_id": "6832",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How did your parents choose your name(s)?\nDoes your name have any special meaning?\nIs your name common or unusual in your country?\nIf you could change your name, would you? [Why/Why not?]"
+      },
+      {
+        "title": "Travelling to work or college",
+        "_book": "剑雅7 Test 4",
+        "_raw_title": "Travelling to work or college",
+        "_question_id": "7004",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How do you usually travel to work or college? [Why?]\nHave you always travelled to work/college in the same way? [Why/Why not?]\nWhat do you like about travelling to work/college this way?\nWhat changes would improve the way you travel to work/college? [Why?]"
+      }
+    ],
+    "个人喜好类": [
+      {
+        "title": "剑桥20 Test1 口语 Part 1 第 1 题",
+        "_book": "剑雅20 Test 1",
+        "_raw_title": "C20T1S1",
+        "_question_id": "8562",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "1. How much walking do you do in your daily life?\n2. Did you walk more when you were at school than now?\n3. What places are there to go for a walk near where you live?\n4. Would you ever like to go on a walking holiday?"
+      },
+      {
+        "title": "剑桥20 Test2 口语 Part 1 第 1 题",
+        "_book": "剑雅20 Test 2",
+        "_raw_title": "C20T2S1",
+        "_question_id": "8565",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "1. What’s your favourite fruit?\n2. Are there any kinds of fruit that you don’t like eating?\n3. Do you like eating cooked food that has fruit in it?\n4. Where’s the best place to buy fruit where you live?"
+      },
+      {
+        "title": "剑桥20 Test3 口语 Part 1 第 1 题",
+        "_book": "剑雅20 Test 3",
+        "_raw_title": "C20T3S1",
+        "_question_id": "8569",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "1. Did you enjoy going to museums when you were a child?\n2. Are there any interesting museums near where you live now?\n3. Do you think it is best to go to museums by yourself or with friends?\n4. When you visit another city or country, do you think it’s important to go to a museum there?"
+      },
+      {
+        "title": "剑桥20 Test4 口语 Part 1 第 1 题",
+        "_book": "剑雅20 Test 4",
+        "_raw_title": "C20T4S1",
+        "_question_id": "8568",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "1. What do you think your best personal qualities are? [Why?]\n2. Do you have the same personal qualities as your parents? [Why/Why not?]\n3.  What personal qualities are important to you in a friend? [Why?]\n4. Do you think you have the personal qualities to be a good/successful leader? [Why/Why not?]"
+      },
+      {
+        "title": "剑桥19 Test1 口语 Part 1 第 1 题",
+        "_book": "剑雅19 Test 1",
+        "_raw_title": "C19T1S1",
+        "_question_id": "8514",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Can you find food from many different countries where you live? [Why/Why not?] .\nHow often do you eat typical food from other countries? [Why/Why not?]\nHave you ever tried making food from another country? [Why/Why not?]\nWhat food from your country would you recommend to people from other countries? [Why?]"
+      },
+      {
+        "title": "剑桥19 Test2 口语 Part 1 第 1 题",
+        "_book": "剑雅19 Test 2",
+        "_raw_title": "C19T2S1",
+        "_question_id": "8519",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Have you travelled a lot by plane? [To where?/Why not?]\nWhy do you think some people enjoy travelling by plane?\nWould you like to live near an airport? [Why/Why not?]\nIn the future, do you think that you will travel by plane more often? [Why/Why not?]"
+      },
+      {
+        "title": "剑桥19 Test3 口语 Part 1 第 1 题",
+        "_book": "剑雅19 Test 3",
+        "_raw_title": "C19T3S1",
+        "_question_id": "8526",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you prefer spending holidays with friends or with family? [Why?]\nWhat kind of holiday accommodation do you like to stay in? [Why?]\nWhat plans do you have for your next holiday?\nIs your city or region a good place for other people to visit on holiday? [Why/Why not?]"
+      },
+      {
+        "title": "剑桥18 Test2 口语 Part 1 第 1 题",
+        "_book": "剑雅18 Test 2",
+        "_raw_title": "C18T2S1",
+        "_question_id": "8456",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Did you like studying science when you were at school? [Why/Why not?]\nWhat do you remember about your science teachers at school?\nHow interested are you in science now? [Why/Why not?]\nWhat do you think has been an important recent scientific development? [Why?]"
+      },
+      {
+        "title": "剑桥18 Test4 口语 Part 1 第 1 题",
+        "_book": "剑雅18 Test 4",
+        "_raw_title": "C18T4S1",
+        "_question_id": "8480",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How many hours do you usually sleep at night?\nDo you sometimes sleep during the day? [Why/Why not?]\nWhat do you do if you can’t get to sleep at night? [Why?]\nDo you ever remember the dreams you’ve had while you were asleep?"
+      },
+      {
+        "title": "History",
+        "_book": "剑雅17 Test 1",
+        "_raw_title": "History",
+        "_question_id": "8399",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What did you study in history lessons when you were at school?\nDid you enjoy studying history at school? [Why/Why not?]\nHow often do you watch TV programmes about history now? [Why/Why not?]\nWhat period in history would you like to learn more about? [Why?]"
+      },
+      {
+        "title": "Books & Reading",
+        "_book": "剑雅17 Test 2",
+        "_raw_title": "Books & Reading",
+        "_question_id": "8402",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Did you have a favourite book when you were a child? [Why/Whynot?]\nHow much reading do you do for your work/studies? [Why/Whynot?]\nWhat kinds of books do you read for pleasure? [Why/Whynot?]\nDo you prefer to read a newspaper or a magazine online, or to buy a copy? [Why/Whynot?]"
+      },
+      {
+        "title": "Drinks",
+        "_book": "剑雅17 Test 3",
+        "_raw_title": "Drinks",
+        "_question_id": "8407",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What do you like to drink with your dinner? [Why?]\nDo you drink a lot of water every day? Why/Why not?]\nDo you prefer drinking tea or coffee? [Why?]\nIf people visit you in your home, what do you usually offer them to drink? [Why/why not?]"
+      },
+      {
+        "title": "People you study/work with",
+        "_book": "剑雅16 Test 1",
+        "_raw_title": "People you study/work with",
+        "_question_id": "8339",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Who do you spend most time studying/working with?\nWhat kinds of things do you study / work on with other people?\nAre there times when you study/work better by yourself?\nIs it important to like the people you study/work with?"
+      },
+      {
+        "title": "Flowers and plants",
+        "_book": "剑雅16 Test 2",
+        "_raw_title": "Flowers and plants",
+        "_question_id": "8342",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you have a favourite flower or plant?\nWhat kinds of flowers and plants grow near where you live?\nIs it important to you to have flowers and plants in your home?\nHave you ever bought flowers for someone else?"
+      },
+      {
+        "title": "Summer",
+        "_book": "剑雅16 Test 3",
+        "_raw_title": "Summer",
+        "_question_id": "8345",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Is summer your favourite time of year?\nWhat do you do in summer when the weather’s very hot?\nDo you go on holiday every summer?\nDid you enjoy the summer holidays when you were at school?"
+      },
+      {
+        "title": "Fast food",
+        "_book": "剑雅16 Test 4",
+        "_raw_title": "Fast food",
+        "_question_id": "8348",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What kinds of fast food have you tried?\nDo you ever use a microwave to cook food quickly?\nHow popular are fast food restaurants where you live?\nHow popular are fast food restaurants where you live?"
+      },
+      {
+        "title": "Email",
+        "_book": "剑雅15 Test 1",
+        "_raw_title": "Email",
+        "_question_id": "8110",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What kinds of emails do you receive about your work or studies?\nDo you prefer to email, phone or text your friends? [Why?]\nDo you reply to emails and messages as soon as you receive them? [Why/Why not?]\nAre you happy to receive emails that are advertising things? [Why/Why not?]"
+      },
+      {
+        "title": "Jewellery",
+        "_book": "剑雅15 Test 4",
+        "_raw_title": "Jewellery",
+        "_question_id": "8162",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How often do you wear jewellery? [Why/Why not?]\nWhat type of jewellery do you like best? [Why/Why not?]\nWhen do people like to give jewellery in your country [Why?]\nHave you ever given jewellery to someone as a gift? [Why/Why not?]"
+      },
+      {
+        "title": "Songs and singing",
+        "_book": "剑雅12 Test 6",
+        "_raw_title": "Songs and singing",
+        "_question_id": "6742",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Did you enjoy singing when you were younger? [Why?/Why not?]\nHow often do you sing now? [Why?]\nDo you have a favourite song you like listening to? [Why?/Why not?]\nHow important is singing in your culture?[Why?]"
+      },
+      {
+        "title": "Food and cooking",
+        "_book": "剑雅11 Test 1",
+        "_raw_title": "Food and cooking",
+        "_question_id": "6758",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What sorts of food do you like eating most? [Why?]\nWho normally does the cooking in your home? [Why/Why not?]\nDo you watch cookery programmes on TV? [Why/Why not?]\nIn general, do you prefer eating out or eating at home? [Why?]"
+      },
+      {
+        "title": "Friends",
+        "_book": "剑雅11 Test 2",
+        "_raw_title": "Friends",
+        "_question_id": "6799",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How often do you go out with friends? [Why/Why not?]\nTell me about your best friend at school.\nHow friendly are you with your neighbours? [Why/Why not?]\nWhich is more important to you, friends or family? [Why?]"
+      },
+      {
+        "title": "Photographs",
+        "_book": "剑雅11 Test 3",
+        "_raw_title": "Photographs",
+        "_question_id": "6791",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What type of photos do you like taking? [Why/Why not?]\nWhat do you do with photos you take? [Why/Why not?]\nWhen you visit other places, do you take photos or buy postcards? [Why/Why not?]\nDo you like people taking photos of you? [Why/Why not?]"
+      },
+      {
+        "title": "School",
+        "_book": "剑雅10 Test 4",
+        "_raw_title": "School",
+        "_question_id": "6861",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Did you go to secondary/high school near to where you lived? [Why/Why not?]\nWhat did you like about your secondary/high school? [Why?]\nTell me about anything you didn't like at your school.\nHow do you think your school could be improved? [Why/Why not?]"
+      },
+      {
+        "title": "Laughing",
+        "_book": "剑雅7 Test 2",
+        "_raw_title": "Laughing",
+        "_question_id": "6994",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What kinds of thing make you laugh?\nDo you like making other people laugh? [Why/Why not?]\nDo you think it's important for people to laugh? [Why/Why not?]\nIs laughing the same as feeling happy, do you think? [Why/Why not?]"
+      },
+      {
+        "title": "Colour",
+        "_book": "剑雅5 Test 2",
+        "_raw_title": "Colour",
+        "_question_id": "7038",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What's your favourite colour? [Why?]\nDo you like the same colours now as you did when you were younger? [Why / Why not?]\nWhat can you learn about a person from the colours they like?\nDo any colours have a special meaning in your culture?"
+      }
+    ],
+    "技能类": [
+      {
+        "title": "剑桥18 Test1 口语 Part 1 第 1 题",
+        "_book": "剑雅18 Test 1",
+        "_raw_title": "C18T1S1",
+        "_question_id": "8444",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What kinds of bills do you have to pay?\nHow do you usually pay your bills – in cash or by another method? [Why?]\nHave you ever forgotten to pay a bill? [Why/Why not?]\nIs there anything you could do to make your bills cheaper? [Why/Why not?]"
+      },
+      {
+        "title": "Maps",
+        "_book": "剑雅17 Test 4",
+        "_raw_title": "Maps",
+        "_question_id": "8412",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you think it's better to use a paper map or a map on your phone? [Why?]\nWhen was the last time you needed to use a map? [Why/Why not?]\nIf you visit a new city, do you always use a map to find your way around? [Why/Why not?]\nIn general, do you find it easy to read maps? [Why/Why not?]"
+      },
+      {
+        "title": "Languages",
+        "_book": "剑雅15 Test 2",
+        "_raw_title": "Languages",
+        "_question_id": "8135",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How many languages can you speak? [Why/Why not?]\nHow useful will English be to you in your future? [Why/Why not?]\nWhat do you remember about learning languages at school? [Why/Why not?]\nWhat do you think would be the hardest language for you to learn? [Why?]"
+      },
+      {
+        "title": "Health",
+        "_book": "剑雅12 Test 5",
+        "_raw_title": "Health",
+        "_question_id": "6725",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Is it important to you to eat healthy food? [Why?/Why not?]\nIf you catch a cold, what do you do to help you feel better? [Why?]\nDo you pay attention to public information about health? [Why?/Why not?]\nWhat could you do to have a healthier lifestyle?"
+      },
+      {
+        "title": "Music",
+        "_book": "剑雅10 Test 2",
+        "_raw_title": "Music",
+        "_question_id": "6921",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What types of music do you like to listen to? [Why?]\nAt what times of day do you like to listen to music? [Why?]\nDid you learn to play a musical instrument when you were a child? [Why/Why not?]\nDo you think all children should learn to play a musical instrument? [Why/Why not?]"
+      },
+      {
+        "title": "Musical instruments",
+        "_book": "剑雅6 Test 2",
+        "_raw_title": "Musical instruments",
+        "_question_id": "7033",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Which instrument do you like listening to most? [Why?]\nHave you ever learned to play a musical instrument? [Which one?]\nDo you think children should learn to play a musical instrument at school? [Why/Why not?]\nHow easy would it be to learn to play an instrument without a teacher? [Why?]"
+      }
+    ],
+    "休闲活动类": [
+      {
+        "title": "剑桥19 Test4 口语 Part 1 第 1 题",
+        "_book": "剑雅19 Test 4",
+        "_raw_title": "C19T4S1",
+        "_question_id": "8529",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you have a favourite café? [Why/Why not?]\nDo you often go to cafés by yourself? [Why/Why not?]\nWhat do you think helps to make a café very popular? [Why?]\nWhy do some people prefer cafés that are part of large chains, rather than small, local cafés?"
+      },
+      {
+        "title": "剑桥18 Test3 口语 Part 1 第 1 题",
+        "_book": "剑雅18 Test 3",
+        "_raw_title": "C18T3S1",
+        "_question_id": "8468",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How often do you buy things online? [Why?]\nWhat was the last thing you bought online?\nDo you ever see things in shops and then buy them online? [Why/Why not?]\nDo you think the popularity of online shopping is changing your town or city centre? [Why/Why not?]"
+      },
+      {
+        "title": "Swimming",
+        "_book": "剑雅15 Test 3",
+        "_raw_title": "Swimming",
+        "_question_id": "8140",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Did you learn to swim when you were a child? [Why/Why not?]\nHow often do you go swimming now? [Why/Why not?]\nWhat places are there for swimming where you live? [Why?]\nDo you think it would be more enjoyable to go swimming outdoors or at an indoor pool? [Why?]"
+      },
+      {
+        "title": "Social media",
+        "_book": "剑雅14 Test 2",
+        "_raw_title": "Social media",
+        "_question_id": "6641",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Which social media websites do you use?\nHow much time do you spend on social media sites? [Why/Why not?]\nWhat kind of information about yourself have you put on social media? [Why/Why not?]\nIs there anything you don't like about social media? [Why?]"
+      },
+      {
+        "title": "Television programmes",
+        "_book": "剑雅13 Test 1",
+        "_raw_title": "Television programmes",
+        "_question_id": "6674",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Where do you usually watch TV programmes/shows? [Why?/Why not?]\nWhat's your favourite TV programme/show? [Why?]\nAre there any programmes/shows you don't like watching? [Why?/Why not?]\nDo you think you will watch more TV or fewer TV programmes/shows in the future? [Why?/Why not?]"
+      },
+      {
+        "title": "Weekends",
+        "_book": "剑雅10 Test 1",
+        "_raw_title": "Weekends",
+        "_question_id": "6820",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How do you usually spend your weekends? [Why?]\nWhich is your favourite part of the weekend? [Why?]\nDo you think your weekends are long enough? [Why/Why not?]\nHow important do you think it is to have free time at the weekends? [Why?]"
+      },
+      {
+        "title": "Travel",
+        "_book": "剑雅10 Test 3",
+        "_raw_title": "Travel",
+        "_question_id": "6828",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you enjoy travelling? [Why/Why not?]\nHave you done much travelling? [Why/Why not?]\nDo you think it's better to travel alone or with other people? [Why?]\nWhere would you like to travel in the future? [Why?]"
+      },
+      {
+        "title": "Games",
+        "_book": "剑雅9 Test 1",
+        "_raw_title": "Games",
+        "_question_id": "6849",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What games are popular in your country? [Why?]\nDo you play any games? [Why/Why not?]\nHow do people learn to play games in your country?\nDo you think it's important for people to play games? [Why/Why not?]"
+      },
+      {
+        "title": "Telephoning",
+        "_book": "剑雅9 Test 3",
+        "_raw_title": "Telephoning",
+        "_question_id": "6940",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How often do you make telephone calls? [Why/Why not?]\nWho do you spend most time talking to on the telephone? [Why?]\nWhen do you think you'll next make a telephone call? [Why?]\nDo you sometimes prefer to send a text message instead of telephoning? [Why/Why not?]"
+      },
+      {
+        "title": "Newspapers and Magazines",
+        "_book": "剑雅8 Test 2",
+        "_raw_title": "Newspapers and Magazines",
+        "_question_id": "6935",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Which magazines and newspapers do you read? [Why? ]\nWhat kinds of article are you most interested in? [Why? ]\nHave you ever read a newspaper or magazine in a foreign language? [When/Why? ]\nDo you think reading a newspaper or magazine in a foreign language is a good way to learn the language? [Why/Why not? ]"
+      },
+      {
+        "title": "Television",
+        "_book": "剑雅8 Test 4",
+        "_raw_title": "Television",
+        "_question_id": "6951",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How often do you watch television? [Why/Why not? ]\nWhich television channel do you usually watch? [Why? ]\nDo you enjoy the advertisemets on television? [Why/Why not?]\nDo you think most programes on television are good? [Why?/ Why not?]"
+      },
+      {
+        "title": "Keeping in contact with people",
+        "_book": "剑雅7 Test 1",
+        "_raw_title": "Keeping in contact with people",
+        "_question_id": "7129",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How do you usually contact your friends? [Why?]\nDo you prefer to contact different people in different ways? [Why?]\nDo you find it easy to keep in contact with friends and family? [Why/Why not?]\nIn your country, did people in the past keep in contact in the same ways as they do today?[Why/Why not?]"
+      },
+      {
+        "title": "Cold weather",
+        "_book": "剑雅7 Test 3",
+        "_raw_title": "Cold weather",
+        "_question_id": "7017",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Have you ever been in very cold weather? [When?]\nHow often is the weather cold where you come from?\nAre some parts of your country colder than others? [Why?]\nWould you prefer to live in a hot place or a cold place? [Why?]"
+      },
+      {
+        "title": "Dancing",
+        "_book": "剑雅6 Test 1",
+        "_raw_title": "Dancing",
+        "_question_id": "7079",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you enjoy dancing? [Why/Why not?]\nHas anyone ever taught you to dance? [Why/Why not?]\nTell me about any traditional dancing in your country.\nDo you think that traditional dancing will be popular in the future? [Why/Why not?]"
+      },
+      {
+        "title": "Entertainment",
+        "_book": "剑雅5 Test 3",
+        "_raw_title": "Entertainment",
+        "_question_id": "7073",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you prefer relaxing at home or going out in the evening? [Why?]\nWhen you go out for an evening, what do you like to do?\nHow popular is this with other people in your country?\nIs there any kind of entertainment you do not like? [Why / Why not?]"
+      }
+    ],
+    "抽象类": [
+      {
+        "title": "Future",
+        "_book": "剑雅14 Test 1",
+        "_raw_title": "Future",
+        "_question_id": "6626",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "What job would you like to have ten years from now? [Why?]\nHow useful will English be for your future? [Why/Why not?]\nHow much travelling do you hope to do in the future? [Why/Why not?]\nHow do you think your life will change in the future? [Why/Why not?]"
+      },
+      {
+        "title": "Giving gifts",
+        "_book": "剑雅9 Test 2",
+        "_raw_title": "Giving gifts",
+        "_question_id": "6880",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "When do people give gifts or presents in your country?\nDo you ever take a gift when you visit someone in their home? [Why/Why not?]\nWhen did you last receive a gift? [What was it?]\nDo you enjoy looking for gifts for people? [Why/Why not?]"
+      },
+      {
+        "title": "Bicycles",
+        "_book": "剑雅9 Test 4",
+        "_raw_title": "Bicycles",
+        "_question_id": "6892",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How popular are bicycles in your home town? [Why?]\nHow often do you ride a bicycle? [Why/Why not?]\nDo you think that bicycles are suitable for all ages? [Why/Why not?]\nWhat are the advantages of a bicycle compared to a car? [Why?]"
+      },
+      {
+        "title": "Flowers",
+        "_book": "剑雅8 Test 3",
+        "_raw_title": "Flowers",
+        "_question_id": "6917",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you like to have flowers in your home? [Why/Why not? ]\nWhere would you go to buy flowers? [Why? ]\nOn what occasions would you give someone flowers?\nAre flowers important in your culture? [Why/Why not? ]"
+      },
+      {
+        "title": "Traffic where you live",
+        "_book": "剑雅6 Test 3",
+        "_raw_title": "Traffic where you live",
+        "_question_id": "7047",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "How do most people travel to work where you live?\nWhat traffic problems are there in your area? [Why?]\nHow do traffic problems affect you?\nHow would you reduce the traffic problems in your area?"
+      },
+      {
+        "title": "Your friends",
+        "_book": "剑雅6 Test 4",
+        "_raw_title": "Your friends",
+        "_question_id": "7054",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Do you prefer to have one particular friend or a group of friends? [Why?]\nWhat do you like doing most with your friend/s?\nDo you think it's important to keep in contact with friends you knew as a child?[Why/Why not?]\nWhat makes a friend into a good friend?"
+      },
+      {
+        "title": "Your country",
+        "_book": "剑雅5 Test 1",
+        "_raw_title": "Your country",
+        "_question_id": "6963",
+        "_sub_questions": "4",
+        "cue_card": null,
+        "difficulty": "B1",
+        "questions": "Which part of your country do most people live in?\nTell me about the main industries there.\nHow easy is it to travel around your country?\nHas your country changed much since you were a child?"
+      }
+    ]
+  },
+  "part2": {
+    "人物": [
+      {
+        "title": "剑桥19 Test2 口语 Part 2 第 2 题",
+        "_book": "剑雅19 Test 2",
+        "_raw_title": "C19T2S2",
+        "_question_id": "8520",
+        "_sub_questions": "1",
+        "cue_card": "Describe a person from your country who has won a prize, award or medal. You should say: who this person is which prize, award or medal they received what they did to win this and explain whether you think it was right that this person received this prize, award or medal.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥18 Test4 口语 Part 2 第 2 题",
+        "_book": "剑雅18 Test 4",
+        "_raw_title": "C18T4S2",
+        "_question_id": "8481",
+        "_sub_questions": "1",
+        "cue_card": "Describe a time when you met someone who you became good friends with.You should say: who you met when and where you met this person what you thought about this person when you first met and explain why you think you became good friends with this person. You will have to talk about the topic for one to two minutes. You have one minute to think about what you are going to say. You can make some notes to help you if you wish.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "Describe the neighbourhood you lived in when you were a child.",
+        "_book": "剑雅17 Test 1",
+        "_raw_title": "Describe the neighbourhood you lived in when you were a child.",
+        "_question_id": "8400",
+        "_sub_questions": "1",
+        "cue_card": "Describe the neighbourhood you lived in when you were a child.",
+        "difficulty": "B2",
+        "questions": "Describe the neighbourhood you lived in when you were a child. You should say: where in your town/city the neighbourhood was what kind of people lived there what it was like to live in this neighbourhood and explain whether you would like to live in this neighbourhood in the future."
+      },
+      {
+        "title": "Describe a famous business person that you know about.",
+        "_book": "剑雅15 Test 3",
+        "_raw_title": "Describe a famous business person that you know about.",
+        "_question_id": "8141",
+        "_sub_questions": "1",
+        "cue_card": "Describe a famous business person that you know about.",
+        "difficulty": "B2",
+        "questions": "Describe a famous business person that you know about. You should say: who this person is what kind of business this person is involved in what you know about this business person and explain what you think of this business person."
+      },
+      {
+        "title": "Describe someone you know who has started a business.",
+        "_book": "剑雅13 Test 1",
+        "_raw_title": "Describe someone you know who has started a business.",
+        "_question_id": "6675",
+        "_sub_questions": "1",
+        "cue_card": "Describe someone you know who has started a business.",
+        "difficulty": "B2",
+        "questions": "Describe someone you know who has started a business. You should say: who this person is what work this person does why this person decided to start a business and explain whether you would like to do the same kind of work as this person."
+      },
+      {
+        "title": "Describe an occasion when you had to wait a long time for someone or something to arrive.",
+        "_book": "剑雅12 Test 5",
+        "_raw_title": "Describe an occasion when you had to wait a long time for someone or something to arrive.",
+        "_question_id": "6726",
+        "_sub_questions": "1",
+        "cue_card": "Describe an occasion when you had to wait a long time for someone or something to arrive.",
+        "difficulty": "B2",
+        "questions": "Describe an occasion when you had to wait a long time for someone or something to arrive. You should say: who or what you were waiting for how long you had to wait why you had to wait a long time and explain how you felt about waiting a long time."
+      },
+      {
+        "title": "Describe an interesting discussion you had about how you spend your money.",
+        "_book": "剑雅12 Test 7",
+        "_raw_title": "Describe an interesting discussion you had about how you spend your money.",
+        "_question_id": "6766",
+        "_sub_questions": "1",
+        "cue_card": "Describe an interesting discussion you had about how you spend your money.",
+        "difficulty": "B2",
+        "questions": "Describe an interesting discussion you had about how you spend your money. You should say: who you had the discussion with why you discussed this topic what the result of the discussion was and explain why this discussion was interesting for you."
+      },
+      {
+        "title": "Describe a time when you visited a friend or family member at their workplace.",
+        "_book": "剑雅12 Test 8",
+        "_raw_title": "Describe a time when you visited a friend or family member at their workplace.",
+        "_question_id": "6774",
+        "_sub_questions": "1",
+        "cue_card": "Describe a time when you visited a friend or family member at their workplace.",
+        "difficulty": "B2",
+        "questions": "Describe a time when you visited a friend or family member at their workplace. You should say: who you visited where this person worked why you visited this person's workplace and explain how you felt about visiting this person's workplace."
+      },
+      {
+        "title": "Describe a writer you would like to meet.",
+        "_book": "剑雅11 Test 2",
+        "_raw_title": "Describe a writer you would like to meet.",
+        "_question_id": "6800",
+        "_sub_questions": "1",
+        "cue_card": "Describe a writer you would like to meet.",
+        "difficulty": "B2",
+        "questions": "Describe a writer you would like to meet. You should say: who the writer is what you know about this writer already what you would like to find out about him/her and explain why you would like to meet this writer."
+      },
+      {
+        "title": "Describe someone you know who does something well.",
+        "_book": "剑雅10 Test 1",
+        "_raw_title": "Describe someone you know who does something well.",
+        "_question_id": "6821",
+        "_sub_questions": "1",
+        "cue_card": "Describe someone you know who does something well.",
+        "difficulty": "B2",
+        "questions": "Describe someone you know who does something well. You should say: who this person is How you know this person what they do well and explain why this person is so good at doing this."
+      },
+      {
+        "title": "Describe a child that you know.",
+        "_book": "剑雅10 Test 3",
+        "_raw_title": "Describe a child that you know.",
+        "_question_id": "6853",
+        "_sub_questions": "1",
+        "cue_card": "Describe a child that you know.",
+        "difficulty": "B2",
+        "questions": "Describe a child that you know. You should say: who this child is and how often you see him or her how old this child is what he or she is like and explain what you feel about this child."
+      },
+      {
+        "title": "Describe a person who has done a lot of work to help people.",
+        "_book": "剑雅9 Test 4",
+        "_raw_title": "Describe a person who has done a lot of work to help people.",
+        "_question_id": "6893",
+        "_sub_questions": "1",
+        "cue_card": "Describe a person who has done a lot of work to help people.",
+        "difficulty": "B2",
+        "questions": "Describe a person who has done a lot of work to help people. You should say: who this person is/was where this person lives/lived what he/she has done to help people and explain how you know about this person."
+      },
+      {
+        "title": "Describe a friend of your family you remember from your childhood.",
+        "_book": "剑雅8 Test 4",
+        "_raw_title": "Describe a friend of your family you remember from your childhood.",
+        "_question_id": "6952",
+        "_sub_questions": "1",
+        "cue_card": "Describe a friend of your family you remember from your childhood.",
+        "difficulty": "B2",
+        "questions": "Describe a friend of your family you remember from your childhood. You should say: who the person was how your family knew this person how often this person visited your family and explain why you remember this person."
+      },
+      {
+        "title": "Describe a party that you enjoyed.",
+        "_book": "剑雅7 Test 1",
+        "_raw_title": "Describe a party that you enjoyed.",
+        "_question_id": "7127",
+        "_sub_questions": "1",
+        "cue_card": "Describe a party that you enjoyed.",
+        "difficulty": "B2",
+        "questions": "Describe a party that you enjoyed. You should say: whose party it was and what it wascelebrating where the party was held and who went to it what people did during the party and explain what you enjoyed about this party."
+      },
+      {
+        "title": "Describe someone in your family who you like.",
+        "_book": "剑雅6 Test 1",
+        "_raw_title": "Describe someone in your family who you like.",
+        "_question_id": "7080",
+        "_sub_questions": "1",
+        "cue_card": "Describe someone in your family who you like.",
+        "difficulty": "B2",
+        "questions": "Describe someone in your family who you like. You should say: how this person is related to you what this person looks like what kind of person he/she is and explain why you like this person."
+      },
+      {
+        "title": "Describe a well-known person you like or admire.",
+        "_book": "剑雅5 Test 1",
+        "_raw_title": "Describe a well-known person you like or admire.",
+        "_question_id": "6964",
+        "_sub_questions": "1",
+        "cue_card": "Describe a well-known person you like or admire.",
+        "difficulty": "B2",
+        "questions": "Describe a well-known person you like or admire. You should say: who this person is what this person has done why this person is well known and explain why you admire this person."
+      },
+      {
+        "title": "Describe one of your friends.",
+        "_book": "剑雅5 Test 3",
+        "_raw_title": "Describe one of your friends.",
+        "_question_id": "7074",
+        "_sub_questions": "1",
+        "cue_card": "Describe one of your friends.",
+        "difficulty": "B2",
+        "questions": "Describe one of your friends. You should say: how you met how long you have known each other how you spend time together and explain why you like this person."
+      }
+    ],
+    "事件": [
+      {
+        "title": "剑桥20 Test2 口语 Part 2 第 2 题",
+        "_book": "剑雅20 Test 2",
+        "_raw_title": "C20T2S2",
+        "_question_id": "8566",
+        "_sub_questions": "1",
+        "cue_card": "Describe a time when you changed a plan you had made. You should say: what your original plan was why you changed it what new plan you made and explain how you felt about changing your plan.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥20 Test4 口语 Part 2 第 2 题",
+        "_book": "剑雅20 Test 4",
+        "_raw_title": "C20T4S2",
+        "_question_id": "8572",
+        "_sub_questions": "1",
+        "cue_card": "Describe a time when you had a long discussion about a news story. You should say: what the news story was about who you discussed this news story with what people’s opinions were and explain why you had such a long discussion about this news story.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥19 Test3 口语 Part 2 第 2 题",
+        "_book": "剑雅19 Test 3",
+        "_raw_title": "C19T3S2",
+        "_question_id": "8527",
+        "_sub_questions": "1",
+        "cue_card": "Describe a car journey you made that took longer than expected. You should say: where you were going who you were with how you felt during the journey and explain why this car journey took longer than expected.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥18 Test3 口语 Part 2 第 2 题",
+        "_book": "剑雅18 Test 3",
+        "_raw_title": "C18T3S2",
+        "_question_id": "8469",
+        "_sub_questions": "1",
+        "cue_card": "Describe a time when you enjoyed visiting a member of your family in their home. You should say: who you visited and where they lived why you made this visit what happened during this visit and explain what you enjoyed about this visit. You will have to talk about the topic for one to two minutes. You have one minute to think about what you are going to say. You can make some notes to help you if you wish.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "Describe an occasion when you had to do something in a hurry.",
+        "_book": "剑雅17 Test 4",
+        "_raw_title": "Describe an occasion when you had to do something in a hurry.",
+        "_question_id": "8413",
+        "_sub_questions": "1",
+        "cue_card": "Describe an occasion when you had to do something in a hurry.",
+        "difficulty": "B2",
+        "questions": "Describe an occasion when you had to do something in a hurry. You should say: what you had to do why you had to do this in a hurry how well you did this and explain how you felt about having to do this in a hurry."
+      },
+      {
+        "title": "Describe an interesting TV programme you watched about a science topic.",
+        "_book": "剑雅15 Test 4",
+        "_raw_title": "Describe an interesting TV programme you watched about a science topic.",
+        "_question_id": "8163",
+        "_sub_questions": "1",
+        "cue_card": "Describe an interesting TV programme you watched about a science topic.",
+        "difficulty": "B2",
+        "questions": "Describe an interesting TV programme you watched about a science topic. You should say: what science topic this TV programme was about when you saw this TV programme what you learnt from this TV programme about a science topic and explain why you found this TV programme interesting."
+      },
+      {
+        "title": "Describe a very difficult task that you succeeded in doing as part of your work studies.",
+        "_book": "剑雅14 Test 3",
+        "_raw_title": "Describe a very difficult task that you succeeded in doing as part of your work studies.",
+        "_question_id": "6652",
+        "_sub_questions": "1",
+        "cue_card": "Describe a very difficult task that you succeeded in doing as part of your work studies.",
+        "difficulty": "B2",
+        "questions": "Describe a very difficult task that you succeeded in doing as part of your work studies. You should say: what task you did why this task was very difficult how you worked on this task and explain how you felt when you had successfully completed this task."
+      },
+      {
+        "title": "Describe an interesting discussion you had as part of your work or studies.",
+        "_book": "剑雅13 Test 3",
+        "_raw_title": "Describe an interesting discussion you had as part of your work or studies.",
+        "_question_id": "6699",
+        "_sub_questions": "1",
+        "cue_card": "Describe an interesting discussion you had as part of your work or studies.",
+        "difficulty": "B2",
+        "questions": "Describe an interesting discussion you had as part of your work or studies. You should say: what the subject of the discussion was who you discussed the subject with what opinions were expressed and explain why you found the discussion interesting."
+      },
+      {
+        "title": "Describe a day that you thought the weather was perfect.",
+        "_book": "剑雅11 Test 3",
+        "_raw_title": "Describe a day that you thought the weather was perfect.",
+        "_question_id": "6792",
+        "_sub_questions": "1",
+        "cue_card": "Describe a day that you thought the weather was perfect.",
+        "difficulty": "B2",
+        "questions": "Describe a day that you thought the weather was perfect. You should say: where you were on this day what the weather was like on this day what you did during the day and explain why you thought the weather was perfect on this day."
+      },
+      {
+        "title": "Describe a TV documentary you watched that was particularly interesting.",
+        "_book": "剑雅11 Test 4",
+        "_raw_title": "Describe a TV documentary you watched that was particularly interesting.",
+        "_question_id": "6833",
+        "_sub_questions": "1",
+        "cue_card": "Describe a TV documentary you watched that was particularly interesting.",
+        "difficulty": "B2",
+        "questions": "Describe a TV documentary you watched that was particularly interesting. You should say: what the documentary was about why you decided to watch it what you learnt during the documentary and explain why the TV documentary was particularly interesting."
+      },
+      {
+        "title": "Describe something you did that was new or exciting.",
+        "_book": "剑雅9 Test 2",
+        "_raw_title": "Describe something you did that was new or exciting.",
+        "_question_id": "6881",
+        "_sub_questions": "1",
+        "cue_card": "Describe something you did that was new or exciting.",
+        "difficulty": "B2",
+        "questions": "Describe something you did that was new or exciting. You should say: what you did where and when you did this who you shared the activity with and explain why this activity was new or exciting for you."
+      },
+      {
+        "title": "Describe a journey that you remember well",
+        "_book": "剑雅9 Test 3",
+        "_raw_title": "Describe a journey that you remember well",
+        "_question_id": "6942",
+        "_sub_questions": "1",
+        "cue_card": "Describe a journey that you remember well",
+        "difficulty": "B2",
+        "questions": "Describe a journey [e.g. by car, plane, boat] that you remember well. You should say: where you went how you travelled why you went on the journey And explain why you remember this journey well."
+      },
+      {
+        "title": "Describe a time when you were asked to give your opinion in a questionnaire or survey",
+        "_book": "剑雅8 Test 1",
+        "_raw_title": "Describe a time when you were asked to give your opinion in a questionnaire or survey",
+        "_question_id": "6909",
+        "_sub_questions": "1",
+        "cue_card": "Describe a time when you were asked to give your opinion in a questionnaire or survey",
+        "difficulty": "B2",
+        "questions": "Describe a time when you were asked to give your opinion in a questionnaire or survey You should say: what the questionnaire/survey was about why you were asked to give your opinions what opinions you gave and explain how you felt about giving your opinions in this questionnaire/survey."
+      },
+      {
+        "title": "Describe a meeting you remember going to at work, college or school.",
+        "_book": "剑雅8 Test 3",
+        "_raw_title": "Describe a meeting you remember going to at work, college or school.",
+        "_question_id": "6919",
+        "_sub_questions": "1",
+        "cue_card": "Describe a meeting you remember going to at work, college or school.",
+        "difficulty": "B2",
+        "questions": "Describe a meeting you remember going to at work, college or school. You should say: when and where the meeting was held who was at the meeting what the people at the meeting talked about and explain why you remember going to this meeting."
+      },
+      {
+        "title": "Describe an idea you had for improving something at work or college.",
+        "_book": "剑雅7 Test 2",
+        "_raw_title": "Describe an idea you had for improving something at work or college.",
+        "_question_id": "6995",
+        "_sub_questions": "1",
+        "cue_card": "Describe an idea you had for improving something at work or college.",
+        "difficulty": "B2",
+        "questions": "Describe an idea you had for improving something at work or college. You should say: when and where you had your idea what your idea was who you told about your idea and explain why you thought your idea would make an improvement."
+      },
+      {
+        "title": "Describe a competition (e.g. TV, college/work or sports competition) that you took part in.",
+        "_book": "剑雅7 Test 3",
+        "_raw_title": "Describe a competition (e.g. TV, college/work or sports competition) that you took part in.",
+        "_question_id": "7018",
+        "_sub_questions": "1",
+        "cue_card": "Describe a competition (e.g. TV, college/work or sports competition) that you took part in.",
+        "difficulty": "B2",
+        "questions": "Describe a competition (e.g. TV, college/work or sports competition) that you took part in. You should say: what kind of competition it was and how you found out about it what you had to do what the prizes were and explain why you chose to take part in this competition."
+      },
+      {
+        "title": "Describe something healthy you enjoy doing.",
+        "_book": "剑雅6 Test 2",
+        "_raw_title": "Describe something healthy you enjoy doing.",
+        "_question_id": "7034",
+        "_sub_questions": "1",
+        "cue_card": "Describe something healthy you enjoy doing.",
+        "difficulty": "B2",
+        "questions": "Describe something healthy you enjoy doing. You should say: what you do where you do it who you do it with and explain why you think doing this is healthy."
+      },
+      {
+        "title": "Describe a game or sport you enjoy playing",
+        "_book": "剑雅6 Test 3",
+        "_raw_title": "Describe a game or sport you enjoy playing",
+        "_question_id": "7048",
+        "_sub_questions": "1",
+        "cue_card": "Describe a game or sport you enjoy playing",
+        "difficulty": "B2",
+        "questions": "Describe a game or sport you enjoy playing You should say: what kind of game or sport it is who you play it with where you play it and explain why you enjoy playing it."
+      },
+      {
+        "title": "Describe an important choice you had to make in your life.",
+        "_book": "剑雅6 Test 4",
+        "_raw_title": "Describe an important choice you had to make in your life.",
+        "_question_id": "7055",
+        "_sub_questions": "1",
+        "cue_card": "Describe an important choice you had to make in your life.",
+        "difficulty": "B2",
+        "questions": "Describe an important choice you had to make in your life. You should say: when you had to make this choice what you had to choose between whether you made a good choice and explain how you felt when you were making this choice."
+      },
+      {
+        "title": "Describe a festival that is important in your country.",
+        "_book": "剑雅5 Test 4",
+        "_raw_title": "Describe a festival that is important in your country.",
+        "_question_id": "7100",
+        "_sub_questions": "1",
+        "cue_card": "Describe a festival that is important in your country.",
+        "difficulty": "B2",
+        "questions": "Describe a festival that is important in your country. You should say： when the festival occurs what you did during it what you like or dislike about it and explain why this festival is important."
+      }
+    ],
+    "物品": [
+      {
+        "title": "剑桥20 Test1 口语 Part 2 第 2 题",
+        "_book": "剑雅20 Test 1",
+        "_raw_title": "C20T1S2",
+        "_question_id": "8563",
+        "_sub_questions": "1",
+        "cue_card": "Describe a play or a film you have seen that you would like to see again with friends. You should say: what play or film you’d like to go to see again who you would go with what other people have said about this play or film and explain why you would like to see this play or film again with friends.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥20 Test3 口语 Part 2 第 2 题",
+        "_book": "剑雅20 Test 3",
+        "_raw_title": "C20T3S2",
+        "_question_id": "8570",
+        "_sub_questions": "1",
+        "cue_card": "Describe a piece of work you did for your job or your studies that you felt very satisfied with. You should say: what this piece of work was why you did this piece of work who or what helped you to do this work and explain why you felt so satisfied with this piece of work.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥19 Test1 口语 Part 2 第 2 题",
+        "_book": "剑雅19 Test 1",
+        "_raw_title": "C19T1S2",
+        "_question_id": "8515",
+        "_sub_questions": "1",
+        "cue_card": "Describe a law that was introduced in your country and that you thought was a very good idea. You should say: what the law was who introduced it when and why it was introduced and explain why you thought this law was such a good idea.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥18 Test1 口语 Part 2 第 2 题",
+        "_book": "剑雅18 Test 1",
+        "_raw_title": "C18T1S2",
+        "_question_id": "8445",
+        "_sub_questions": "1",
+        "cue_card": "Describe some food or drink that you learned to prepare. You should say: what food or drink you learned to prepare when and where you learned to prepare this how you learned to prepare this and explain how you felt about learning to prepare this food or drink. You will have to talk about the topic for one to two minutes. You have one minute to think about what you are going to say. You can make some notes to help you if you wish.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "Describe a monument (e.g., a statue or sculpture) that you like.",
+        "_book": "剑雅17 Test 3",
+        "_raw_title": "Describe a monument (e.g., a statue or sculpture) that you like.",
+        "_question_id": "8408",
+        "_sub_questions": "1",
+        "cue_card": "Describe a monument (e.g., a statue or sculpture) that you like.",
+        "difficulty": "B2",
+        "questions": "Describe a monument (e.g., a statue or sculpture) that you like. You should say: what this monument is where this monument is what it looks like and explain why you like this monument"
+      },
+      {
+        "title": "Describe a review you read about a product or service.",
+        "_book": "剑雅16 Test 2",
+        "_raw_title": "Describe a review you read about a product or service.",
+        "_question_id": "8343",
+        "_sub_questions": "1",
+        "cue_card": "Describe a review you read about a product or service.",
+        "difficulty": "B2",
+        "questions": "Describe a review you read about a product or service. You should say: where you read the review what the product or service was what information the review gave about the product or service and explain what you did as a result of reading this review."
+      },
+      {
+        "title": "Describe a luxury item you would like to own in the future.",
+        "_book": "剑雅16 Test 3",
+        "_raw_title": "Describe a luxury item you would like to own in the future.",
+        "_question_id": "8346",
+        "_sub_questions": "1",
+        "cue_card": "Describe a luxury item you would like to own in the future.",
+        "difficulty": "B2",
+        "questions": "Describe a luxury item you would like to own in the future. You should say: what item you would like to own what this item looks like why you would like to own this item and explain whether you think you will ever own this item."
+      },
+      {
+        "title": "Describe some technology (e.g. an app, phone, software program) that you decided to stop using.",
+        "_book": "剑雅16 Test 4",
+        "_raw_title": "Describe some technology (e.g. an app, phone, software program) that you decided to stop using.",
+        "_question_id": "8349",
+        "_sub_questions": "1",
+        "cue_card": "Describe some technology (e.g. an app, phone, software program) that you decided to stop using.",
+        "difficulty": "B2",
+        "questions": "Describe some technology (e.g. an app, phone, software program) that you decided to stop using. You should say: when and where you got this technology why you started using this technology why you decided to stop using it and explain how you feel about the decision you made."
+      },
+      {
+        "title": "Describe a website that you bought something from.",
+        "_book": "剑雅15 Test 2",
+        "_raw_title": "Describe a website that you bought something from.",
+        "_question_id": "8136",
+        "_sub_questions": "1",
+        "cue_card": "Describe a website that you bought something from.",
+        "difficulty": "B2",
+        "questions": "Describe a website that you bought something from. You should say: what the website is what you bought from this website how satisfied you were with what you bought and explain what you liked or disliked about using this website."
+      },
+      {
+        "title": "Describe a book that you enjoyed reading because you had to think a lot.",
+        "_book": "剑雅14 Test 1",
+        "_raw_title": "Describe a book that you enjoyed reading because you had to think a lot.",
+        "_question_id": "6628",
+        "_sub_questions": "1",
+        "cue_card": "Describe a book that you enjoyed reading because you had to think a lot.",
+        "difficulty": "B2",
+        "questions": "Describe a book that you enjoyed reading because you had to think a lot. You should say: what this book was why you decided to read it what reading this book made you think about and explain why you enjoyed reading this book."
+      },
+      {
+        "title": "Describe something you liked very much which you bought for your home.",
+        "_book": "剑雅14 Test 2",
+        "_raw_title": "Describe something you liked very much which you bought for your home.",
+        "_question_id": "6642",
+        "_sub_questions": "1",
+        "cue_card": "Describe something you liked very much which you bought for your home.",
+        "difficulty": "B2",
+        "questions": "Describe something you liked very much which you bought for your home. You should say: what you bought when and where you bought it why you chose this particular thing and explain why you liked it so much."
+      },
+      {
+        "title": "Describe a website you have bought something from.",
+        "_book": "剑雅14 Test 4",
+        "_raw_title": "Describe a website you have bought something from.",
+        "_question_id": "6668",
+        "_sub_questions": "1",
+        "cue_card": "Describe a website you have bought something from.",
+        "difficulty": "B2",
+        "questions": "Describe a website you have bought something from. You should say: what the website is what you bought from this website how satisfied you were with what you bought and explain what you liked and disliked about using this website."
+      },
+      {
+        "title": "Describe a time when you started using a new technological device (e.g. a new computer or phone).",
+        "_book": "剑雅13 Test 2",
+        "_raw_title": "Describe a time when you started using a new technological device (e.g. a new computer or phone).",
+        "_question_id": "6686",
+        "_sub_questions": "1",
+        "cue_card": "Describe a time when you started using a new technological device (e.g. a new computer or phone).",
+        "difficulty": "B2",
+        "questions": "Describe a time when you started using a new technological device (e.g. a new computer or phone) You should say: what device you started using why you started using this device how easy or difficult it was to use and explain how helpful this device was to you."
+      },
+      {
+        "title": "Describe a website you use that helps you a lot in your work or studies.",
+        "_book": "剑雅13 Test 4",
+        "_raw_title": "Describe a website you use that helps you a lot in your work or studies.",
+        "_question_id": "6731",
+        "_sub_questions": "1",
+        "cue_card": "Describe a website you use that helps you a lot in your work or studies.",
+        "difficulty": "B2",
+        "questions": "Describe a website you use that helps you a lot in your work or studies. You should say: what the website is how often you use the website what information the website gives you and explain how your work or studies would change if this website didn't exist."
+      },
+      {
+        "title": "Describe something you don't have now but would really like to own in the future.",
+        "_book": "剑雅10 Test 4",
+        "_raw_title": "Describe something you don't have now but would really like to own in the future.",
+        "_question_id": "6863",
+        "_sub_questions": "1",
+        "cue_card": "Describe something you don't have now but would really like to own in the future.",
+        "difficulty": "B2",
+        "questions": "Describe something you don't have now but would really like to own in the future. You should say: what this thing is how long you have wanted to own it where you first saw it and explain why you would like to own it."
+      },
+      {
+        "title": "Describe a piece of electronic equipment that you find useful.",
+        "_book": "剑雅7 Test 4",
+        "_raw_title": "Describe a piece of electronic equipment that you find useful.",
+        "_question_id": "7005",
+        "_sub_questions": "1",
+        "cue_card": "Describe a piece of electronic equipment that you find useful.",
+        "difficulty": "B2",
+        "questions": "Describe a piece of electronic equipment that you find useful. You should say: what it is how you learned to use it how long you have had it and explain why you find this piece of electronic equipment useful."
+      },
+      {
+        "title": "Describe a song or a piece of music you like.",
+        "_book": "剑雅5 Test 2",
+        "_raw_title": "Describe a song or a piece of music you like.",
+        "_question_id": "7039",
+        "_sub_questions": "1",
+        "cue_card": "Describe a song or a piece of music you like.",
+        "difficulty": "B2",
+        "questions": "Describe a song or a piece of music you like. You should say: what the song or music is what kind of song or music it is where you first heard it and explain why you like it."
+      }
+    ],
+    "地点": [
+      {
+        "title": "剑桥19 Test4 口语 Part 2 第 2 题",
+        "_book": "剑雅19 Test 4",
+        "_raw_title": "C19T4S2",
+        "_question_id": "8530",
+        "_sub_questions": "1",
+        "cue_card": "Describe a place you visited that has beautiful views. You should say: where this place is when and why you visited it what views you can see from this place and explain why you think these views are so beautiful.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "剑桥18 Test2 口语 Part 2 第 2 题",
+        "_book": "剑雅18 Test 2",
+        "_raw_title": "C18T2S2",
+        "_question_id": "8457",
+        "_sub_questions": "1",
+        "cue_card": "Describe a tourist attraction in your country that you would recommend. You should say: what the tourist attraction is where in your country this tourist attraction is what visitors can see and do at this tourist attraction and explain why you would recommend this tourist attraction. You will have to talk about the topic for one to two minutes. You have one minute to think about what you are going to say. You can make some notes to help you if you wish.",
+        "difficulty": "B2",
+        "questions": ""
+      },
+      {
+        "title": "Describe a big city you would like to visit.",
+        "_book": "剑雅17 Test 2",
+        "_raw_title": "Describe a big city you would like to visit.",
+        "_question_id": "8403",
+        "_sub_questions": "1",
+        "cue_card": "Describe a big city you would like to visit.",
+        "difficulty": "B2",
+        "questions": "Describe a big city you would like to visit. You should say: which big city you would like to visit how you would travel there what you would do there and explain why you would like to visit this big city."
+      },
+      {
+        "title": "Describe a tourist attraction you enjoyed visiting.",
+        "_book": "剑雅16 Test 1",
+        "_raw_title": "Describe a tourist attraction you enjoyed visiting.",
+        "_question_id": "8340",
+        "_sub_questions": "1",
+        "cue_card": "Describe a tourist attraction you enjoyed visiting.",
+        "difficulty": "B2",
+        "questions": "Describe a tourist attraction you enjoyed visiting. You should say: what this tourist attraction is when and why you visited it what you did there and explain why you enjoyed visiting this tourist attraction."
+      },
+      {
+        "title": "Describe a hotel that you know.",
+        "_book": "剑雅15 Test 1",
+        "_raw_title": "Describe a hotel that you know.",
+        "_question_id": "8111",
+        "_sub_questions": "1",
+        "cue_card": "Describe a hotel that you know.",
+        "difficulty": "B2",
+        "questions": "Describe a hotel that you know. You should say: where this hotel is what this hotel looks like what facilities this hotel has and explain whether you think this is a nice hotel to stay in."
+      },
+      {
+        "title": "Describe a film/movie actor from your country who is very popular.",
+        "_book": "剑雅12 Test 6",
+        "_raw_title": "Describe a film/movie actor from your country who is very popular.",
+        "_question_id": "6744",
+        "_sub_questions": "1",
+        "cue_card": "Describe a film/movie actor from your country who is very popular.",
+        "difficulty": "B2",
+        "questions": "Describe a film/movie actor from your country who is very popular. You should say: who this actor is what kinds of films/movies he/she acts in what you know about this actor's life and explain why this actor is so popular"
+      },
+      {
+        "title": "Describe a house/apartment that someone you know lives in.",
+        "_book": "剑雅11 Test 1",
+        "_raw_title": "Describe a house/apartment that someone you know lives in.",
+        "_question_id": "6759",
+        "_sub_questions": "1",
+        "cue_card": "Describe a house/apartment that someone you know lives in.",
+        "difficulty": "B2",
+        "questions": "Describe a house/apartment that someone you know lives in. You should say: whose house/apartment this is where the house/apartment is what it looks like inside and explain what you like or dislike about this person's house/apartment."
+      },
+      {
+        "title": "Describe a shop near where you live that you sometimes use.",
+        "_book": "剑雅10 Test 2",
+        "_raw_title": "Describe a shop near where you live that you sometimes use.",
+        "_question_id": "6922",
+        "_sub_questions": "1",
+        "cue_card": "Describe a shop near where you live that you sometimes use.",
+        "difficulty": "B2",
+        "questions": "Describe a shop near where you live that you sometimes use. You should say: what sorts of product or service it sells what the shop looks like where it is located and explain why you use this shop."
+      },
+      {
+        "title": "Describe an open-air or street market which you enjoyed visiting.",
+        "_book": "剑雅9 Test 1",
+        "_raw_title": "Describe an open-air or street market which you enjoyed visiting.",
+        "_question_id": "6850",
+        "_sub_questions": "1",
+        "cue_card": "Describe an open-air or street market which you enjoyed visiting.",
+        "difficulty": "B2",
+        "questions": "Describe an open-air or street market which you enjoyed visiting. You should say: where the market is what the market sells how big the market is And explain why you enjoyed visiting this market."
+      },
+      {
+        "title": "Describe a restaurant that you enjoyed going to.",
+        "_book": "剑雅8 Test 2",
+        "_raw_title": "Describe a restaurant that you enjoyed going to.",
+        "_question_id": "6936",
+        "_sub_questions": "1",
+        "cue_card": "Describe a restaurant that you enjoyed going to.",
+        "difficulty": "B2",
+        "questions": "Describe a restaurant that you enjoyed going to. You should say: where the restaurant was why you chose this restaurant what type of food you ate in this restaurant and explain why you enjoyed eating in this restaurant."
+      }
+    ]
+  },
+  "part3": {
+    "人物": [
+      {
+        "title": "剑桥18 Test1 口语 Part 3 第 3 题",
+        "_book": "剑雅18 Test 1",
+        "_raw_title": "C18T1S3",
+        "_question_id": "8446",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of things can children learn to cook?\nDo you think it is important for children to learn to cook?\nDo you think young people should learn to cook at home or at school?\nHow enjoyable do you think it would be to work as a professional chef?\nWhat skills does a person need to be a great chef?\nHow much influence do celebrity/TV chefs have on what ordinary people cook?"
+      },
+      {
+        "title": "剑桥18 Test4 口语 Part 3 第 3 题",
+        "_book": "剑雅18 Test 4",
+        "_raw_title": "C18T4S3",
+        "_question_id": "8482",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "How important is it for children to have lots of friends at school?\nDo you think it is wrong for parents to influence which friends their children have?\nWhy do you think children often choose different friends as they get older?\nIf a person is moving to a new town, what is a good way for them to make friends?\nCan you think of any disadvantages of making new friends online?\nWould you say it is harder for people to make new friends as they get older?"
+      },
+      {
+        "title": "Neighbours  & Facilities in cities",
+        "_book": "剑雅17 Test 1",
+        "_raw_title": "Neighbours  & Facilities in cities",
+        "_question_id": "8401",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What sort of things can neighbours do to help each other?\nHow well do people generally know their neighbours in your country?\nHow important do you think it is to have good neighbours?\nWhich facilities are most important to people living in cities ?\nHow does shopping in small local shops differ from shopping in large city centre shops ?\nDo you think that children should always go to the school nearest to where they live ?"
+      },
+      {
+        "title": "Famous people today & Advantages of being famous",
+        "_book": "剑雅15 Test 3",
+        "_raw_title": "Famous people today & Advantages of being famous",
+        "_question_id": "8142",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of people are most famous in your country today?\nWhy are there so many stories about famous people in the news?\nDo you agree or disagree that many young people today want to be famous?\nDo you think it is easy for famous people to earn a lot of money?\nWhy might famous people enjoy having fans?\nIn what ways could famous people use their influence to do good things in the world?"
+      },
+      {
+        "title": "Arriving early & Being patient",
+        "_book": "剑雅12 Test 5",
+        "_raw_title": "Arriving early & Being patient",
+        "_question_id": "6727",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "In what kinds of situations should people always arrive early?\nHow important it is to arrive early in your country?\nHow can modern technology help people to arrive early?\nWhat kinds of jobs require the most patience?\nIs it always better to be patient in work (or studies)?\nDo you agree or disagree that the older people are, the more patient they are?"
+      },
+      {
+        "title": "Money and young people & Money and society",
+        "_book": "剑雅12 Test 7",
+        "_raw_title": "Money and young people & Money and society",
+        "_question_id": "6767",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do some parents give their children money to spend each week?\nDo you agree that schools should teach children how to manage money?\nDo you think it is a good idea for students to earn money while studying?\nDo you think it is true that in today's society money cannot buy happiness?\nWhat disadvantages are there in a society where the gap between rich and poor is very large?\nDo you think richer countries have a responsibility to help poorer countries?"
+      },
+      {
+        "title": "Different kinds of workplaces & The importance of work",
+        "_book": "剑雅12 Test 8",
+        "_raw_title": "Different kinds of workplaces & The importance of work",
+        "_question_id": "6775",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What things make an office comfortable to work in?\nWhy do some people prefer to work outdoors?\nDo you agree that the building people work in is more important than the colleagues they work with?\nWhat would life be like if people didn't have to work?\nAre all jobs of equal importance?\nWhy do some people become workaholics?"
+      },
+      {
+        "title": "Reading and children & Reading for different purposes",
+        "_book": "剑雅11 Test 2",
+        "_raw_title": "Reading and children & Reading for different purposes",
+        "_question_id": "6801",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of book are most popular with children in your country? Why do you think that is?\nWhy do you think some children do not read books very often?\nHow do you think children can be encouraged to read more?\nAre there any occasions when reading at speed is a useful skill to have? What are they?\nAre there any jobs where people need to read a lot? What are they?\nDo you think that reading novels is more interesting than reading factual books?Why is that?"
+      },
+      {
+        "title": "Skills and abilities & Salaries for skilled people",
+        "_book": "剑雅10 Test 1",
+        "_raw_title": "Skills and abilities & Salaries for skilled people",
+        "_question_id": "6822",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What skills and abilities do people most want to have today? Why?\nWhich skills should children learn at school? Are there any skills which they should learn at home?What are they?\nWhich skills do you think will be important in the future? Why?\nWhich kinds of jobs have the highest salaries in your country? Why is this?\nAre there any other jobs that you think should have high salaries? Why do you think that?\nSome people say it would be better for society if everyone got the same salary. What do you think about that? Why?"
+      },
+      {
+        "title": "Relationships between parents and children & Children’s free-time activities",
+        "_book": "剑雅10 Test 3",
+        "_raw_title": "Relationships between parents and children & Children’s free-time activities",
+        "_question_id": "6854",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "How much time do children spend with their parents in your country? Do you think that is enough?\nHow important do you think spending time together is for the relationships between parents and children? Why?\nHave relationships between parents and children changed in recent years? Why do you think that is?\nWhat are the most popular free-time activities with children today?\nDo you think the free-time activities children do today are good for their health? Why is that?\nHow do you think children's activities will change in the future? Will this be a positive change?"
+      },
+      {
+        "title": "Helping other people in the community & Community Services",
+        "_book": "剑雅9 Test 4",
+        "_raw_title": "Helping other people in the community & Community Services",
+        "_question_id": "6894",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are some of the ways people can help others in the community? Which is most important?\nWhy do you think some people like to help other people?\nSome people say that people help others In the community more now than they did in the past. Do you agree or disagree? Why?\nWhat types of services, such as libraries or health centres, are available to the people who live in your area? Do you think there are enough of them?\nWhich group of people generally need most support in a community? Why?\nWho do you think should pay for the services that are available to the people in a community? Should it be the government or individual people?"
+      },
+      {
+        "title": "Friendship & Influence of friends",
+        "_book": "剑雅8 Test 4",
+        "_raw_title": "Friendship & Influence of friends",
+        "_question_id": "6953",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What do you think makes someone a good friend to a whole family?\nDo you think we meet different kinds of friend at different stages of our lives? In what ways are these types of friend different?\nHow easy is it to make friends with people from a different age group?\nDo you think it is possible to be friends with someone if you never meet them in person? Is this real friendship?\nWhat kind of influence can friends have on our lives?\nHow important would you say it is to have friends from different cultures?"
+      },
+      {
+        "title": "Family parties&National celebrations",
+        "_book": "剑雅7 Test 1",
+        "_raw_title": "Family parties&National celebrations",
+        "_question_id": "7128",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the main reasons why people organise family parties in your country?\nIn some places people spend a lot of money on parties that celebrate special family events. Is this ever true in your country? Do you think this is a good trend or a bad trend?\nAre there many differences between family parties and parties given by friends? Why do you think this is?\nWhat kinds of national celebration do you have in your country?\nWho tends to enjoy national celebrations more: young people or old people? Why?\nWhy do you think some people think that national celebrations are a waste of government money? Would you agree or disagree with this view? Why?"
+      },
+      {
+        "title": "Family similarities&Genetic research",
+        "_book": "剑雅6 Test 1",
+        "_raw_title": "Family similarities&Genetic research",
+        "_question_id": "7081",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "In what ways can people in a family be similar to each other?\nDo you think that daughters are always more similar to mothers than to male relatives? What about sons and fathers?\nIn terms of personality, are people more influenced by their family or by their friends? In what ways?\nWhere can people in your country get information about genetic research?\nHow do people in your country feel about genetic research?\nShould this research be funded by governments or private companies? Why?"
+      },
+      {
+        "title": "Famous people in your country&Being in the public eye",
+        "_book": "剑雅5 Test 1",
+        "_raw_title": "Famous people in your country&Being in the public eye",
+        "_question_id": "6965",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kind of people become famous people these days?\nIs this different from the kind of achievement that made people famous in the past? In what way?\nHow do you think people will become famous in the future?\nWhat are the good things about being famous? Are there any disadvantages?\nHow does the media in your country treat famous people?\nWhy do you think ordinary people are interested in the lives of famous people?"
+      },
+      {
+        "title": "Qualities of friends & Other relationships",
+        "_book": "剑雅5 Test 3",
+        "_raw_title": "Qualities of friends & Other relationships",
+        "_question_id": "7075",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What do you think are the most important qualities for friends to have?\nWhich are more important to people, their family or their friends? Why?\nWhat do you think causes friendships to break up?\nWhat other types of relationship, apart from friends or family, are important in people's lives today?\nHave relationships with neighbours where you live changed in recent years? How?\nHow important do you think it is for a person to spend some time alone? Why / Why not?"
+      }
+    ],
+    "事件": [
+      {
+        "title": "剑桥20 Test2 口语 Part 3 第 3 题",
+        "_book": "剑雅20 Test 2",
+        "_raw_title": "C20T2S3",
+        "_question_id": "8567",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "1. What kinds of plans do friends make together?\n2. Do you think it’s better to discuss future plans with friends or with family?\n3. When making plans for the future, is it important not to copy friends?\n1. When people are choosing what to study, how important is it that their course should lead directly to a career?\n2. Why is it a good idea to get some work experience before deciding on a future career?\n3. How easy do you think it is for people to change from one career to another?"
+      },
+      {
+        "title": "剑桥20 Test3 口语 Part 3 第 3 题",
+        "_book": "剑雅20 Test 3",
+        "_raw_title": "C20T3S3",
+        "_question_id": "8571",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "1. What are some aspects of people’s lives that they can often be dissatisfied with?\n2. Would you say that having ambitions in life is always a positive thing?\n3. What do you believe the most important components are of a satisfying life?\n1. What makes a job more satisfying: a high salary or having good colleagues?\n2. Do you think people need to change jobs regularly if they want to stay satisfied at work?\n3. Is it possible to find job satisfaction in all types of work?"
+      },
+      {
+        "title": "剑桥20 Test4 口语 Part 3 第 3 题",
+        "_book": "剑雅20 Test 4",
+        "_raw_title": "C20T4S3",
+        "_question_id": "8573",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "1. How do most people find out about the news in your country?\n2. Are people more interested in local news than national news?\n3. How important is it to know about international news?\n1. Why are discussion programmes involving members of the public popular on [TV and radio]?\n2. What kinds of people want to take part in discussion programmes?\n3. Do discussion programmes influence people in a good or bad way?"
+      },
+      {
+        "title": "剑桥19 Test4 口语 Part 3 第 3 题",
+        "_book": "剑雅19 Test 4",
+        "_raw_title": "C19T4S3",
+        "_question_id": "8531",
+        "_sub_questions": "5",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Do you agree that most beauty products are a waste of money?\nHow does the beauty industry advertise its products so successfully?\nWhat do you think of the view that beauty products should not be advertised to children?\nWhy do many people equate youth with beauty?\nDo you think that being beautiful could affect a person’s success in life? Why might society’s ideas about beauty change over time?"
+      },
+      {
+        "title": "剑桥18 Test3 口语 Part 3 第 3 题",
+        "_book": "剑雅18 Test 3",
+        "_raw_title": "C18T3S3",
+        "_question_id": "8470",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "When do families celebrate together in your country?\nHow often do all the generations in a family come together in your country？\nWhy is it that some people might not enjoy attending family occasions?\nDo you think it is a good thing for parents to help their children with schoolwork?\nHow important do you think it is for families to eat together at least once a day?\nDo you believe that everyone in a family should share household tasks?"
+      },
+      {
+        "title": "Arriving late &Managing study time",
+        "_book": "剑雅17 Test 4",
+        "_raw_title": "Arriving late &Managing study time",
+        "_question_id": "8414",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Do you think it's OK to arrive late when meeting a friend?\nWhat should happen to people who arrive late for work?\nCan you suggest how people can make sure they don't arrive late?\nIs it better to study for long periods or in shorter blocks of time?\nWhat are the likely effects of students not managing their study time well?\nHow important is it for students to have enough leisure time?"
+      },
+      {
+        "title": "Shopping online & The culture of consumerism",
+        "_book": "剑雅15 Test 2",
+        "_raw_title": "Shopping online & The culture of consumerism",
+        "_question_id": "8137",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of things do people in your country often buy from online shops?\nWhy do you think online shopping has become so popular nowadays?\nWhat are some possible disadvantages of buying things from online shops?\nWhy do many people today keep buying things which they do not need?\nDo you believe the benefits of a consumer society outweigh the disadvantages?\nHow possible is it to avoid the culture of consumerism?"
+      },
+      {
+        "title": "Science and the public & Scientific discoveries",
+        "_book": "剑雅15 Test 4",
+        "_raw_title": "Science and the public & Scientific discoveries",
+        "_question_id": "8164",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "How interested are most people in your country in science?\nWhy do you think children today might be better at science than their parents?\nHow do you suggest the public can learn more about scientific developments?\nWhat do you think are the most important scientific discoveries in the last 100 years?\nDo you agree or disagree that there are no more major scientific discoveries left to make?\nWho should pay for scientific research – governments or private companies?"
+      },
+      {
+        "title": "Creating a nice home & Different types of home",
+        "_book": "剑雅14 Test 2",
+        "_raw_title": "Creating a nice home & Different types of home",
+        "_question_id": "6643",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do some people buy lots of things for their home?\nDo you think it is very expensive to make a home look nice?\nWhy don't some people care about how their home looks?\nIn what ways is living in a flat/apartment better than living in a house?\nDo you think homes will look different in the future?\nDo you agree that the kinds of homes people prefer change as they get older?"
+      },
+      {
+        "title": "Difficult jobs & Personal and career success",
+        "_book": "剑雅14 Test 3",
+        "_raw_title": "Difficult jobs & Personal and career success",
+        "_question_id": "6653",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the most difficult jobs that people do?\nWhy do you think some people choose to do difficult jobs?\nDo you agree or disagree that all jobs are difficult sometimes?\nHow important is it for everyone to have a goal in their personal life?\nIs it always necessary to work hard in order to achieve career success?\nDo you think that successful people are always happy people?"
+      },
+      {
+        "title": "Shopping online & Online retail businesses",
+        "_book": "剑雅14 Test 4",
+        "_raw_title": "Shopping online & Online retail businesses",
+        "_question_id": "6669",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of things do people in your country often buy from online shops?\nWhy has online shopping become so popular in many countries?\nWhat are some possible disadvantages of buying things from online shops?\nDo you agree that the prices of all goods should be lower on internet shopping sites than in shops?\nWill large shopping malls continue to be popular, despite the growth of internet shopping?\nDo you think that some businesses (e.g. banks and travel agents) will only operate online in the future?"
+      },
+      {
+        "title": "Choosing work & Work-Life balance",
+        "_book": "剑雅13 Test 1",
+        "_raw_title": "Choosing work & Work-Life balance",
+        "_question_id": "6676",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of jobs do young people not want to do in your country?\nWho is best at advising young people about choosing a job: teachers or parents?\nIs money always the most important thing when choosing a job?\nDo you agree that many people nowadays are under pressure to work longer hours and take less holiday?\nWhat is the impact on society of people having a poor work-life balance?\nCould you recommend some effective strategies for governments and employers to ensure people have a good work-life balance?"
+      },
+      {
+        "title": "Discussing problems with others & Communication skills at work",
+        "_book": "剑雅13 Test 3",
+        "_raw_title": "Discussing problems with others & Communication skills at work",
+        "_question_id": "6700",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why is it good to discuss problems with other people?\nDo you think that it’s better to talk to friends and not family about problems?\nIs it always a good idea to tell lots of people about a problem?\nWhich communication skills are most important when taking part in meetings with colleagues?\nWhat are the possible effects of poor written communication skills at work?\nWhat do you think will be the future impact of technology on communication in the workplace?"
+      },
+      {
+        "title": "Watching films/movices & Theatre",
+        "_book": "剑雅12 Test 6",
+        "_raw_title": "Watching films/movices & Theatre",
+        "_question_id": "6745",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the most popular types of films in your country?\nWhat is the difference between watching a film in the cinema and watching a film at home?\nDo you think cinemas will close in the future?\nHow important is the theatre in your country's history?\nHow strong a tradition is it today in your country to go to the theatre?\nDo you think the theatre should be run as a business as a public service?"
+      },
+      {
+        "title": "Types of weather & Weather forecasts",
+        "_book": "剑雅11 Test 3",
+        "_raw_title": "Types of weather & Weather forecasts",
+        "_question_id": "6793",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What types of weather do people in your country dislike most? Why is that?\nWhat jobs can be affected by different weather conditions? Why?\nAre there any important festivals in your country that celebrate a season or type of weather?\nHow important do you think it is for everyone to check what the next day's weather will be? Why?\nWhat is the best way to get accurate information about the weather?\nHow easy or difficult is it to predict the weather in your country? Why is that?"
+      },
+      {
+        "title": "Different types of TV programmes & TV advertising",
+        "_book": "剑雅11 Test 4",
+        "_raw_title": "Different types of TV programmes & TV advertising",
+        "_question_id": "6834",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the most popular kinds of TV programmes in your country? Why is this?\nDo you think there are too many game shows on TV nowadays? Why?\nDo you think TV is the main way for people to get the news in your country? What other ways are there?\nWhat types of products are advertised most often on TV?\nDo you think that people pay attention to adverts on TV? Why do you think that is?\nHow important are regulations on TV advertising?"
+      },
+      {
+        "title": "Doing new things&Learning new things",
+        "_book": "剑雅9 Test 2",
+        "_raw_title": "Doing new things&Learning new things",
+        "_question_id": "6882",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do you think some people like doing new things?\nWhat problems can people have when they try new activities for the first time?\nDo you think it's best to do new things on your own or with other people? Why?\nWhat kinds of things do children learn to do when they are very young? How important are these things?\nDo you think children and adults learn to do new things in the same way? How is their learning style different?\nSome people say that it is more important to be able to learn new things now that it was in the past. Do you agree or disagree with that? Why?"
+      },
+      {
+        "title": "Reasons for daily travel & Benefits of international travel",
+        "_book": "剑雅9 Test 3",
+        "_raw_title": "Reasons for daily travel & Benefits of international travel",
+        "_question_id": "6943",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do people need to travel every day?\nWhat problems can people have when they are on their daily journey, for example to work or school? Why is this?\nSome people say that daily journeys like these will not be so common in the future. Do you agree or disagree? Why?\nWhat do you think people can learn from travelling to other countries? Why?\nCan travel make a positive difference to the economy of a country? How?\nDo you think a society can benefit if its members have experience of travelling to other countries? In what ways?"
+      },
+      {
+        "title": "Asking questions & Questionaires in school",
+        "_book": "剑雅8 Test 1",
+        "_raw_title": "Asking questions & Questionaires in school",
+        "_question_id": "6912",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of organisation want to find out about people's opinions?\nDo you think that questionnaires or surveys are good ways of finding out people's opinions?\nWhat reasons might people have for not wanting to give their opinions?\nDo you think it would be a good idea for schools to ask students their opinions about lessons?\nWhat would the advantages for schools be if they asked students their opinions?\nWould there be any disadvantages in asking students' opinions?"
+      },
+      {
+        "title": "Going to meetings&International meetings",
+        "_book": "剑雅8 Test 3",
+        "_raw_title": "Going to meetings&International meetings",
+        "_question_id": "6920",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the different types of meeting that people often go to?\nSome people say that no-one likes to go to meetings - what do you think?\nWhy can it sometimes be important to go to meetings?\nWhy do you think world leaders often have meetings together?\nWhat possible difficulties might be involved in organising meetings between world leaders?\nDo you think that meetings between international leaders will become more frequent in the future? Or will there be less need for world leaders to meet?"
+      },
+      {
+        "title": "Ideas and education&Ideas in the workplace",
+        "_book": "剑雅7 Test 2",
+        "_raw_title": "Ideas and education&Ideas in the workplace",
+        "_question_id": "6996",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Some people think that education should be about memorising the important ideas of the past. Do you agree or disagree? Why?\nShould education encourage students to have their own new ideas? Why?\nHow do you think teachers could help students to develop and share their own ideas?\nShould employers encourage their workers to have new ideas about improving the company? Why?\nDo you think people sometimes dislike ideas just because they are new? Why?\nWhat is more difficult: having new ideas or putting them into practice? Which is more important for a successful company?"
+      },
+      {
+        "title": "Competitions in school & Sporting competitions",
+        "_book": "剑雅7 Test 3",
+        "_raw_title": "Competitions in school & Sporting competitions",
+        "_question_id": "7019",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do you think some school teachers use competitions as class activities?\nDo you think it is a good thing to give prizes to children who do well at school? Why?\nWould you say that schools for young children have become more or less competitive since you were that age? Why?\nWhat are the advantages and disadvantages of intensive training for young sportspeople?\nSome people think that competition leads to a better performance from sports stars. Others think it just makes players feel insecure. What is your opinion?\nDo you think that it is possible to become too competitive in sport? In what way?"
+      },
+      {
+        "title": "Keeping fit and healthy&Health and modern lifestyles",
+        "_book": "剑雅6 Test 2",
+        "_raw_title": "Keeping fit and healthy&Health and modern lifestyles",
+        "_question_id": "7035",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What do most people do to keep fit in your country?\nHow important is it for people to do some regular physical exercise?\nWhy do some people think that modern lifestyles are not healthy?\nWhy do some people choose to lead unhealthy lives?\nShould individuals or governments be responsible for making people's lifestyle healthy?\nWhat could be done to encourage people to live in a healthy way?"
+      },
+      {
+        "title": "Children's games&Games and competition",
+        "_book": "剑雅6 Test 3",
+        "_raw_title": "Children's games&Games and competition",
+        "_question_id": "7049",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "How have games changed from the time when you were a child?\nDo you think this has been a positive change? Why?\nWhy do you think children like playing games?\nDo you think competitive games are good or bad for children? In what ways?\nHow can games sometimes help to unite people?\nWhy is competition often seen as important in today's society?"
+      },
+      {
+        "title": "Important choices&Choices in everyday life",
+        "_book": "剑雅6 Test 4",
+        "_raw_title": "Important choices&Choices in everyday life",
+        "_question_id": "7056",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the typical choices people make at different stages of their lives?\nShould important choices be made by parents rather than by young adults?\nWhy do some people like to discuss choices with other people?\nWhat kind of choices do people have to make in their everyday life?\nWhy do some people choose to do the same things every day? Are there any disadvantages in this?\nDo you think that people today have more choices to make today than in the past?"
+      },
+      {
+        "title": "Purpose of festivals and celebrations & Festivals and the media",
+        "_book": "剑雅5 Test 4",
+        "_raw_title": "Purpose of festivals and celebrations & Festivals and the media",
+        "_question_id": "7101",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do you think festivals are important events in the working year?\nWould you agree that the original significance of festivals is often lost today? Is it good or bad, do you think?\nDo you think that new festivals will be introduced in the future? What kind?\nWhat role does the media play in festivals, do you think?\nDo you think it's good or bad to watch festivals on TV? Why?\nHow may globalisation affect different festivals around the world?"
+      }
+    ],
+    "物品": [
+      {
+        "title": "剑桥20 Test1 口语 Part 3 第 3 题",
+        "_book": "剑雅20 Test 1",
+        "_raw_title": "C20T1S3",
+        "_question_id": "8564",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "1. What are the most popular kinds of plays or shows at theatres in your country?\n2. How easy is it to get tickets to the theatre?\n3. Do you think theatres need to do more to attract younger audiences?\n1. What do you think attracts people to working as an actor?\n2. What are some of the qualities that a person needs to have if they want to become an actor?\n3. Can you think of any disadvantages of working as an actor?"
+      },
+      {
+        "title": "剑桥19 Test1 口语 Part 3 第 3 题",
+        "_book": "剑雅19 Test 1",
+        "_raw_title": "C19T1S3",
+        "_question_id": "8516",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of rules are common in a school?\nHow important is it to have rules in a school?\nWhat do you recommend should happen if children break school rules?\nCan you suggest why many students decide to study law at university?\nWhat are the key personal qualities needed to be a successful lawyer?\nDo you agree that working in the legal profession is very stressful?"
+      },
+      {
+        "title": "剑桥19 Test2 口语 Part 3 第 3 题",
+        "_book": "剑雅19 Test 2",
+        "_raw_title": "C19T2S3",
+        "_question_id": "8521",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What types of school prizes do children in your country receive?\nWhat do you think are the advantages of rewarding schoolchildren for good work?\nDo you agree that it’s more important for children to receive rewards from their parents than from teachers?\nDo you think that some sportspeople (e.g., top footballers) are paid too much money?\nShould everyone on a team get the same prize money when they win?\nDo you agree with the view that, in sport, taking part is more important than winning?"
+      },
+      {
+        "title": "剑桥19 Test3 口语 Part 3 第 3 题",
+        "_book": "剑雅19 Test 3",
+        "_raw_title": "C19T3S3",
+        "_question_id": "8528",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "How interested are young people in your country in learning to drive?\nWhat are the differences between driving in the countryside and driving in the city?\nDo you consider most drivers where you live to be good drivers?\nHow popular are electric cars in your country?\nIn what ways could more people be persuaded to buy electric cars?\nDo you think all cars will be electric one day?"
+      },
+      {
+        "title": "Public monuments&Architecture",
+        "_book": "剑雅17 Test 3",
+        "_raw_title": "Public monuments&Architecture",
+        "_question_id": "8409",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of monuments do tourists in your country enjoy visiting?\nWhy do you think there are often statues of famous people in public places?\nDo you agree that old monuments and buildings should always be preserved?\nWhy is architecture such a popular university subject?\nIn what ways has the design of homes changed in recent years?\nTo what extent does the design of buildings affect people's moods?"
+      },
+      {
+        "title": "Online reviews & customer service",
+        "_book": "剑雅16 Test 2",
+        "_raw_title": "Online reviews & customer service",
+        "_question_id": "8344",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of things do people write online reviews about in your country?\nWhy do some people write online reviews?\nDo you think that online reviews are good for both shoppers and companies?\nWhat do you think it might be like to work in a customer service job?\nDo you agree that customers are more likely to complain nowadays?\nHow important is it for companies to take all customer complaints seriously?"
+      },
+      {
+        "title": "Expensive items & Rich people",
+        "_book": "剑雅16 Test 3",
+        "_raw_title": "Expensive items & Rich people",
+        "_question_id": "8347",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Which expensive items would many young people (in your country) like to buy?\nHow do the expensive items that younger people want to buy differ from those that older people want to buy?\nDo you think that people are more likely to buy expensive items for their friends or for themselves?\nHow difficult is it to become very rich in today’s world?\nDo you agree that money does not necessarily bring happiness?\nIn what ways might rich people use their money to help society?"
+      },
+      {
+        "title": "Computer games & Technology in the classroom",
+        "_book": "剑雅16 Test 4",
+        "_raw_title": "Computer games & Technology in the classroom",
+        "_question_id": "8350",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of computer games do people play in your country?\nWhy do people enjoy playing computer games?\nDo you think that all computer games should have a minimum age for players?\nIn what ways can technology in the classroom be helpful?\nDo you agree that students are often better at using technology than their teachers?\nDo you believe that computers will ever replace human teachers?"
+      },
+      {
+        "title": "Children and reading & Electronic books",
+        "_book": "剑雅14 Test 1",
+        "_raw_title": "Children and reading & Electronic books",
+        "_question_id": "6629",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the most popular types of children's books in your country?\nWhat are the benefits of parents reading books to their children?\nShould parents always let children choose the books they read?\nHow popular are electronic books are in your country?\nWhat are the advantages of parents reading electronic books (compared to printed books)?\nWill electronic books ever completely replace printed books in the future?"
+      },
+      {
+        "title": "Technology and education & Technology and society",
+        "_book": "剑雅13 Test 2",
+        "_raw_title": "Technology and education & Technology and society",
+        "_question_id": "6687",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What is the best age for children to start computer lessons?\nDo you think that schools should use more technology to help children learn?\nDo you agree or disagree that computers will replace teachers one day?\nHow much has technology improved how we communicate with each other?\nDo you agree that there are still many more major technological innovations to?be made?\nCould you suggest some reasons why some people are deciding to reduce their use of technology?"
+      },
+      {
+        "title": "The internet & Social media websites",
+        "_book": "剑雅13 Test 4",
+        "_raw_title": "The internet & Social media websites",
+        "_question_id": "6732",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do some people find the internet addictive?\nWhat would the world be like without the internet?\nDo you think that the way people use the internet may change in the future?\nWhat are the ways that social media can be used for positive purposes?\nWhy do some individuals post highly negative comments about other people on social media?\nDo you think that companies' main form of advertising will be via social media in the future?"
+      },
+      {
+        "title": "Owning things & Salaries for skilled people",
+        "_book": "剑雅10 Test 4",
+        "_raw_title": "Owning things & Salaries for skilled people",
+        "_question_id": "6864",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What types of things do young people in your country most want to own today? Why is this?\nWhy do some people feel they need to own things?\nDo you think that owing lots of things makes people happy? Why?\nDo you think television and films can make people want to get new possessions? Why do they have this effect?\nAre there any benifits to society of people wanting to get new possessions? Why do you think this is?\nDo you think people will consider that having lots of possessions is a sign of success in the future? Why?"
+      },
+      {
+        "title": "Technology and housework&Technology in the workplace",
+        "_book": "剑雅7 Test 4",
+        "_raw_title": "Technology and housework&Technology in the workplace",
+        "_question_id": "7006",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of machine are used for housework in modern homes in your country?\nHow have these machines benefited people? Are there any negative effects of using them?\nDo you think all new homes will be equipped with household machines in the future? Why?\nWhat kinds of equipment do most workers need to use in offices today?\nHow have developments in technology affected employment in your country?\nSome people think that technology has brought more stress than benefits to employed people nowadays. Would you agree or disagree? Why?"
+      },
+      {
+        "title": "Music and young people&Music and society",
+        "_book": "剑雅5 Test 2",
+        "_raw_title": "Music and young people&Music and society",
+        "_question_id": "7040",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of music are popular with young people in your culture?\nWhat do you think influences a young person's taste in music?\nHow has technology affected the kinds of music popular with young people?\nTell me about any traditional music in your culture.\nHow important is it for a culture to have musical traditions?\nWhy do you think countries have national anthems or songs?"
+      }
+    ],
+    "地点": [
+      {
+        "title": "剑桥18 Test2 口语 Part 3 第 3 题",
+        "_book": "剑雅18 Test 2",
+        "_raw_title": "C18T2S3",
+        "_question_id": "8458",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the most popular museums and art galleries in … / where you live?\nDo you believe that all museums and art galleries should be free?\nWhat kinds of things make a museum or art gallery an interesting place to visit?\nWhy, do you think, do some people book package holidays rather than travelling independently?\nWould you say that large numbers of tourists cause problems for local people?\nWhat sort of impact can large holiday resorts have on the environment?"
+      },
+      {
+        "title": "Visiting cities on holiday & The growth of cities",
+        "_book": "剑雅17 Test 2",
+        "_raw_title": "Visiting cities on holiday & The growth of cities",
+        "_question_id": "8404",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the most interesting things to do while visiting cities on holiday?\nWhy can it be expensive to visit cities on holiday?\nDo you think it is better to visit cities alone or in a group with friends?\nWhy have cities increased in size in recent years?\nWhat are the challenges created by ever-growing cities?\nIn what ways do you think cities of the future will be different to cities today?"
+      },
+      {
+        "title": "Different kinds & the importance of tourist attractions",
+        "_book": "剑雅16 Test 1",
+        "_raw_title": "Different kinds & the importance of tourist attractions",
+        "_question_id": "8341",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What are the most popular tourist attractions in your country?\nHow do the types of tourist attractions that younger people like to visit compare with those that older people like to visit?\nDo you agree that some tourist attractions (e.g. national museums/galleries) should be free to visit?\nWhy is tourism important to a country?\nWhat are the benefits to individuals of visiting another country as tourists?\nHow necessary is it for tourists to learn the language of the country they’re visiting?"
+      },
+      {
+        "title": "Staying in hotels & Working in a hotel",
+        "_book": "剑雅15 Test 1",
+        "_raw_title": "Staying in hotels & Working in a hotel",
+        "_question_id": "8112",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What things are important when people are choosing a hotel?\nWhy do some people not like staying in hotels?\nDo you think staying in a luxury hotel is a waste of money?\nDo you think hotel work is a good career for life?\nHow does working in a big hotel compare with working in a small hotel?\nWhat skills are needed to be a successful hotel manager?"
+      },
+      {
+        "title": "Different types of home & Finding a place to live",
+        "_book": "剑雅11 Test 1",
+        "_raw_title": "Different types of home & Finding a place to live",
+        "_question_id": "6760",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What kinds of home are most popular in your country? Why is this?\nWhat do you think are the advantages of living in a house rather than an apartment?\nDo you think that everyone would like to live in a larger home? Why is that?\nHow easy is it to find a place to live in your country？\nDo you think it's better to rent or to buy a place to live in? Why?\nDo you agree that there is a right age for young adults to stop living with their parents? Why is that?"
+      },
+      {
+        "title": "Local business & People and business",
+        "_book": "剑雅10 Test 2",
+        "_raw_title": "Local business & People and business",
+        "_question_id": "6923",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "What types of local business are there in your neighbourhood? Are there any restaurants, shops or dentists for example?\nDo you think local businesses are important for a neighbourhood? In what way?\nHow do large shopping malls and commercial centres affect small local businesses? Why do you think that is?\nWhy do some people want to start their own business?\nAre there any disadvantages to running a business? Which is the most serious?\nWhat are the most important qualities that a good business person needs? Why is that?"
+      },
+      {
+        "title": "Shopping at markets&Shopping in general",
+        "_book": "剑雅9 Test 1",
+        "_raw_title": "Shopping at markets&Shopping in general",
+        "_question_id": "6851",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Do people in your country enjoy going to open-air markets that sell things like foods or clothes or old objects? Which type of market is more popular? Why?\nDo you think markets are more suitable places for selling certain types of things? Which ones? Why do you think this is?\nDo you think young people feel the same about shopping at markets like as older people? Why is that?\nWhat do you think are the advantages of buying things from shops rather than markets?\nHow dose advertising influence what people choose to buy? Is this true for everyone?\nDo you think that any recent changes in the way people live have affected general shopping habits? Why is this?"
+      },
+      {
+        "title": "Restaurants & Producing food",
+        "_book": "剑雅8 Test 2",
+        "_raw_title": "Restaurants & Producing food",
+        "_question_id": "6937",
+        "_sub_questions": "6",
+        "cue_card": null,
+        "difficulty": "C1",
+        "questions": "Why do you think people go to restaurants when they want to celebrate something?\nWhich are more popular in your country: fast food restaurants or traditional restaurants?Why do you think that is?\nSome people say that food in an expensive restaurant is always better than food in a cheap restaurant - would you agree?\nDo you think there will be a greater choice of food available in shops-in the future, or will there be less choice?\nWhat effects has modern technology had on the way food is produced?\nHow important is it for a country to be able to grow all the food it needs, without importing any from other countries?"
+      }
+    ]
+  }
+}

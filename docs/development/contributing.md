@@ -30,6 +30,6 @@
 
 **项目信息**:
 
-- **项目地址**: https://github.com/your-repo/lingua-learner
-- **问题反馈**: https://github.com/your-repo/lingua-learner/issues
-- **贡献文档**: https://github.com/your-repo/lingua-learner/blob/main/CONTRIBUTING.md 🚧
+- **项目地址**: https://github.com/0422/Artifex
+- **问题反馈**: https://github.com/0422/Artifex/issues
+- **贡献文档**: https://github.com/0422/Artifex/blob/main/CONTRIBUTING.md 🚧

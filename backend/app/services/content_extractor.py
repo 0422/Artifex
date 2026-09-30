@@ -9,6 +9,8 @@ import httpx
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
+from app.core.constants import PRODUCT_NAME
+
 MAX_CONTENT_CHARS = 20000  # 传给 LLM 前的截断上限，控制 token 成本
 
 
@@ -24,8 +26,8 @@ def _truncate(text: str) -> str:
 async def extract_from_url(url: str) -> str:
     try:
         async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
-            # 2026-09-22 项目更名为 Artifex，抓取 UA 中的产品名同步更新（原 LinguaLearner）
-            resp = await client.get(url, headers={"User-Agent": "Mozilla/5.0 (Artifex)"})
+            # 2026-09-29 抓取 UA 中的产品名改用 PRODUCT_NAME，更名只改一处
+            resp = await client.get(url, headers={"User-Agent": f"Mozilla/5.0 ({PRODUCT_NAME})"})
             resp.raise_for_status()
     except httpx.HTTPError as exc:
         raise ContentExtractionError(f"URL 抓取失败: {exc}") from exc

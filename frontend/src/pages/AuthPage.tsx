@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 
 import { authApi } from '../services/api'
+// 2026-09-29 产品名改由 constants.ts 的 PRODUCT_NAME 统一提供
+import { PRODUCT_NAME } from '../lib/constants'
 import { useAuthStore } from '../stores/authStore'
 
 export default function AuthPage() {
@@ -38,7 +40,7 @@ export default function AuthPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-900/60 p-8">
-        <h1 className="mb-1 text-center text-2xl font-semibold text-indigo-400">Artifex</h1>
+        <h1 className="mb-1 text-center text-2xl font-semibold text-indigo-400">{PRODUCT_NAME}</h1>
         <p className="mb-6 text-center text-sm text-slate-400">全领域 AI 学习伙伴</p>
 
         <div className="mb-6 flex rounded-lg bg-slate-800 p-1 text-sm">

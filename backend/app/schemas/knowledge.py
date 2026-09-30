@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class KnowledgeCategoryCreate(BaseModel):
@@ -35,6 +35,15 @@ class KnowledgeCategoryRead(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    # 2026-09-30 归属只参与 is_shared 计算，不回传给前端，避免暴露"这条是谁建的"
+    user_id: uuid.UUID | None = Field(default=None, exclude=True)
+    # 官方共享分类（雅思真题库）为 True：前端据此隐藏编辑/删除入口
+    is_shared: bool = False
+
+    @model_validator(mode="after")
+    def _derive_is_shared(self) -> "KnowledgeCategoryRead":
+        self.is_shared = self.user_id is None
+        return self
 
 
 class KnowledgeCategoryTree(KnowledgeCategoryRead):

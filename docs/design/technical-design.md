@@ -588,7 +588,7 @@ ChatSession ──1:N──> LearningEvent (检验结果回流路径)
 ## 5. 目录结构
 
 ```
-lingua-learner/
+Artifex/
 ├── frontend/                      # React PWA
 │   ├── src/
 │   │   ├── components/           # 通用组件

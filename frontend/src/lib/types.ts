@@ -103,6 +103,8 @@ export interface KnowledgeCategory extends KnowledgeCategoryBrief {
   is_active: boolean
   card_count: number
   children: KnowledgeCategory[]
+  // 2026-09-30 官方共享分类（雅思真题库）为 true，前端据此隐藏编辑/删除入口
+  is_shared: boolean
   created_at: string
   updated_at: string
 }
@@ -125,6 +127,13 @@ export interface Scenario {
   estimated_minutes: number | null
   tags: string[]
   categories: KnowledgeCategoryBrief[]
+  // 2026-09-30 雅思口语场景库：ielts_part 非空即雅思场景，
+  // 决定对话走考官 prompt（Part 1 逐题追问 / Part 2 题卡独白 / Part 3 抽象追问）
+  ielts_part: number | null
+  // Part 2 的题卡正文，UI 单独展示，不混在 description 里
+  cue_card: string | null
+  // 2026-09-30 官方共享真题为 true，前端据此隐藏编辑/删除入口
+  is_shared: boolean
   is_active: boolean
   created_at: string
   updated_at: string
@@ -140,6 +149,8 @@ export interface ScenarioInput {
   estimated_minutes?: number | null
   tags?: string[]
   category_ids?: string[]
+  ielts_part?: number | null
+  cue_card?: string | null
 }
 
 export interface ChatCorrection {
@@ -233,4 +244,121 @@ export interface DashboardSessionPage {
 
 export interface DashboardSessionDetail extends DashboardSessionItem {
   report: SessionReport | null
+}
+
+// ---- Edge devices ----
+// 2026-09-30 新增边缘设备管理模块：设备在线状态。unknown = 档案刚建、尚未扫描过
+export type EdgeDeviceStatus = 'online' | 'offline' | 'unknown'
+
+// OTA 任务生命周期
+export type EdgeOtaTaskStatus = 'pending' | 'running' | 'success' | 'failed' | 'canceled'
+
+export const EDGE_DEVICE_CHIPS = ['esp32s3', 'rk3576', 'esp32', 'esp32c3'] as const
+export type EdgeChip = (typeof EDGE_DEVICE_CHIPS)[number]
+
+// llm_config.api_key 由后端脱敏后返回，只用于展示，不是真实密钥
+export interface EdgeLlmConfig {
+  api_key: string | null
+  base_url: string | null
+  model: string | null
+  temperature: number | null
+}
+
+export interface EdgePromptConfig {
+  system_prompt: string | null
+}
+
+export interface EdgeDeviceBrief {
+  id: string
+  name: string
+  chip: string
+  ip_address: string | null
+}
+
+export interface EdgeDevice extends EdgeDeviceBrief {
+  mac_address: string | null
+  firmware_version: string | null
+  status: EdgeDeviceStatus
+  last_online_at: string | null
+  wifi_ssid: string | null
+  llm_config: EdgeLlmConfig | null
+  prompt_config: EdgePromptConfig | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface EdgeDeviceInput {
+  name: string
+  chip: string
+  ip_address?: string | null
+  mac_address?: string | null
+  firmware_version?: string | null
+  notes?: string | null
+}
+
+export interface EdgeWifiInput {
+  ssid: string
+  password: string
+}
+
+export interface EdgePromptInput {
+  system_prompt: string
+}
+
+// 下发 LLM 配置。api_key 省略或保持脱敏值（**** 开头）时，后端沿用已保存的真值
+export interface EdgeLlmInput {
+  api_key?: string | null
+  base_url?: string | null
+  model?: string | null
+  temperature?: number | null
+}
+
+/** 扫描到的未认领设备：固件只广播裸 IP，认领后才能补充名称/芯片等元数据 */
+export interface DiscoveredDevice {
+  ip: string
+  payload: string
+  seen_count: number
+}
+
+/** 已建档设备在本次扫描中的在线情况 */
+export interface DeviceScanState {
+  device_id: string
+  name: string
+  ip_address: string | null
+  online: boolean
+  payload: string | null
+}
+
+export interface EdgeScanResult {
+  scanned_at: string
+  duration_ms: number
+  port: number
+  unclaimed: DiscoveredDevice[]
+  matched: DeviceScanState[]
+}
+
+export interface EdgeFirmware {
+  id: string
+  filename: string
+  version: string
+  chip: string
+  size_bytes: number
+  sha256: string
+  notes: string | null
+  created_at: string
+}
+
+export interface EdgeOtaTask {
+  id: string
+  device_id: string
+  firmware_id: string | null
+  status: EdgeOtaTaskStatus
+  progress: number
+  error: string | null
+  log: string | null
+  started_at: string | null
+  finished_at: string | null
+  created_at: string
+  firmware: EdgeFirmware | null
 }

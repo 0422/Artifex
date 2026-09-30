@@ -1,3 +1,5 @@
+name: lingua-learner
+
 services:
   # ====== PostgreSQL 15 + pgvector ======
   postgres:

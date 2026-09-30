@@ -15,26 +15,18 @@ def db() -> MagicMock:
     return MagicMock(spec=AsyncSession)
 
 
-@pytest.mark.asyncio
-async def test_create_seed_scenarios_adds_five_cards_without_committing(
-    db: MagicMock,
-) -> None:
-    user_id = uuid.uuid4()
-
-    scenarios = await scenario_service.create_seed_scenarios(db, user_id)
-
-    assert len(scenarios) == 5
-    assert all(scenario.user_id == user_id for scenario in scenarios)
-    assert {scenario.title for scenario in scenarios} == {
-        "餐厅点餐",
-        "便利店购物",
-        "问路",
-        "自我介绍",
-        "商务会议",
-    }
-    db.add_all.assert_called_once_with(scenarios)
-    db.flush.assert_awaited_once()
-    db.commit.assert_not_called()
+# 2026-09-30 test_create_seed_scenarios_adds_five_cards_without_committing 已删除：
+# 默认场景随 SEED_SCENARIOS 一起注释移除，该函数不复存在。
+# 原测试留档：
+# @pytest.mark.asyncio
+# async def test_create_seed_scenarios_adds_five_cards_without_committing(db: MagicMock) -> None:
+#     user_id = uuid.uuid4()
+#     scenarios = await scenario_service.create_seed_scenarios(db, user_id)
+#     assert len(scenarios) == 5
+#     assert all(scenario.user_id == user_id for scenario in scenarios)
+#     db.add_all.assert_called_once_with(scenarios)
+#     db.flush.assert_awaited_once()
+#     db.commit.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -58,7 +50,11 @@ async def test_create_scenario_commits_and_refreshes(db: MagicMock) -> None:
 
 @pytest.mark.asyncio
 async def test_update_scenario_only_changes_supplied_fields(db: MagicMock) -> None:
-    scenario = SimpleNamespace(title="旧标题", description="原描述", is_active=True)
+    # 2026-09-30 补 user_id：update_scenario 现在会拦共享行（user_id 为空），
+    # 本测的是"本人私有场景"，fixture 必须带归属身份
+    scenario = SimpleNamespace(
+        title="旧标题", description="原描述", is_active=True, user_id=uuid.uuid4()
+    )
 
     result = await scenario_service.update_scenario(
         db, scenario, ScenarioUpdate(title="新标题")
@@ -72,7 +68,8 @@ async def test_update_scenario_only_changes_supplied_fields(db: MagicMock) -> No
 
 @pytest.mark.asyncio
 async def test_deactivate_scenario_is_idempotent(db: MagicMock) -> None:
-    scenario = SimpleNamespace(is_active=True)
+    # 2026-09-30 同上：补 user_id 使其成为私有场景，避开共享只读保护
+    scenario = SimpleNamespace(is_active=True, user_id=uuid.uuid4())
 
     await scenario_service.deactivate_scenario(db, scenario)
     await scenario_service.deactivate_scenario(db, scenario)

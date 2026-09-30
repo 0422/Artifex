@@ -60,6 +60,11 @@ async def update_category(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="分类不存在")
     try:
         category = await knowledge_service.update_category(db, category, payload)
+    except knowledge_service.SharedReadOnlyError as error:
+        # 2026-09-30 官方共享分类对所有人只读
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=str(error)
+        ) from error
     except ValueError as error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)
@@ -76,4 +81,9 @@ async def archive_category(
     category = await knowledge_service.get_category(db, category_id, current_user.id)
     if category is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="分类不存在")
-    await knowledge_service.archive_category(db, category)
+    try:
+        await knowledge_service.archive_category(db, category)
+    except knowledge_service.SharedReadOnlyError as error:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=str(error)
+        ) from error

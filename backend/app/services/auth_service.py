@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.security import hash_password, verify_password
 from app.models.user import User, UserProfile
 from app.schemas.auth import RegisterRequest
-from app.services.scenario_service import create_seed_scenarios
 
 
 class EmailAlreadyRegisteredError(Exception):
@@ -39,7 +38,8 @@ async def register_user(db: AsyncSession, payload: RegisterRequest) -> User:
     await db.flush()
 
     db.add(UserProfile(user_id=user.id))
-    await create_seed_scenarios(db, user.id)
+    # 2026-09-30 移除注册即建的 5 条默认日语场景：现在场景统一由知识库承载
+    # （雅思真题库 + 用户自建），对话页初始为空、由用户自己选。
     await db.commit()
     await db.refresh(user)
     return user

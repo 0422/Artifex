@@ -44,7 +44,33 @@ class ChatTurnResult:
     degraded: bool = False
 
 
+def _first_question(text: str) -> str:
+    """雅思场景的 description 里按行存放题库，开场白只问第一题。
+
+    约定：一行一题。这样 prompt 能拿到完整题库按需取用，而开场白不会一次倒出一串问题。
+    """
+    for line in (text or "").splitlines():
+        clean = line.strip()
+        if clean:
+            return clean
+    return (text or "").strip()
+
+
 def _opening_message(scenario: ScenarioCard) -> str:
+    # 2026-09-30 雅思口语场景库：三种 part 的开场都必须是"考官开口"而不是
+    # "Let's practice X"——Part 2 还要把题卡完整念出来。
+    part = getattr(scenario, "ielts_part", None)
+    if part == 1:
+        # 只问题库里的第一题，后续追问由 prompt 规则驱动
+        return _first_question(scenario.description)
+    if part == 2:
+        card = getattr(scenario, "cue_card", None) or scenario.description
+        return (
+            f'Here is your topic card. You have about 1 minute to prepare, '
+            f'then please speak for up to 2 minutes.\n\n{card}'
+        )
+    if part == 3:
+        return _first_question(scenario.description)
     if getattr(scenario, "scenario_mode", "role_play") != "role_play":
         return f"我们来讨论“{scenario.title}”。{scenario.description} 你想先从哪个角度开始？"
     if scenario.language == ScenarioLanguage.JA:

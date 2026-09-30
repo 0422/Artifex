@@ -12,6 +12,14 @@ import type {
   DashboardOverview,
   DashboardSessionDetail,
   DashboardSessionPage,
+  EdgeDevice,
+  EdgeDeviceInput,
+  EdgeFirmware,
+  EdgeLlmInput,
+  EdgeOtaTask,
+  EdgePromptInput,
+  EdgeScanResult,
+  EdgeWifiInput,
   Scenario,
   ScenarioInput,
   User,
@@ -104,4 +112,69 @@ export const dashboardApi = {
 
   session: (id: string) =>
     http.get<DashboardSessionDetail>(`/dashboard/sessions/${id}`).then((r) => r.data),
+}
+
+// ---- Edge devices ----
+// 2026-09-30 新增边缘设备管理模块。固件侧尚无 OTA/远程配置接口，
+// 下发类请求会由后端返回 device-ota-unsupported / device-api-unsupported 等错误码。
+export const edgeDevicesApi = {
+  list: () => http.get<EdgeDevice[]>('/edge-devices').then((r) => r.data),
+
+  create: (input: EdgeDeviceInput) =>
+    http.post<EdgeDevice>('/edge-devices', input).then((r) => r.data),
+
+  update: (id: string, input: Partial<EdgeDeviceInput>) =>
+    http.patch<EdgeDevice>(`/edge-devices/${id}`, input).then((r) => r.data),
+
+  remove: (id: string) => http.delete(`/edge-devices/${id}`),
+
+  // 触发一次局域网 UDP 扫描，返回未认领 IP 与已建档设备的在线情况
+  scan: () => http.post<EdgeScanResult>('/edge-devices/scan').then((r) => r.data),
+
+  defaultPrompt: () =>
+    http.get<{ system_prompt: string }>('/edge-devices/default-prompt').then((r) => r.data),
+
+  pushWifi: (id: string, input: EdgeWifiInput) =>
+    http.put<EdgeDevice>(`/edge-devices/${id}/wifi`, input).then((r) => r.data),
+
+  pushLlmConfig: (id: string, input: EdgeLlmInput) =>
+    http.put<EdgeDevice>(`/edge-devices/${id}/llm-config`, input).then((r) => r.data),
+
+  pushPrompt: (id: string, input: EdgePromptInput) =>
+    http.put<EdgeDevice>(`/edge-devices/${id}/prompt`, input).then((r) => r.data),
+
+  // ---- Firmware warehouse ----
+  firmwareList: () =>
+    http.get<EdgeFirmware[]>('/edge-devices/firmware').then((r) => r.data),
+
+  uploadFirmware: (file: File, version: string, chip: string, notes?: string) => {
+    const form = new FormData()
+    form.append('version', version)
+    form.append('chip', chip)
+    form.append('file', file)
+    if (notes) form.append('notes', notes)
+    return http.post<EdgeFirmware>('/edge-devices/firmware', form).then((r) => r.data)
+  },
+
+  deleteFirmware: (id: string) => http.delete(`/edge-devices/firmware/${id}`),
+
+  downloadFirmware: (id: string) =>
+    http.get(`/edge-devices/firmware/${id}/download`, { responseType: 'blob' }).then((r) => r.data),
+
+  // ---- OTA tasks ----
+  otaTasks: (deviceId?: string) =>
+    http
+      .get<EdgeOtaTask[]>('/edge-devices/ota-tasks', { params: { device_id: deviceId } })
+      .then((r) => r.data),
+
+  otaTask: (id: string) =>
+    http.get<EdgeOtaTask>(`/edge-devices/ota-tasks/${id}`).then((r) => r.data),
+
+  createOtaTask: (deviceId: string, firmwareId: string) =>
+    http
+      .post<EdgeOtaTask>(`/edge-devices/${deviceId}/ota-tasks`, { firmware_id: firmwareId })
+      .then((r) => r.data),
+
+  cancelOtaTask: (id: string) =>
+    http.post<EdgeOtaTask>(`/edge-devices/ota-tasks/${id}/cancel`).then((r) => r.data),
 }

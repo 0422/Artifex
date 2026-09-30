@@ -3,6 +3,8 @@ import { ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { captureApi } from '../services/api'
+// 2026-09-29 产品名改由 constants.ts 的 PRODUCT_NAME 统一提供
+import { PRODUCT_NAME } from '../lib/constants'
 import type { Concept, Domain } from '../lib/types'
 
 const DOMAIN_OPTIONS: { value: Domain; label: string }[] = [
@@ -55,7 +57,7 @@ export default function CapturePage() {
       <Link to="/tools" title="返回工具库" aria-label="返回工具库" className="icon-button mb-5"><ArrowLeft size={19} /></Link>
       <h1 className="mb-1 text-2xl font-semibold text-slate-100">内容捕获</h1>
       <p className="mb-6 text-sm text-slate-400">
-        粘贴文章，Artifex 会自动提取关键概念、生成记忆卡片。
+        粘贴文章，{PRODUCT_NAME} 会自动提取关键概念、生成记忆卡片。
       </p>
 
       <textarea

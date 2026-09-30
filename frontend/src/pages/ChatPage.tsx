@@ -4,6 +4,8 @@ import { useSearchParams } from 'react-router-dom'
 
 import type { DigitalHumanMood, DigitalHumanMotion } from '../components/DigitalHumanAvatar'
 import ScenarioManager from '../components/ScenarioManager'
+// 2026-09-30 雅思口语场景库：Part 徽章名
+import { IELTS_PART_LABEL } from '../lib/constants'
 import type { ChatMessage, ChatServerEvent, Scenario, SessionReport } from '../lib/types'
 import {
   createSpeechRecognition,
@@ -355,7 +357,11 @@ export default function ChatPage() {
               {scenarioOpen ? <ChevronLeft size={17} /> : <ChevronRight size={17} />}
             </button></span>
             <div className="min-w-0">
-              <h1 className="truncate text-sm font-semibold text-zinc-100">{selected?.title ?? '情境对话'}</h1>
+              <div className="flex min-w-0 items-center gap-2">
+                <h1 className="truncate text-sm font-semibold text-zinc-100">{selected?.title ?? '情境对话'}</h1>
+                {/* 2026-09-30 雅思口语场景库：考官模式下标明 Part，行为差异全靠它区分 */}
+                {selected?.ielts_part ? <span className="shrink-0 rounded bg-teal-950 px-2 py-0.5 text-[10px] text-teal-300">雅思 {IELTS_PART_LABEL[selected.ielts_part]}</span> : null}
+              </div>
               <p className="truncate text-xs text-zinc-500">{selected ? `${LANGUAGE_LABEL[selected.language]} · ${selected.difficulty}` : '请选择练习场景'}</p>
             </div>
           </div>
@@ -409,6 +415,18 @@ export default function ChatPage() {
         </div>
 
         {error && <div className="border-t border-red-900/60 bg-red-950/40 px-5 py-2 text-xs text-red-300">{error}</div>}
+        {/* 2026-09-30 雅思 Part 2：题卡在整段独白期间常驻，学生随时能看到要说什么 */}
+        {selected?.ielts_part === 2 && selected.cue_card && (sessionState === 'active' || sessionState === 'idle') && (
+          <div className="shrink-0 border-t border-teal-900/60 bg-teal-950/25 px-5 py-3">
+            <div className="mx-auto max-w-3xl">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-xs font-medium text-teal-300">Cue card · Part 2</h2>
+                <span className="text-[11px] text-zinc-500">约 1 分钟准备，最长 2 分钟独白</span>
+              </div>
+              <p className="mt-2 whitespace-pre-wrap font-mono text-xs leading-6 text-zinc-200">{selected.cue_card}</p>
+            </div>
+          </div>
+        )}
         <footer className="shrink-0 border-t border-zinc-800 bg-zinc-950 p-3 sm:p-4">
           <div className="mx-auto flex max-w-3xl items-end gap-2">
             <button

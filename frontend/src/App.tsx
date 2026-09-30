@@ -6,6 +6,8 @@ import { useAuthStore } from './stores/authStore'
 import AuthPage from './pages/AuthPage'
 import CapturePage from './pages/CapturePage'
 import ChatPage from './pages/ChatPage'
+// 2026-09-30 新增边缘设备管理模块
+import EdgeDevicesPage from './pages/EdgeDevicesPage'
 import ContainerLoadingCalculatorPage from './pages/ContainerLoadingCalculatorPage'
 import DashboardPage from './pages/DashboardPage'
 import Layout from './pages/Layout'
@@ -44,6 +46,8 @@ export default function App() {
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/knowledge" element={<KnowledgePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          {/* 2026-09-30 新增边缘设备管理模块 */}
+          <Route path="/edge-devices" element={<EdgeDevicesPage />} />
           <Route path="/tools" element={<ToolLibraryPage />} />
           <Route path="/tools/learning-path" element={<PathPage />} />
           <Route path="/tools/content-capture" element={<CapturePage />} />
