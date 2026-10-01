@@ -42,6 +42,9 @@ class ChatTurnResult:
     assistant_message: ChatMessage
     correction: ChatCorrection | None
     degraded: bool = False
+    # 2026-10-01 降级原因（异常类型 + 摘要），一路带到前端，
+    # 让右上角「对话服务在线」能如实显示 LLM 出问题了，而不是显示正常
+    degraded_reason: str | None = None
 
 
 def _first_question(text: str) -> str:
@@ -153,6 +156,7 @@ async def append_turn(
     await db.refresh(user_message)
 
     degraded = False
+    degraded_reason: str | None = None
     correction: ChatCorrection | None = None
     try:
         raw_output = await asyncio.wait_for(
@@ -175,6 +179,7 @@ async def append_turn(
             "Chat LLM fallback for session %s: %s", session.id, type(exc).__name__
         )
         degraded = True
+        degraded_reason = f"{type(exc).__name__}: {exc}"[:200]
         reply_content = _placeholder_reply(session.language)
 
     user_message.correction = (
@@ -194,6 +199,7 @@ async def append_turn(
         assistant_message=reply,
         correction=correction,
         degraded=degraded,
+        degraded_reason=degraded_reason,
     )
 
 

@@ -13,24 +13,9 @@ class CardType(str, enum.Enum):
     TECHNIQUE = "technique"
 
 
-class CaptureSourceType(str, enum.Enum):
-    TEXT = "text"
-    URL = "url"
-    PDF = "pdf"
-
-
-class CaptureStatus(str, enum.Enum):
-    PENDING = "pending"
-    PROCESSING = "processing"
-    COMPLETED = "completed"
-    FAILED = "failed"
-
-
-class ConceptRelationType(str, enum.Enum):
-    PREREQUISITE = "prerequisite"
-    ANALOGY = "analogy"
-    CONTRAST = "contrast"
-    EXTENDS = "extends"
+# 2026-10-01 内容捕获/知识图谱/学习路径功能下线，
+# CaptureSourceType、CaptureStatus、ConceptRelationType、
+# LearningPathStatus、PathMilestoneStatus 五个枚举随模型一并删除
 
 
 class ChatSessionStatus(str, enum.Enum):
@@ -72,18 +57,6 @@ class LearningEventType(str, enum.Enum):
     CONCEPT_DISCOVERY = "concept_discovery"
     CONVERSATION_PRACTICE = "conversation_practice"
     OUTPUT_CHALLENGE = "output_challenge"
-
-
-class LearningPathStatus(str, enum.Enum):
-    ACTIVE = "active"
-    COMPLETED = "completed"
-    ARCHIVED = "archived"
-
-
-class PathMilestoneStatus(str, enum.Enum):
-    COMPLETED = "completed"
-    CURRENT = "current"
-    LOCKED = "locked"
 
 
 # 2026-09-30 新增边缘设备管理模块：设备在线状态。unknown = 档案刚建、尚未扫描过。

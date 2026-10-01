@@ -1,42 +1,44 @@
 import json
-from string import Template
+import logging
 from typing import Any
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, BadRequestError
 
-from app.core.config import get_settings
-from app.core.constants import PRODUCT_NAME
+from app.ai import llm_config
 
-settings = get_settings()
+logger = logging.getLogger(__name__)
 
-# 走中转站 OpenAI 兼容层（Bearer 认证）。当前可用模型为 GPT-5.x 系列（如 gpt-5.6-sol）。
-_client = AsyncOpenAI(
-    api_key=settings.openai_api_key, base_url=settings.openai_base_url
-)
+# 2026-10-01 LLM 供应商连接方式抽离到 app/ai/llm_config.py（请求地址 / API Key / 模型
+# 存于 backend/config/llm_providers.json，可在「LLM Select」中切换与新增）。
+# 本文件只保留 prompt 与返回解析的业务逻辑，按当前激活供应商取连接参数。
+# 客户端按「供应商 id + api_key」缓存，改 Key 或切换供应商都会拿到新实例。
+_clients: dict[str, AsyncOpenAI] = {}
 
-# 2026-09-29 系统提示词中的产品名改用 PRODUCT_NAME 注入；
-# 提示词内含大量 JSON 花括号，故用 string.Template 而非 f-string
-CONCEPT_EXTRACTION_SYSTEM_PROMPT = Template("""\
-你是$product_name的知识提取助手。用户会粘贴一段学习内容（外语文章/人文社科文本/技能教程等），
-你需要：
-1. 生成一句话摘要（summary）
-2. 提取其中的关键概念（至少 3 个，最多 8 个），每个概念包含：
-   - label：概念名称（简短，可含原文术语）
-   - definition：概念的清晰定义（1-3 句话）
+# 2026-10-01 随内容捕获/记忆卡片/学习路径功能下线，以下三个提示词及其生成函数已删除：
+#   CONCEPT_EXTRACTION_SYSTEM_PROMPT + extract_concepts（LLM 提取摘要 + 概念）
+#   CARD_GENERATION_SYSTEM_PROMPT   + generate_cards（概念生成记忆卡片）
+#   PATH_GENERATION_SYSTEM_PROMPT   + generate_learning_path（引导生成学习路径）
+# 原先这三个 prompt 用 string.Template 注入产品名，删除后 Template / PRODUCT_NAME 导入也不再需要。
 
-只返回严格的 JSON，格式如下，不要有任何多余文字：
-{"summary": "...", "concepts": [{"label": "...", "definition": "..."}]}
-""").substitute(product_name=PRODUCT_NAME)
 
-CARD_GENERATION_SYSTEM_PROMPT = Template("""\
-你是$product_name的记忆卡片生成助手。用户会给你一个已提取的知识概念（label + definition）。
-你需要为这个概念生成 1-2 张记忆卡片，用于间隔重复复习。每张卡片包含：
-  - front_content：正面（问题/提示，引导回忆）
-  - back_content：背面（答案/完整说明）
+def _normalize_base_url(base_url: str) -> str:
+    """SDK 自行拼接 /chat/completions；各家示例有的带 /v1 有的不带，统一去掉尾部斜杠即可。"""
+    return base_url.rstrip("/")
 
-只返回严格的 JSON，格式如下，不要有任何多余文字：
-{"cards": [{"front_content": "...", "back_content": "..."}]}
-""").substitute(product_name=PRODUCT_NAME)
+
+def _get_client(provider: dict[str, Any]) -> AsyncOpenAI:
+    api_key = (provider.get("api_key") or "").strip()
+    if not api_key:
+        raise ValueError(f"LLM「{provider.get('name')}」尚未填写 API Key，请在「LLM Select」中补全")
+
+    base_url = _normalize_base_url(provider["base_url"])
+    # 缓存键带上 base_url：编辑供应商改了地址但 Key 不变时，才不会复用连向旧地址的客户端
+    cache_key = f"{provider['id']}|{base_url}|{api_key}"
+    client = _clients.get(cache_key)
+    if client is None:
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+        _clients[cache_key] = client
+    return client
 
 
 def _extract_json_text(text: str) -> str:
@@ -64,69 +66,48 @@ async def _chat_messages_json(
     messages: list[dict[str, str]],
     max_tokens: int,
 ) -> dict[str, Any]:
-    response = await _client.chat.completions.create(
-        model=settings.openai_model,
-        max_tokens=max_tokens,
+    provider, model = llm_config.get_active()
+    client = _get_client(provider)
+
+    request: dict[str, Any] = {
+        "model": model["name"],
+        "max_tokens": max_tokens,
         # 强制返回合法 JSON，避免 LLM 输出尾随逗号/代码块包裹导致解析失败
-        response_format={"type": "json_object"},
-        messages=[
+        "messages": [
             {"role": "system", "content": system_prompt},
             *messages,
         ],
-    )
-    return json.loads(_extract_json_text(response.choices[0].message.content or ""))
+    }
+    # 部分模型（如 deepseek-reasoner）不支持 JSON Output，按模型开关决定是否传
+    if model.get("json_mode", True):
+        request["response_format"] = {"type": "json_object"}
 
+    try:
+        response = await client.chat.completions.create(**request)
+    except BadRequestError:
+        # 供应商/模型不支持 response_format 时，去掉该参数重试一次，
+        # 避免整个对话或报告直接降级；重试仍失败则照常抛给调用方处理。
+        if "response_format" not in request:
+            raise
+        del request["response_format"]
+        response = await client.chat.completions.create(**request)
 
-async def extract_concepts(content: str) -> dict[str, Any]:
-    """调用 LLM 从内容中提取摘要 + 概念列表。返回 {"summary": str, "concepts": [{"label", "definition"}]}"""
-    return await _chat_json(CONCEPT_EXTRACTION_SYSTEM_PROMPT, content, max_tokens=2000)
+    content = response.choices[0].message.content or ""
 
-
-async def generate_cards(label: str, definition: str) -> dict[str, Any]:
-    """调用 LLM 为单个概念生成记忆卡片。返回 {"cards": [{"front_content", "back_content"}]}"""
-    return await _chat_json(
-        CARD_GENERATION_SYSTEM_PROMPT,
-        f"概念：{label}\n定义：{definition}",
-        max_tokens=1000,
-    )
-
-
-PATH_GENERATION_SYSTEM_PROMPT = Template("""\
-你是$product_name的学习路径规划师。用户完成了 5 分钟引导，你会收到 JSON 格式的引导答案
-（包含学习领域 domain、目标 goal、当前水平 level、每日投入时间、动机等）。
-你需要：
-1. 生成一份"学习起点报告"（starting_point_report），包含：
-   - level_summary：对用户当前水平的一句话判断
-   - strengths：优势（数组，1-3 条）
-   - gaps：待补齐的短板（数组，1-3 条）
-   - recommendation：总体学习建议（一句话）
-2. 生成一条初始学习路径：
-   - title：路径标题（如"日语 N4 → N3 突破计划"）
-   - milestones：4-6 个里程碑，每个含 title（阶段标题）、description（这一阶段做什么，1-2 句）
-
-只返回严格的 JSON，格式如下，不要有任何多余文字：
-{
-  "starting_point_report": {
-    "level_summary": "...",
-    "strengths": ["..."],
-    "gaps": ["..."],
-    "recommendation": "..."
-  },
-  "path": {
-    "title": "...",
-    "milestones": [{"title": "...", "description": "..."}]
-  }
-}
-""").substitute(product_name=PRODUCT_NAME)
-
-
-async def generate_learning_path(onboarding_answers: dict[str, Any]) -> dict[str, Any]:
-    """根据引导答案生成起点报告 + 初始学习路径。"""
-    return await _chat_json(
-        PATH_GENERATION_SYSTEM_PROMPT,
-        json.dumps(onboarding_answers, ensure_ascii=False),
-        max_tokens=3000,
-    )
+    # 2026-10-01 不少供应商会忽略 response_format（请求不报错但返回纯文本），
+    # 此前直接 json.loads 会抛 JSONDecodeError，被调用点当成"调用失败"走备用回复，
+    # 用户只看到占位句、看不出真实原因。这里改成把原文包进 reply 字段：
+    # 对话至少能正常进行，只是拿不到 correction 这类结构化字段。
+    try:
+        return json.loads(_extract_json_text(content))
+    except json.JSONDecodeError:
+        logger.warning(
+            "LLM %s/%s 未返回 JSON（response_format 可能被忽略），按纯文本处理：%r",
+            provider["name"],
+            model["name"],
+            content[:200],
+        )
+        return {"reply": content.strip(), "_unparsed": True}
 
 
 async def generate_chat_turn(

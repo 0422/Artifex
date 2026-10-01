@@ -1,14 +1,8 @@
 import { http } from './http'
 import type {
   AuthResponse,
-  Capture,
-  CaptureConceptsResponse,
-  CaptureSourceType,
-  Domain,
-  LearningPath,
   KnowledgeCategory,
   KnowledgeCategoryInput,
-  OnboardingQuestion,
   DashboardOverview,
   DashboardSessionDetail,
   DashboardSessionPage,
@@ -20,6 +14,9 @@ import type {
   EdgePromptInput,
   EdgeScanResult,
   EdgeWifiInput,
+  LLMProviderInput,
+  LLMProvidersResponse,
+  LLMProviderUpdate,
   Scenario,
   ScenarioInput,
   User,
@@ -38,41 +35,29 @@ export const authApi = {
   me: () => http.get<User>('/auth/me').then((r) => r.data),
 }
 
+// 2026-10-01 随内容捕获/学习路径功能下线，captureApi 与 pathApi（含 /path/onboarding 引导）一并删除
 // ---- Capture ----
-export const captureApi = {
-  create: (domain: Domain, sourceType: CaptureSourceType, content?: string, sourceUrl?: string) =>
-    http
-      .post<Capture>('/capture', {
-        domain,
-        source_type: sourceType,
-        content,
-        source_url: sourceUrl,
-      })
-      .then((r) => r.data),
-
-  uploadPdf: (domain: Domain, file: File) => {
-    const form = new FormData()
-    form.append('domain', domain)
-    form.append('file', file)
-    return http.post<Capture>('/capture/pdf', form).then((r) => r.data)
-  },
-
-  getStatus: (id: string) => http.get<Capture>(`/capture/${id}`).then((r) => r.data),
-
-  getConcepts: (id: string) =>
-    http.get<CaptureConceptsResponse>(`/capture/${id}/concepts`).then((r) => r.data),
-}
-
+// export const captureApi = { ... }
 // ---- Path ----
-export const pathApi = {
-  getOnboarding: () => http.get<OnboardingQuestion[]>('/path/onboarding').then((r) => r.data),
+// export const pathApi = { ... }
 
-  completeOnboarding: (domain: Domain, answers: Record<string, string>) =>
-    http
-      .post<LearningPath>('/path/onboarding/complete', { domain, answers })
-      .then((r) => r.data),
+// ---- LLM 供应商（2026-10-01 新增）----
+// 多家 LLM 的请求地址 / API Key / 模型集中在后端配置文件中，可随时切换与新增
+export const llmApi = {
+  list: () => http.get<LLMProvidersResponse>('/llm/providers').then((r) => r.data),
 
-  getCurrent: () => http.get<LearningPath>('/path/current').then((r) => r.data),
+  create: (input: LLMProviderInput) =>
+    http.post<LLMProvidersResponse>('/llm/providers', input).then((r) => r.data),
+
+  // 修改已有供应商。api_key 传 undefined 表示"不修改"，避免把已保存的 Key 清掉
+  update: (id: string, input: LLMProviderUpdate) =>
+    http.put<LLMProvidersResponse>(`/llm/providers/${id}`, input).then((r) => r.data),
+
+  // 切换供应商；model 省略时沿用该供应商当前的 active_model
+  activate: (id: string, model?: string) =>
+    http.post<LLMProvidersResponse>(`/llm/providers/${id}/activate`, { model: model ?? null }).then((r) => r.data),
+
+  remove: (id: string) => http.delete<LLMProvidersResponse>(`/llm/providers/${id}`).then((r) => r.data),
 }
 
 // ---- Scenarios ----

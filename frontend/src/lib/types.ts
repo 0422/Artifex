@@ -1,10 +1,5 @@
 // 与后端 Pydantic schema 对应的类型定义
 
-export type Domain = 'language' | 'humanities' | 'skill'
-export type CaptureSourceType = 'text' | 'url' | 'pdf'
-export type CaptureStatus = 'pending' | 'processing' | 'completed' | 'failed'
-export type MilestoneStatus = 'completed' | 'current' | 'locked'
-
 export interface User {
   id: string
   email: string
@@ -19,67 +14,48 @@ export interface AuthResponse {
   user: User
 }
 
-// ---- Capture ----
-export interface Capture {
+// 2026-10-01 内容捕获（Capture/Concept/RelatedConcept/CaptureConceptsResponse）与
+// 学习路径、5 分钟引导（OnboardingQuestion/StartingPointReport/Milestone/LearningPath）类型随功能下线删除
+
+// ---- LLM 供应商（2026-10-01 新增）----
+// json_mode 控制是否发送 response_format；思考类模型（如 deepseek-reasoner）常不支持，需关闭
+export interface LLMModel {
+  name: string
+  json_mode: boolean
+}
+
+export interface LLMProvider {
   id: string
-  domain: Domain
-  source_type: CaptureSourceType
-  source_url: string | null
-  summary: string | null
-  status: CaptureStatus
-  created_at: string
+  name: string
+  base_url: string
+  // 后端只返回掩码，不明文返回 API Key
+  api_key_masked: string
+  active_model: string | null
+  models: LLMModel[]
+  // 内置供应商（中转站/DeepSeek/StepFun）锁定，不可删除
+  builtin: boolean
 }
 
-export interface RelatedConcept {
-  id: string
-  label: string
+export interface LLMProvidersResponse {
+  active_provider_id: string | null
+  active_model: string | null
+  providers: LLMProvider[]
 }
 
-export interface Concept {
-  id: string
-  label: string
-  definition: string | null
-  domain: Domain
-  related: RelatedConcept[]
-  card_count: number
+export interface LLMProviderInput {
+  name: string
+  base_url: string
+  api_key: string
+  // 换行或逗号分隔的模型名，前端负责拆分
+  models: string[]
 }
 
-export interface CaptureConceptsResponse {
-  capture: Capture
-  concepts: Concept[]
-}
-
-// ---- Path ----
-export interface OnboardingQuestion {
-  key: string
-  question: string
-  hint: string | null
-}
-
-export interface StartingPointReport {
-  level_summary?: string
-  strengths?: string[]
-  gaps?: string[]
-  recommendation?: string
-}
-
-export interface Milestone {
-  id: string
-  order_index: number
-  title: string
-  description: string | null
-  status: MilestoneStatus
-  progress_data: Record<string, unknown> | null
-}
-
-export interface LearningPath {
-  id: string
-  domain: Domain
-  title: string
-  starting_point_report: StartingPointReport | null
-  status: string
-  created_at: string
-  milestones: Milestone[]
+export interface LLMProviderUpdate {
+  name?: string
+  base_url?: string
+  // 留空表示不修改已保存的 API Key（后端只回掩码，前端编辑框默认为空）
+  api_key?: string
+  models?: LLMModel[]
 }
 
 // ---- Scenario practice ----
@@ -181,7 +157,7 @@ export interface SessionReport {
 export type ChatServerEvent =
   | { type: 'authenticated'; user_id: string }
   | { type: 'session_started'; session_id: string; scenario_id: string; scenario_title: string; language: ScenarioLanguage; difficulty: ScenarioDifficulty; started_at: string }
-  | { type: 'ai_response'; message_id: string; content: string; created_at: string; degraded: boolean }
+  | { type: 'ai_response'; message_id: string; content: string; created_at: string; degraded: boolean; degraded_reason?: string | null }
   | ({ type: 'correction'; message_id: string } & ChatCorrection)
   | { type: 'session_ended'; session_id: string; duration_seconds: number; ended_at: string }
   | { type: 'report_generating'; session_id: string }

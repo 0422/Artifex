@@ -16,5 +16,5 @@
 
 **相关文档**:
 
-- [产品需求规格书](../design/prd.md) — P0-2 智能记忆模块
-- [M1阶段文档](../design/phases/M1.md) — Card和ReviewLog模型
+- [产品需求规格书](../../design/prd.md) — P0-2 智能记忆模块
+- [M1阶段文档](../../design/phases/M1.md) — Card和ReviewLog模型

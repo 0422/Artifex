@@ -54,6 +54,9 @@ export default function ChatPage() {
   const [sessionState, setSessionState] = useState<SessionState>('idle')
   const [socketState, setSocketState] = useState<'connecting' | 'open' | 'closed'>('closed')
   const [authenticated, setAuthenticated] = useState(false)
+  // 2026-10-01 LLM 真实可用性：WebSocket 通不代表 LLM 能用，
+  // 右上角状态据此显示，避免"连得上但对话全是备用回复"还显示服务正常
+  const [llmError, setLlmError] = useState<string | null>(null)
   const [mood, setMood] = useState<DigitalHumanMood>('neutral')
   const [report, setReport] = useState<SessionReport | null>(null)
   const [error, setError] = useState('')
@@ -83,6 +86,12 @@ export default function ChatPage() {
   const [avatarMotion, setAvatarMotion] = useState<DigitalHumanMotion>('auto')
   const socketRef = useRef<ChatSocket | null>(null)
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null)
+  // 2026-10-01 onend 是异步回调，直接调 send() 会拿到旧 render 里的 draft，
+  // 用 ref 始终指向最新的 send
+  const sendRef = useRef<() => void>(() => {})
+  // 区分"用户主动点停（要发送）"和"识别自动结束（只保留文本）"
+  const commitOnEndRef = useRef(false)
+  const listenTimerRef = useRef<number | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const chatLayoutRef = useRef<HTMLDivElement>(null)
   const avatarWidthRef = useRef(avatarWidth)
@@ -163,11 +172,14 @@ export default function ChatPage() {
     }
     if (event.type === 'session_started') {
       setSessionState('active')
+      setLlmError(null)
       setMood('relaxed')
       return
     }
     if (event.type === 'ai_response') {
       setMessages((current) => [...current, { id: event.message_id, role: 'assistant', content: event.content, createdAt: event.created_at, degraded: event.degraded }])
+      // 备用回复 = LLM 调用失败；正常回复则清除故障标记
+      setLlmError(event.degraded ? (event.degraded_reason ?? 'LLM 调用失败，已返回备用回复') : null)
       speakResponse(event.content)
       setMood('happy')
       window.setTimeout(() => setMood('relaxed'), 1200)
@@ -255,6 +267,7 @@ export default function ChatPage() {
     setMood('thinking')
     socketRef.current?.sendText(content)
   }
+  sendRef.current = send
 
   const end = () => {
     if (!window.confirm('确定结束本次会话并生成学习报告吗？')) return
@@ -272,6 +285,8 @@ export default function ChatPage() {
 
   const toggleListening = () => {
     if (isListening) {
+      // 说完了：再点一下 -> 停止识别并直接把内容发出去（按住说话式的交互）
+      commitOnEndRef.current = true
       recognitionRef.current?.stop()
       return
     }
@@ -288,7 +303,9 @@ export default function ChatPage() {
     setError('')
     const existingDraft = draft.trimEnd()
     recognition.lang = speechLocale(selected?.language)
-    recognition.continuous = false
+    // 2026-10-01 continuous 必须为 true：false 时浏览器一说停顿就判定本轮说完并触发
+    // onend，用户中途换气/思考会被强行打断，只能重点麦克风。true 后会一直听到用户主动点停。
+    recognition.continuous = true
     recognition.interimResults = true
     recognition.maxAlternatives = 1
     recognition.onstart = () => {
@@ -313,10 +330,25 @@ export default function ChatPage() {
       setError(message)
     }
     recognition.onend = () => {
+      if (listenTimerRef.current !== null) {
+        window.clearTimeout(listenTimerRef.current)
+        listenTimerRef.current = null
+      }
       recognitionRef.current = null
       setIsListening(false)
+      // 用户主动点停才发送；自动结束（超时/异常）只保留已识别的文本，让用户自己改
+      if (commitOnEndRef.current) {
+        commitOnEndRef.current = false
+        sendRef.current()
+      }
     }
     recognitionRef.current = recognition
+
+    // 兜底：continuous=true 后会一直收音，忘点停就会把环境音也录进来，2 分钟自动收尾
+    listenTimerRef.current = window.setTimeout(() => {
+      commitOnEndRef.current = false
+      recognitionRef.current?.stop()
+    }, 120_000)
 
     try {
       recognition.start()
@@ -370,8 +402,17 @@ export default function ChatPage() {
               if (window.innerWidth >= 1280) commitAvatarWidth(AVATAR_DEFAULT_WIDTH)
               else setAvatarMobileOpen(true)
             }} className="icon-button"><UserRound size={17} /></button></div>
-            <span className={`hidden text-xs sm:inline ${socketState === 'open' && authenticated ? 'text-emerald-400' : 'text-amber-400'}`}>
-              {socketState === 'open' && authenticated ? '对话服务在线' : socketState === 'connecting' ? '正在连接' : '服务未连接'}
+            <span
+              className={`hidden text-xs sm:inline ${socketState === 'open' && authenticated ? (llmError ? 'text-amber-400' : 'text-emerald-400') : 'text-amber-400'}`}
+              title={llmError ?? undefined}
+            >
+              {socketState !== 'open' || !authenticated
+                ? socketState === 'connecting'
+                  ? '正在连接'
+                  : '服务未连接'
+                : llmError
+                  ? 'LLM 响应异常'
+                  : '对话服务在线'}
             </span>
             <button disabled={!selected || unavailable || sessionState !== 'idle'} onClick={start} style={{ display: sessionState === 'active' || sessionState === 'ending' ? 'none' : undefined }} className="primary-button"><Sparkles size={15} /><span>开始练习</span></button>
             <button disabled={sessionState === 'ending'} onClick={end} style={{ display: sessionState === 'active' || sessionState === 'ending' ? undefined : 'none' }} className="secondary-button text-red-300"><CircleStop size={15} /><span>结束会话</span></button>
@@ -394,7 +435,11 @@ export default function ChatPage() {
                     <div className={`rounded-lg px-4 py-3 text-sm leading-6 ${message.role === 'user' ? 'bg-teal-700 text-white' : 'border border-zinc-700 bg-zinc-800 text-zinc-100'}`}>
                       {message.role === 'assistant' ? <TypewriterText text={message.content} /> : message.content}
                     </div>
-                    {message.degraded && <p className="mt-1 text-xs text-amber-400">当前为备用回复</p>}
+                    {message.degraded && (
+                      <p className="mt-1 text-xs text-amber-400">
+                        当前为备用回复{llmError ? `（${llmError}）` : ''}
+                      </p>
+                    )}
                     {message.correction && (
                       <div className={`mt-2 border-l-2 px-3 py-2 text-xs leading-5 ${message.correction.severity === 'major' ? 'border-red-400 bg-red-950/30' : 'border-amber-400 bg-amber-950/20'}`}>
                         <p className="text-zinc-400 line-through">{message.correction.original}</p>
@@ -432,7 +477,8 @@ export default function ChatPage() {
             <button
               disabled={sessionState !== 'active' || !speechInputSupported}
               title={!speechInputSupported ? '当前浏览器不支持语音识别' : isListening ? '停止语音输入' : '开始语音输入'}
-              aria-label={isListening ? '停止语音输入' : '开始语音输入'}
+              title={isListening ? '正在聆听，说完再点一下发送' : '点击开始语音输入（说完再点一下发送）'}
+              aria-label={isListening ? '停止语音输入并发送' : '开始语音输入'}
               aria-pressed={isListening}
               onClick={toggleListening}
               className={`icon-button h-10 w-10 ${isListening ? 'animate-pulse bg-red-950 text-red-300 hover:bg-red-900' : ''}`}
@@ -441,7 +487,7 @@ export default function ChatPage() {
             </button>
             <textarea value={draft} disabled={sessionState !== 'active'} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
-            }} rows={1} className="field min-w-0 max-h-32 min-h-10 flex-1 resize-none py-2.5" placeholder={isListening ? '正在聆听...' : sessionState === 'active' ? '输入你的回答...' : '开始练习后即可发送消息'} />
+            }} rows={1} className="field min-w-0 max-h-32 min-h-10 flex-1 resize-none py-2.5" placeholder={isListening ? '正在聆听... 说完再点一下麦克风发送' : sessionState === 'active' ? '输入你的回答...' : '开始练习后即可发送消息'} />
             <button
               disabled={!speechOutputSupported}
               title={speechOutputEnabled ? '关闭 AI 语音' : '开启 AI 语音'}

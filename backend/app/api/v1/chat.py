@@ -164,6 +164,7 @@ async def chat_websocket(
                         content=turn.assistant_message.content,
                         created_at=turn.assistant_message.created_at,
                         degraded=turn.degraded,
+                        degraded_reason=turn.degraded_reason,
                     ),
                 )
                 if turn.correction is not None:

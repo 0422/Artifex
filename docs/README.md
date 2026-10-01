@@ -1,6 +1,6 @@
 # 📚 Artifex 文档
 
-> **全领域AI学习伙伴** — 从内容捕获到智能复习，一个Agent管三个世界。
+> **全领域AI学习伙伴** — 从情境对话到智能复习，一个 Agent 管三个世界。
 
 ---
 
@@ -50,8 +50,8 @@
 | M1 | [框架搭建](design/phases/M1.md) | 数据模型、Auth模块、前后端脚手架 | 2026-08-15 |
 | M2 | [场景对话闭环](design/phases/M2.md) | 对话流、消息持久化、引导策略 | 2026-08-15 |
 | M3 | [流式语音与数字人](design/phases/M3.md) | 语音对话、数字人形象、流式响应 | 2026-08-15 |
-| M4 | [知识库](design/phases/M4.md) | 知识图谱、向量检索、pgvector | 2026-08-16 |
-| M5 | [工具库](design/phases/M5.md) | 工具调用系统、MCP集成 | 2026-08-17 |
+| M4 | [知识库](design/phases/M4.md) | 分类树、场景管理（知识图谱已下线） | 2026-08-16 |
+| M5 | [工具库](design/phases/M5.md) | 工具注册表、iframe 单页工具（现仅留集装箱装载计算器） | 2026-08-17 |
 | M6 | [世势洞察](design/phases/M6.md) | 🚧 规划中 | - |
 
 ---
@@ -62,10 +62,9 @@
 
 | 功能 | 文档 | 状态 |
 |------|------|------|
-| 内容捕获 | [capture.md](guides/features/capture.md) | 🚧 待补充 |
-| 智能复习 | [review.md](guides/features/review.md) | 🚧 待补充 |
 | AI对话 | [chat.md](guides/features/chat.md) | 🚧 待补充 |
-| 知识图谱 | [knowledge-base.md](guides/features/knowledge-base.md) | 🚧 待补充 |
+| 智能复习 | [review.md](guides/features/review.md) | 🚧 待补充 |
+| 知识库 | [knowledge-base.md](guides/features/knowledge-base.md) | 🚧 待补充 |
 
 ### 用户手册
 
@@ -168,6 +167,6 @@ docs/
 - **项目名称**: Artifex（原 LinguaLearner）
 - **创建时间**: 2026-08-13
 - **文档版本**: v1.0
-- **最后更新**: 2026-09-22
+- **最后更新**: 2026-10-01（内容捕获、学习路径、知识图谱模块下线；侧边栏改版）
 
 > 💡 **提示**: 🚧 标记的文档正在规划中，欢迎参与贡献！

@@ -4,7 +4,6 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { authApi } from './services/api'
 import { useAuthStore } from './stores/authStore'
 import AuthPage from './pages/AuthPage'
-import CapturePage from './pages/CapturePage'
 import ChatPage from './pages/ChatPage'
 // 2026-09-30 新增边缘设备管理模块
 import EdgeDevicesPage from './pages/EdgeDevicesPage'
@@ -12,10 +11,7 @@ import ContainerLoadingCalculatorPage from './pages/ContainerLoadingCalculatorPa
 import DashboardPage from './pages/DashboardPage'
 import Layout from './pages/Layout'
 import KnowledgePage from './pages/KnowledgePage'
-import OnboardingPage from './pages/OnboardingPage'
-import PathPage from './pages/PathPage'
 import ToolLibraryPage from './pages/ToolLibraryPage'
-import ToolPage from './pages/ToolPage'
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((state) => state.accessToken)
@@ -41,7 +37,6 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/onboarding" element={<RequireAuth><OnboardingPage /></RequireAuth>} />
         <Route element={<RequireAuth><Layout /></RequireAuth>}>
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/knowledge" element={<KnowledgePage />} />
@@ -49,12 +44,10 @@ export default function App() {
           {/* 2026-09-30 新增边缘设备管理模块 */}
           <Route path="/edge-devices" element={<EdgeDevicesPage />} />
           <Route path="/tools" element={<ToolLibraryPage />} />
-          <Route path="/tools/learning-path" element={<PathPage />} />
-          <Route path="/tools/content-capture" element={<CapturePage />} />
           <Route path="/tools/container-loading-calculator" element={<ContainerLoadingCalculatorPage />} />
-          <Route path="/tools/:toolId" element={<ToolPage />} />
-          <Route path="/capture" element={<Navigate to="/tools/content-capture" replace />} />
-          <Route path="/path" element={<Navigate to="/tools/learning-path" replace />} />
+          {/* 2026-10-01 移除学习路径/内容捕获/引导流程及三个轻量工具，
+              原 /tools/learning-path、/tools/content-capture、/tools/:toolId、
+              /onboarding、/capture、/path 路由随之删除 */}
         </Route>
         <Route path="/" element={<Navigate to="/chat" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />

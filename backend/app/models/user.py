@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -27,6 +27,9 @@ class UserProfile(UUIDMixin, TimestampMixin, Base):
     native_language: Mapped[str | None] = mapped_column(String(20))
     timezone: Mapped[str] = mapped_column(String(50), default="UTC")
     daily_goal_minutes: Mapped[int] = mapped_column(Integer, default=20)
-    onboarding_completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    # 2026-10-01 onboarding_completed 原由 path_service.complete_onboarding 在完成 5 分钟引导时置位，
+    # 引导流程整体下线后已无人写入，列由 alembic 迁移 drop
+    # 2026-09-30 之前写法：
+    # onboarding_completed: Mapped[bool] = mapped_column(Boolean, default=False)
 
     user: Mapped["User"] = relationship(back_populates="profile")

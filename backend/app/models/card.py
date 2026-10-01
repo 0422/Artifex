@@ -19,9 +19,12 @@ class Card(UUIDMixin, TimestampMixin, Base):
     card_type: Mapped[CardType] = mapped_column(Enum(CardType, native_enum=False), nullable=False)
     front_content: Mapped[str] = mapped_column(Text, nullable=False)
     back_content: Mapped[str] = mapped_column(Text, nullable=False)
-    source_concept_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("concept_nodes.id", ondelete="SET NULL"), index=True
-    )
+    # 2026-10-01 原 source_concept_id（外键指向 concept_nodes）随知识图谱模型一并删除，
+    # cards 表本身作为 FSRS 间隔重复域保留，列与索引由 alembic 迁移 drop
+    # 2026-09-30 之前写法：
+    # source_concept_id: Mapped[uuid.UUID | None] = mapped_column(
+    #     UUID(as_uuid=True), ForeignKey("concept_nodes.id", ondelete="SET NULL"), index=True
+    # )
 
     # FSRS 状态
     fsrs_state: Mapped[dict | None] = mapped_column(JSONB)
@@ -35,7 +38,8 @@ class Card(UUIDMixin, TimestampMixin, Base):
     is_merged: Mapped[bool] = mapped_column(Boolean, default=False)
     merged_from_ids: Mapped[list[uuid.UUID] | None] = mapped_column(ARRAY(UUID(as_uuid=True)))
 
-    source_concept: Mapped["ConceptNode"] = relationship(back_populates="cards")
+    # 2026-10-01 原 source_concept relationship 随 ConceptNode 模型删除
+    # source_concept: Mapped["ConceptNode"] = relationship(back_populates="cards")
     review_logs: Mapped[list["ReviewLog"]] = relationship(back_populates="card", cascade="all, delete-orphan")
 
 

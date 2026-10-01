@@ -13,3 +13,8 @@ backend/firmware/*
 
 # 2026-09-30 雅思口语抓取脚本 dump 的中间 HTML
 backend/dump_part*.html
+
+# 2026-10-01 LLM 供应商配置：含各家 API Key，不明文入库；
+# 首次运行由 .env 自动播种生成
+backend/config/llm_providers.json
+backend/config/llm_providers.json.tmp

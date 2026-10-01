@@ -44,7 +44,6 @@ Artifex/                         # 项目根目录
 │   │   ├── components/
 │   │   │   ├── ui/               # Radix UI 二次封装（Button/Dialog/Select...）
 │   │   │   ├── dashboard/        # 仪表盘组件
-│   │   │   ├── capture/          # 内容捕获组件
 │   │   │   ├── chat/             # AI 对话组件
 │   │   │   ├── digital-human/    # 桌面数字人组件（VRM渲染/Lip-Sync/表情/悬浮窗）
 │   │   │   └── memory/           # 复习卡片组件
@@ -70,12 +69,10 @@ Artifex/                         # 项目根目录
 │   │   │   └── v1/
 │   │   │       ├── __init__.py
 │   │   │       ├── auth.py
-│   │   │       ├── capture.py
 │   │   │       ├── memory.py
 │   │   │       ├── chat.py
 │   │   │       ├── digital_human.py
 │   │   │       ├── dashboard.py
-│   │   │       └── path.py
 │   │   ├── core/
 │   │   │   ├── config.py         # pydantic-settings 配置管理
 │   │   │   ├── security.py       # JWT + bcrypt
@@ -83,31 +80,24 @@ Artifex/                         # 项目根目录
 │   │   ├── models/               # SQLAlchemy ORM
 │   │   │   ├── __init__.py
 │   │   │   ├── user.py
-│   │   │   ├── capture.py
 │   │   │   ├── card.py
-│   │   │   ├── concept.py
 │   │   │   ├── chat.py
 │   │   │   ├── digital_human.py
 │   │   │   └── event.py
 │   │   ├── schemas/              # Pydantic v2 请求/响应模型
 │   │   │   ├── __init__.py
 │   │   │   ├── auth.py
-│   │   │   ├── capture.py
 │   │   │   ├── memory.py
 │   │   │   ├── chat.py
 │   │   │   ├── digital_human.py
 │   │   │   ├── dashboard.py
-│   │   │   └── path.py
 │   │   ├── services/             # 业务逻辑层
 │   │   │   ├── __init__.py
-│   │   │   ├── capture_service.py
 │   │   │   ├── memory_service.py
 │   │   │   ├── fsrs_engine.py
 │   │   │   ├── chat_service.py
 │   │   │   ├── digital_human_service.py
 │   │   │   ├── dashboard_service.py
-│   │   │   ├── path_service.py
-│   │   │   └── concept_graph_service.py
 │   │   ├── ai/                   # AI 能力封装
 │   │   │   ├── __init__.py
 │   │   │   ├── llm.py
@@ -118,11 +108,8 @@ Artifex/                         # 项目根目录
 │   │   ├── workers/              # Celery 异步任务
 │   │   │   ├── __init__.py
 │   │   │   ├── celery_app.py     # Celery 实例 + 配置
-│   │   │   ├── extract_concepts.py
-│   │   │   ├── generate_cards.py
 │   │   │   ├── build_queue.py
 │   │   │   ├── daily_digest.py
-│   │   │   └── update_graph.py
 │   │   └── main.py               # FastAPI 入口
 │   ├── alembic/                  # DB 迁移（alembic init 生成）
 │   │   ├── versions/
@@ -132,7 +119,6 @@ Artifex/                         # 项目根目录
 │   │   ├── __init__.py
 │   │   ├── conftest.py
 │   │   ├── test_auth.py
-│   │   ├── test_capture.py
 │   │   └── test_memory.py
 │   ├── pyproject.toml            # Poetry 配置
 │   ├── Dockerfile
@@ -819,7 +805,7 @@ mkdir -p backend/tests
 find backend/app -type d -exec touch {}/__init__.py \;
 
 # ====== 前端目录结构 ======
-mkdir -p frontend/src/{components/{ui,dashboard,capture,chat,digital-human,memory},hooks,stores,services,lib,pages}
+mkdir -p frontend/src/{components/{ui,dashboard,chat,digital-human,memory},hooks,stores,services,lib,pages}
 
 # ====== Docker + CI ======
 mkdir -p docker/{postgres,nginx}
@@ -864,9 +850,9 @@ docker compose ps        # 查看状态
 |---|------|---------|------|
 | 1 | **项目代码托管在哪？** GitHub / GitLab / 私有 Git？ | Git remote + CI 配置 | GitHub（CI 模板已基于 GitHub Actions 写） |
 | 2 | **OPENAI_API_KEY 怎么管理？** 个人账号还是团队账号？ | 后端无法调用 AI | 开发阶段先用个人 key；生产用环境变量注入 |
-| 3 | **前端路由设计**：几个页面？页面间怎么跳转？ | 前端 pages 目录和路由配置 | 建议首页 = Dashboard、/capture、/chat、/memory、/path |
+| 3 | **前端路由设计**：几个页面？页面间怎么跳转？ | 前端 pages 目录和路由配置 | 建议首页 = Dashboard、/chat、/knowledge、/tools |
 | 4 | **是否需要先跑 M1 三个 Spike？**（STT/TTS 选型、FSRS 评估、PWA 录音 POC） | 对话模块和记忆模块的实现方式 | PRD 标注 W1-3 必须完成，可以先用 mock 数据搭脚手架并行进行 |
-| 5 | **数据库 ORM 建模**：是先画完所有模型的 ER 图再迁移，还是边写边改？ | Alembic 迁移策略 | 建议先建核心表（User/Capture/Card/Concept），M2 再加 Chat/Dashboard 表 |
+| 5 | **数据库 ORM 建模**：是先画完所有模型的 ER 图再迁移，还是边写边改？ | Alembic 迁移策略 | 建议先建核心表（User/Card/ScenarioCard），M2 再加 Chat/Dashboard 表 |
 | 6 | **数字人 VRM 模型来源？** 使用 VRoid Hub 免费模型还是自制？ | P1-6 数字人模块开发 | 建议初期用 VRoid Hub 免费可商用模型，3-5 个角色供用户选择 |
 | 7 | **数字人语音交互优先级**：Web Speech API 先行还是直接上 Whisper？ | P1-6 STT 方案选型 | 建议 Web Speech API 优先（零成本零延迟），Spike D 验证效果后决定回退策略 |
 
@@ -891,4 +877,4 @@ docker compose ps        # 查看状态
 
 ---
 
-> 以上是 Artifex 项目"从零到能跑"的完整初始化指南。环境搭好后，Swagger UI 能看到空 API 列表、前端能看到空白的 Vite 页面，就是脚手架就绪的信号。接下来按 M1 里程碑——先做 P0-1（内容捕获）和 P0-5（学习路径）的业务代码。
+> 以上是 Artifex 项目"从零到能跑"的完整初始化指南。环境搭好后，Swagger UI 能看到空 API 列表、前端能看到空白的 Vite 页面，就是脚手架就绪的信号。接下来按 M1 里程碑——先做 Auth 与场景对话的业务代码。

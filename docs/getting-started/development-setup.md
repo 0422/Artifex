@@ -137,7 +137,6 @@ pnpm add -D vite-plugin-pwa workbox-window
 cd src
 mkdir components\ui
 mkdir components\dashboard
-mkdir components\capture
 mkdir components\chat
 mkdir components\digital-human
 mkdir components\memory
@@ -151,7 +150,6 @@ cd ..
 # 各目录用途：
 #   components/ui           —— Radix UI 二次封装（Button/Dialog/Select...）
 #   components/dashboard     —— 仪表盘组件
-#   components/capture       —— 内容捕获组件
 #   components/chat          —— AI 对话组件
 #   components/digital-human —— 桌面数字人组件（VRM渲染/Lip-Sync/表情/悬浮窗）
 #   components/memory        —— 复习卡片组件

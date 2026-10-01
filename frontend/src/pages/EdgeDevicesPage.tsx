@@ -75,7 +75,8 @@ export default function EdgeDevicesPage() {
       <section className="flex min-w-0 flex-1 flex-col">
         <header className="flex min-h-14 shrink-0 flex-wrap items-center gap-3 border-b border-zinc-800 px-4 py-2 sm:px-6">
           <div className="min-w-0 flex-1">
-            <h1 className="truncate text-sm font-semibold text-zinc-100">边缘管理</h1>
+            {/* 2026-10-01 「边缘管理」更名为「边缘设备」，与侧边栏导航保持一致 */}
+            <h1 className="truncate text-sm font-semibold text-zinc-100">边缘设备</h1>
             <p className="text-xs text-zinc-500">
               {scanning
                 ? '正在扫描局域网...'

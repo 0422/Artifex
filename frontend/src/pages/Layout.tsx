@@ -1,18 +1,22 @@
-import { BarChart3, Cpu, Languages, Library, LogOut, Wrench } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { BarChart3, Cpu, Languages, Library, Wrench } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 
-import { authApi } from '../services/api'
+import AccountMenu, { type AccountMenuAction } from '../components/AccountMenu'
+import InfoDialog from '../components/InfoDialog'
+import LlmSelectDialog from '../components/LlmSelectDialog'
+import { authApi, llmApi } from '../services/api'
 // 2026-09-29 产品名改由 constants.ts 的 PRODUCT_NAME 统一提供
 import { PRODUCT_NAME } from '../lib/constants'
 import { useAuthStore } from '../stores/authStore'
 
+// 2026-10-01 侧边栏自上而下调整为：仪表盘、情境对话、边缘设备、知识库、工具库；
+// 同时「边缘管理」更名为「边缘设备」。侧边栏与移动端底部导航共用本数组。
 const NAV = [
-  { to: '/chat', label: '情境对话', icon: Languages },
-  { to: '/knowledge', label: '知识库', icon: Library },
   { to: '/dashboard', label: '仪表盘', icon: BarChart3 },
-  // 2026-09-30 新增边缘设备管理模块入口
-  { to: '/edge-devices', label: '边缘管理', icon: Cpu },
+  { to: '/chat', label: '情境对话', icon: Languages },
+  { to: '/edge-devices', label: '边缘设备', icon: Cpu },
+  { to: '/knowledge', label: '知识库', icon: Library },
   { to: '/tools', label: '工具库', icon: Wrench },
 ]
 
@@ -22,6 +26,23 @@ const SIDEBAR_MIN_WIDTH = 72
 const SIDEBAR_COLLAPSE_THRESHOLD = 160
 const SIDEBAR_DEFAULT_WIDTH = 256
 const SIDEBAR_MAX_WIDTH = 360
+
+// 2026-10-01 桌面端菜单挂在侧边栏头像下方，移动端挂在底部导航上方
+const DESKTOP_MENU_CLASS = 'left-3 top-[3.25rem]'
+const MOBILE_MENU_CLASS = 'bottom-16 left-3'
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches,
+  )
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 768px)')
+    const onChange = () => setIsDesktop(query.matches)
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+  return isDesktop
+}
 
 export default function Layout() {
   const user = useAuthStore((s) => s.user)
@@ -35,6 +56,28 @@ export default function Layout() {
   const latestWidthRef = useRef(sidebarWidth)
   const navigate = useNavigate()
   const collapsed = sidebarWidth < SIDEBAR_COLLAPSE_THRESHOLD
+
+  // 2026-10-01 账号菜单与 LLM Select 弹窗
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [dialog, setDialog] = useState<'none' | 'llm' | 'settings' | 'help'>('none')
+  const [activeLlm, setActiveLlm] = useState('加载中...')
+  const isDesktop = useIsDesktop()
+
+  // 菜单里展示当前生效的 LLM，切供应商后由 LlmSelectDialog 回调刷新
+  useEffect(() => {
+    let alive = true
+    llmApi
+      .list()
+      .then((data) => {
+        if (!alive) return
+        const provider = data.providers.find((p) => p.id === data.active_provider_id)
+        setActiveLlm(provider && data.active_model ? `${provider.name} · ${data.active_model}` : '未配置')
+      })
+      .catch(() => alive && setActiveLlm('未配置'))
+    return () => {
+      alive = false
+    }
+  }, [dialog])
 
   const updateSidebarWidth = (width: number) => {
     const next = Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, width))
@@ -59,7 +102,17 @@ export default function Layout() {
     <div className="flex h-[100dvh] min-h-0 bg-zinc-950 text-zinc-100">
       <aside style={{ width: sidebarWidth }} className={`relative hidden shrink-0 flex-col border-r border-zinc-800 bg-zinc-950 md:flex ${resizing ? '' : 'transition-[width]'}`}>
         <div className={`flex h-14 items-center border-b border-zinc-800 ${collapsed ? 'justify-center px-2' : 'px-4'}`}>
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-teal-500 text-sm font-semibold text-teal-300">李</span>
+          {/* 2026-10-01 「李」字改为账号菜单入口：LLM Select / 设置 / 帮助 / 退出登录 */}
+          <button
+            title="账号菜单"
+            aria-label="账号菜单"
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-colors ${menuOpen ? 'border-teal-400 bg-teal-950 text-teal-200' : 'border-teal-500 text-teal-300 hover:bg-teal-950/60'}`}
+          >
+            李
+          </button>
           {!collapsed && <span className="ml-3 whitespace-nowrap font-semibold">{PRODUCT_NAME}</span>}
         </div>
         <nav className="flex-1 space-y-1 p-3">
@@ -69,10 +122,9 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
-        <div className="border-t border-zinc-800 p-3">
-          {!collapsed && user?.nickname && <p className="mb-2 truncate px-3 text-xs text-zinc-500">{user.nickname}</p>}
-          <button title="退出登录" onClick={logout} className={`flex h-10 w-full items-center rounded-md text-sm text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100 ${collapsed ? 'justify-center px-0' : 'px-3'}`}><LogOut className="shrink-0" size={18} />{!collapsed && <span className="ml-3">退出登录</span>}</button>
-        </div>
+        {/* 2026-10-01 原侧边栏底部的昵称与「退出登录」整块已移除：
+            昵称改由左上角账号菜单展示，退出登录移入该菜单。 */}
+
         <div
           role="separator"
           aria-label="调整导航栏宽度"
@@ -123,8 +175,64 @@ export default function Layout() {
       <main className="min-w-0 flex-1 overflow-auto pb-14 md:pb-0"><Outlet /></main>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 flex h-14 border-t border-zinc-800 bg-zinc-950 md:hidden">
+        {/* 2026-10-01 桌面侧边栏在移动端是隐藏的，账号菜单入口一并补到底部导航，
+            否则手机上无法退出登录、也无法切 LLM */}
+        <button
+          title="账号菜单"
+          aria-label="账号菜单"
+          onClick={() => setMenuOpen((open) => !open)}
+          className="flex w-14 shrink-0 items-center justify-center"
+        >
+          <span
+            className={`flex h-7 w-7 items-center justify-center rounded-full border text-sm font-semibold ${menuOpen ? 'border-teal-400 bg-teal-950 text-teal-200' : 'border-teal-500 text-teal-300'}`}
+          >
+            李
+          </span>
+        </button>
         {NAV.map(({ to, label, icon: Icon }) => <NavLink key={to} to={to} className={({ isActive }) => `flex flex-1 flex-col items-center justify-center gap-1 text-[10px] ${isActive ? 'text-teal-300' : 'text-zinc-500'}`}><Icon size={18} /><span>{label}</span></NavLink>)}
       </nav>
+
+      {/* 2026-10-01 账号菜单：只渲染一个实例。
+          早期写法同时挂了桌面（hidden md:block）与移动（md:hidden）两份，两个实例各自注册
+          document 级 mousedown 监听，点桌面菜单项时被那个 display:none 的实例判定为
+          "点在窗外"而提前卸载菜单，click 再也到不了按钮上，表现为点什么都不响应。 */}
+      {menuOpen && (
+        <AccountMenu
+          className={isDesktop ? DESKTOP_MENU_CLASS : MOBILE_MENU_CLASS}
+          nickname={user?.nickname}
+          activeLabel={activeLlm}
+          onAction={(action: AccountMenuAction) => {
+            setMenuOpen(false)
+            if (action === 'logout') {
+              void logout()
+              return
+            }
+            setDialog(action)
+          }}
+          onClose={() => setMenuOpen(false)}
+        />
+      )}
+
+      {/* 2026-10-01 账号菜单拉起的三个弹窗。设置与帮助暂为占位，内容待补充 */}
+      {dialog === 'llm' && (
+        <LlmSelectDialog
+          onClose={() => {
+            // 诊断：若弹窗在没有用户操作的情况下消失，这里会打出调用栈，便于定位
+            console.info('[llm-dialog] close', new Error('stack').stack)
+            setDialog('none')
+          }}
+        />
+      )}
+      {dialog === 'settings' && (
+        <InfoDialog title="设置" message="🚧 待补充：将提供账号信息、学习偏好等设置项。" onClose={() => setDialog('none')} />
+      )}
+      {dialog === 'help' && (
+        <InfoDialog
+          title="帮助"
+          message={'🚧 待补充：使用说明与常见问题。\n\n当前版本可用功能：\n· 仪表盘 — 查看对话练习进度与薄弱点\n· 情境对话 — 与 AI 进行场景对话练习\n· 边缘设备 — 局域网设备扫描、认领与 OTA\n· 知识库 — 分类树与场景卡管理\n· 工具库 — 集装箱装载计算器\n· 左上角「李」→ LLM Select — 切换或新增 LLM 供应商'}
+          onClose={() => setDialog('none')}
+        />
+      )}
     </div>
   )
 }

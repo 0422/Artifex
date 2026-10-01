@@ -381,8 +381,7 @@ async def run_ota_task(
 ) -> None:
     """后台执行 OTA 推送，持续把进度与日志写库。
 
-    自建 DB 会话（同 capture_service.process_capture 的做法），与请求生命周期解耦，
-    这样 BackgroundTasks 触发后前端可以独立轮询任务详情看进度。
+    自建 DB 会话，与请求生命周期解耦，这样 BackgroundTasks 触发后前端可以独立轮询任务详情看进度。
     """
     factory = session_factory or async_session_factory
 

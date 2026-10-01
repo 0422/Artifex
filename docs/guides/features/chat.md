@@ -16,6 +16,6 @@
 
 **相关文档**:
 
-- [产品需求规格书](../design/prd.md) — P0-3 检验对话
-- [M2阶段文档](../design/phases/M2.md) — 场景对话闭环
-- [M3阶段文档](../design/phases/M3.md) — 流式语音与数字人
+- [产品需求规格书](../../design/prd.md) — P0-3 检验对话
+- [M2阶段文档](../../design/phases/M2.md) — 场景对话闭环
+- [M3阶段文档](../../design/phases/M3.md) — 流式语音与数字人

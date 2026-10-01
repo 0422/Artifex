@@ -200,6 +200,8 @@ UserProfile (user_id, native_language, timezone, daily_goal_minutes, onboarding_
 
 #### 3.2.2 Capture Module（资料组织与概念提取）→ 覆盖 P0-1
 
+> 📌 **2026-10-01 已移除**：内容捕获模块连同其路由、service、模型与数据库表已删除，以下为原设计记录。
+
 **职责**：接收用户输入内容（学习资料，主体在软件外）→ 异步提取概念 → 建立知识关联 → 触发记忆卡片生成 → 归位到路径对应环节
 
 **子模块**：
@@ -380,6 +382,8 @@ MHI = 0.30 * consistency_score + 0.25 * engagement_score + 0.25 * progress_perce
 
 #### 3.2.6 Path Module（领域路径引擎）→ 覆盖 P0-5
 
+> 📌 **2026-10-01 已移除**：学习路径模块与 5 分钟引导流程已整体删除，以下为原设计记录。
+
 **职责**：领域添加 → 问卷（起点+目标分析）→ 路径生成 → 资料推荐与自动归位 → 检验驱动实时更新
 
 **子模块**：
@@ -396,6 +400,8 @@ MHI = 0.30 * consistency_score + 0.25 * engagement_score + 0.25 * progress_perce
 ---
 
 #### 3.2.7 Concept Graph Module（知识图谱）
+
+> 📌 **2026-10-01 已移除**：概念节点与关联边模型、pgvector 向量检索已随内容捕获一并下线，以下为原设计记录。
 
 **职责**：管理跨领域概念节点和关联边，支撑"跨领域概念联结"(P1-3)
 
@@ -559,28 +565,41 @@ DigitalHumanConfig (
 
 ## 4. 数据模型 ER 概要
 
+> 📌 **2026-10-01 已移除**：`Capture`、`ConceptNode`、`ConceptEdge`、`LearningPath`、`PathMilestone` 五张表及 `Card.source_concept_id` 已删除；以下为原 ER 记录。
+
 ```
 User ──1:N──> UserProfile
 User ──1:1──> DigitalHumanConfig
-User ──1:N──> Capture
 User ──1:N──> Card
-User ──1:N──> ConceptNode
 User ──1:N──> ChatSession
 User ──1:N──> LearningEvent
-User ──1:N──> LearningPath
-
-Capture ──1:N──> ConceptNode
-ConceptNode ──1:N──> Card
-ConceptNode ──1:N──> ConceptEdge(source/target)
+User ──1:N──> KnowledgeCategory
+User ──1:N──> ScenarioCard
+User ──1:N──> EdgeDevice
 
 ChatSession ──1:N──> ChatMessage
 ChatSession ──1:N──> Card (练习报告生成的卡片)
 
 Card ──1:N──> ReviewLog
 
+ScenarioCard ──N:N──> KnowledgeCategory
+EdgeDevice ──1:N──> EdgeFirmware / EdgeOtaTask
+ChatSession ──1:N──> LearningEvent (检验结果回流)
+```
+
+**已删除的原始关系**（2026-10-01）：
+
+```
+User ──1:N──> Capture
+User ──1:N──> ConceptNode
+User ──1:N──> LearningPath
+
+Capture ──1:N──> ConceptNode
+ConceptNode ──1:N──> Card
+ConceptNode ──1:N──> ConceptEdge(source/target)
+
 LearningPath ──1:N──> PathMilestone
 PathMilestone ──1:N──> Capture (资料归位: path_milestone_id)
-ChatSession ──1:N──> LearningEvent (检验结果回流路径)
 ```
 
 ---
@@ -594,7 +613,6 @@ Artifex/
 │   │   ├── components/           # 通用组件
 │   │   │   ├── ui/               # Radix UI 封装
 │   │   │   ├── dashboard/        # 仪表盘组件
-│   │   │   ├── capture/          # 内容捕获组件
 │   │   │   ├── chat/             # AI 对话组件
 │   │   │   ├── digital-human/    # 桌面数字人组件
 │   │   │   │   ├── AvatarRenderer.tsx    # VRM 渲染器
@@ -617,12 +635,10 @@ Artifex/
 │   │   ├── api/
 │   │   │   ├── v1/
 │   │   │   │   ├── auth.py
-│   │   │   │   ├── capture.py
 │   │   │   │   ├── memory.py
 │   │   │   │   ├── chat.py       # REST + WebSocket
 │   │   │   │   ├── digital_human.py  # 数字人 REST + WS
 │   │   │   │   ├── dashboard.py
-│   │   │   │   └── path.py
 │   │   │   └── deps.py           # 依赖注入
 │   │   ├── core/
 │   │   │   ├── config.py         # 配置管理
@@ -630,7 +646,6 @@ Artifex/
 │   │   │   └── database.py       # DB 连接池
 │   │   ├── models/               # SQLAlchemy ORM
 │   │   │   ├── user.py
-│   │   │   ├── capture.py
 │   │   │   ├── card.py
 │   │   │   ├── concept.py
 │   │   │   ├── chat.py
@@ -638,7 +653,6 @@ Artifex/
 │   │   │   └── event.py
 │   │   ├── schemas/              # Pydantic 验证
 │   │   ├── services/             # 业务逻辑
-│   │   │   ├── capture_service.py
 │   │   │   ├── memory_service.py
 │   │   │   ├── fsrs_engine.py
 │   │   │   ├── chat_service.py
@@ -653,11 +667,8 @@ Artifex/
 │   │   │   ├── tts.py            # 语音合成
 │   │   │   └── cost_tracker.py   # Token 用量追踪
 │   │   └── workers/              # Celery 任务
-│   │       ├── extract_concepts.py
-│   │       ├── generate_cards.py
 │   │       ├── build_queue.py
 │   │       ├── daily_digest.py
-│   │       └── update_graph.py
 │   ├── alembic/                  # DB 迁移
 │   ├── tests/
 │   ├── Dockerfile
@@ -679,9 +690,6 @@ Artifex/
 | POST | `/api/v1/auth/register` | Auth | 注册 |
 | POST | `/api/v1/auth/login` | Auth | 登录 |
 | POST | `/api/v1/auth/refresh` | Auth | 刷新 Token |
-| POST | `/api/v1/capture` | Capture | 提交内容（可带 `path_milestone_id` 归位到路径环节） |
-| GET | `/api/v1/capture/{id}` | Capture | 查询处理状态 |
-| GET | `/api/v1/capture/{id}/concepts` | Capture | 获取提取概念 |
 | GET | `/api/v1/memory/due` | Memory | 今日待复习队列 |
 | POST | `/api/v1/memory/review` | Memory | 提交复习结果 |
 | GET | `/api/v1/memory/cards` | Memory | 卡片列表(分页) |
@@ -692,13 +700,6 @@ Artifex/
 | GET | `/api/v1/dashboard/overview` | Dashboard | 仪表盘总览 |
 | GET | `/api/v1/dashboard/dle-trend` | Dashboard | DLE 趋势(7/30d) |
 | GET | `/api/v1/dashboard/mhi` | Dashboard | MHI 状态+历史 |
-| GET | `/api/v1/path/current` | Path | 当前学习路径 |
-| GET | `/api/v1/path/onboarding` | Path | 引导流程步骤 |
-| POST | `/api/v1/path/onboarding/complete` | Path | 完成引导，生成起点报告 |
-| POST | `/api/v1/path/domains` | Path | 添加学习领域，触发问卷+路径生成 |
-| GET | `/api/v1/path/domains/{id}/today` | Path | 今日学习任务（当前里程碑推进项） |
-| GET | `/api/v1/concepts` | Concept | 概念列表 |
-| GET | `/api/v1/concepts/{id}/graph` | Concept | 概念邻域图谱 |
 | GET | `/api/v1/digital-human/config` | DigitalHuman | 获取数字人配置 |
 | PUT | `/api/v1/digital-human/config` | DigitalHuman | 更新数字人配置 |
 | GET | `/api/v1/digital-human/models` | DigitalHuman | 可用 VRM 模型列表 |

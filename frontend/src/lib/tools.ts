@@ -1,10 +1,5 @@
-import { ALargeSmall, Boxes, ListFilter, Route, ScanText, TextCursorInput } from 'lucide-react'
-import type { ComponentType } from 'react'
+import { Boxes } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-
-import CaseConverterTool from '../components/tools/CaseConverterTool'
-import LineDeduplicatorTool from '../components/tools/LineDeduplicatorTool'
-import TextStatisticsTool from '../components/tools/TextStatisticsTool'
 
 export interface ToolDefinition {
   id: string
@@ -12,9 +7,11 @@ export interface ToolDefinition {
   description: string
   icon: LucideIcon
   path: string
-  component?: ComponentType
 }
 
+// 2026-10-01 学习路径、内容捕获、文本统计、英文大小写转换、逐行去重五个工具卡片已下线，
+// 相关页面（ToolPage/PathPage/CapturePage）与轻量组件一并删除。
+// 仅保留集装箱装载计算器：它有自己的完整页面和独立路由，不走这里的 component 渲染。
 export const TOOLS: ToolDefinition[] = [
   {
     id: 'container-loading-calculator',
@@ -23,44 +20,4 @@ export const TOOLS: ToolDefinition[] = [
     icon: Boxes,
     path: '/tools/container-loading-calculator',
   },
-  {
-    id: 'learning-path',
-    name: '学习路径',
-    description: '查看根据引导结果生成的阶段目标、能力起点和个性化学习建议。',
-    icon: Route,
-    path: '/tools/learning-path',
-  },
-  {
-    id: 'content-capture',
-    name: '内容捕获',
-    description: '粘贴学习材料，由 AI 提取关键概念、生成摘要和记忆卡片。',
-    icon: ScanText,
-    path: '/tools/content-capture',
-  },
-  {
-    id: 'text-statistics',
-    name: '文本统计',
-    description: '快速统计文本的字符数、单词数和行数，辅助评估阅读与写作篇幅。',
-    icon: TextCursorInput,
-    path: '/tools/text-statistics',
-    component: TextStatisticsTool,
-  },
-  {
-    id: 'case-converter',
-    name: '英文大小写转换',
-    description: '在大写、小写、标题格式和句首大写之间快速转换英文文本。',
-    icon: ALargeSmall,
-    path: '/tools/case-converter',
-    component: CaseConverterTool,
-  },
-  {
-    id: 'line-deduplicator',
-    name: '逐行去重',
-    description: '删除词汇表或句子列表中的重复行，并保留原有排列顺序。',
-    icon: ListFilter,
-    path: '/tools/line-deduplicator',
-    component: LineDeduplicatorTool,
-  },
 ]
-
-export const findTool = (id: string | undefined) => TOOLS.find((tool) => tool.id === id)

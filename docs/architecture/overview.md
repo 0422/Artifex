@@ -18,7 +18,7 @@
 
 **相关文档**:
 
-- [技术架构设计](technical-design.md) — 详细技术选型和模块设计
+- [技术架构设计](../design/technical-design.md) — 详细技术选型和模块设计
 - [Nanobot集成](nanobot-integration.md) — AI集成架构
 
 ---

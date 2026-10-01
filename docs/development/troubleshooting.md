@@ -29,10 +29,7 @@
 ### 注册与登录
 
 - 🚧 待补充
-
-### 内容捕获
-
-- 🚧 待补充
+- 修改 `backend/app/core/config.py` 删除配置字段后，必须同步清理本地 `.env`：`BaseSettings` 默认 `extra="forbid"`，残留 key 会让后端启动失败（前端表现为登录一直"处理中"）
 
 ### 复习功能
 

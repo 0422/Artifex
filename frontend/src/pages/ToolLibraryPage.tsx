@@ -10,7 +10,6 @@ export default function ToolLibraryPage() {
         <header className="mb-8">
           <div className="flex items-center gap-2 text-teal-400"><Wrench size={18} /><span className="text-xs font-medium uppercase tracking-wider">Toolkit</span></div>
           <h1 className="mt-3 text-2xl font-semibold text-zinc-100">工具库</h1>
-          <p className="mt-2 text-sm text-zinc-500">选择一个工具，快速处理语言学习中的常见任务。</p>
         </header>
 
         <section className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">

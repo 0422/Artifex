@@ -58,6 +58,8 @@ class AiResponseEvent(BaseModel):
     content: str
     created_at: datetime
     degraded: bool = False
+    # 2026-10-01 降级原因，供前端在「对话服务在线」位置如实提示 LLM 故障
+    degraded_reason: str | None = None
 
 
 class ChatCorrection(BaseModel):
