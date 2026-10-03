@@ -6,12 +6,14 @@ export default function ContainerLoadingCalculatorPage() {
   const [loading, setLoading] = useState(true)
 
   return (
-    <div className="flex h-full min-h-[720px] flex-col bg-zinc-900">
+    // 2026-10-02 全卡片式改版：计算器页面由通栏（flex h-full min-h-[720px] flex-col bg-zinc-900）改为独立面板，
+    // overflow-hidden 保证内部 iframe 区域被卡片圆角裁切
+    <div className="panel flex h-full min-h-[720px] flex-col overflow-hidden">
       <header className="shrink-0 border-b border-zinc-800 bg-zinc-950/70 px-8 py-3 lg:px-10">
         <div className="flex items-center gap-4">
           <Link to="/tools" title="返回工具库" aria-label="返回工具库" className="icon-button"><ArrowLeft size={19} /></Link>
           <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-teal-900 bg-teal-950/50 text-teal-300"><Boxes size={20} /></div>
-          <div><h1 className="font-semibold text-zinc-100">集装箱装载计算器</h1><p className="mt-0.5 text-xs text-zinc-500">配置集装箱和货物 SKU，计算并查看三维装载方案</p></div>
+          <div><h1 className="font-semibold text-zinc-100">集装箱装载计算器</h1><p className="mt-0.5 text-xs text-zinc-400">配置集装箱和货物 SKU，计算并查看三维装载方案</p></div>
         </div>
       </header>
       <div className="relative min-h-0 flex-1 bg-[#1a1d2e]">

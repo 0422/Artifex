@@ -79,8 +79,8 @@ export default function AccountMenu({
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-zinc-100">{nickname || '未命名用户'}</p>
           {/* 供应商名 + 模型名可能很长，换行显示而不是截断，避免看不出当前用的是哪家 */}
-          <p className="mt-0.5 break-words text-xs leading-4 text-zinc-500">
-            <span className="text-zinc-600">当前 LLM </span>
+          <p className="mt-0.5 break-words text-xs leading-4 text-zinc-400">
+            <span className="text-zinc-400">当前 LLM </span>
             {activeLabel}
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function AccountMenu({
             <Icon size={15} className="mt-0.5 shrink-0 text-zinc-400" />
             <span className="min-w-0">
               <span className="block text-sm text-zinc-200">{label}</span>
-              {hint && <span className="block text-xs text-zinc-500">{hint}</span>}
+              {hint && <span className="block text-xs text-zinc-400">{hint}</span>}
             </span>
           </button>
         ))}

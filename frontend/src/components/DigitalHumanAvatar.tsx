@@ -55,6 +55,9 @@ export default function DigitalHumanAvatar({
   const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error'>('loading')
   const [usingCustomModel, setUsingCustomModel] = useState(false)
   const [isRotating, setIsRotating] = useState(false)
+  // 2026-10-02 第三批：模型就绪后才整块淡入上移（原来 ready 是硬切出现），
+  // entered 在每次换模型/重试时复位，重播入场
+  const [entered, setEntered] = useState(false)
 
   useEffect(() => { moodRef.current = mood }, [mood])
   useEffect(() => { speakingRef.current = isSpeaking }, [isSpeaking])
@@ -85,6 +88,7 @@ export default function DigitalHumanAvatar({
     let inViewport = true
 
     setLoadState('loading')
+    setEntered(false)
     let renderer: THREE.WebGLRenderer
     try {
       renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' })
@@ -146,6 +150,7 @@ export default function DigitalHumanAvatar({
         camera.updateProjectionMatrix()
 
         setLoadState('ready')
+        setEntered(true)
 
         mixer = new THREE.AnimationMixer(vrm.scene)
         const motionUrls = {
@@ -296,6 +301,13 @@ export default function DigitalHumanAvatar({
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
+  // 2026-10-02 第三批：加载失败时的手动重试。带 query 参数改 URL 触发 effect 重跑，
+  // 顺便绕过浏览器对同一 URL 的缓存；自定义模型不提供重试（重试也没有意义）
+  const retryLoad = () => {
+    if (usingCustomModel) return
+    setModelUrl(`${defaultModelUrl}?retry=${Date.now()}`)
+  }
+
   return (
     <div
       ref={containerRef}
@@ -314,7 +326,9 @@ export default function DigitalHumanAvatar({
     >
       <canvas
         ref={canvasRef}
-        className={`absolute inset-0 h-full w-full touch-none ${isRotating ? 'cursor-grabbing' : 'cursor-grab'}`}
+        // 2026-10-02 第三批：就绪前 opacity-0 藏住，ready 时随 entered 播 fade + 上移入场；
+        // 原来模型是硬切出现的，首屏没有"醒来"的仪式感
+        className={`absolute inset-0 h-full w-full touch-none ${isRotating ? 'cursor-grabbing' : 'cursor-grab'} ${entered ? 'animate-page-in' : 'opacity-0'}`}
         aria-label="3D 对话伙伴"
         title="拖动旋转，滚轮缩放"
         onPointerDown={(event) => {
@@ -341,6 +355,10 @@ export default function DigitalHumanAvatar({
           setIsRotating(false)
         }}
       />
+      {/* 2026-10-02 第三批：接地阴影。模型悬在画布上总缺点"落地感"，
+          底部一道 radial 暗影补上；pointer-events-none 不挡拖动旋转 */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-[radial-gradient(60%_100%_at_50%_100%,rgba(0,0,0,0.5),transparent)]" />
+
       <div className="absolute right-3 top-3 z-10 flex gap-1">
         {usingCustomModel && (
           <button type="button" title="恢复默认模型" aria-label="恢复默认模型" onClick={resetModel} className="icon-button bg-zinc-950/80 backdrop-blur-sm">
@@ -352,11 +370,30 @@ export default function DigitalHumanAvatar({
         </button>
         <input ref={fileInputRef} type="file" accept=".vrm,model/gltf-binary" className="hidden" onChange={(event) => selectModel(event.target.files?.[0])} />
       </div>
-      {loadState === 'loading' && <div className="absolute inset-0 flex items-center justify-center text-sm text-zinc-500"><span className="h-2 w-2 animate-pulse rounded-full bg-teal-400" /></div>}
+      {/* 2026-10-02 第三批：加载态由一个孤零零的脉冲点升级为「转环 + 文案」，
+          与骨架屏语言一致；错误态补重试按钮和拖拽提示 */}
+      {loadState === 'loading' && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+          <span className="h-7 w-7 animate-spin rounded-full border-2 border-zinc-700 border-t-teal-400" />
+          <span className="text-xs text-zinc-400">正在加载模型…</span>
+        </div>
+      )}
       {loadState === 'error' && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-zinc-500">
-          <UserRound size={88} strokeWidth={1.1} />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-zinc-400">
+          <span className="relative flex h-16 w-16 items-center justify-center">
+            <span className="absolute inset-0 rounded-full ring-1 ring-inset ring-zinc-800" />
+            <span className="absolute inset-3 rounded-full bg-red-500/10 blur-[8px]" />
+            <UserRound className="relative text-zinc-500" size={26} strokeWidth={1.5} />
+          </span>
           <span className="text-xs">模型加载失败</span>
+          {!usingCustomModel && (
+            <button type="button" onClick={retryLoad} className="secondary-button h-8 px-3 text-xs">
+              <RotateCcw size={14} />重新加载
+            </button>
+          )}
+          <span className="max-w-[15rem] px-4 text-center text-[11px] leading-5 text-zinc-500">
+            自定义模型失败时，也可以直接把 .vrm 文件拖到这里加载
+          </span>
         </div>
       )}
     </div>

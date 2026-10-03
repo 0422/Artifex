@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Check, Loader2, Pencil, Plus, Trash2, X } from 'lucide-react'
+import * as Dialog from '@radix-ui/react-dialog'
 
 import { llmApi } from '../services/api'
 import type { LLMModel, LLMProvider } from '../lib/types'
+// 2026-10-02 收尾轮：关闭先播退场动画再卸载
+import { useDialogExit } from '../lib/useDialogExit'
 
 /**
  * 2026-10-01 LLM Select 弹窗。
@@ -98,29 +101,26 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
   /**
    * 统一的关闭入口。有未保存修改时先提示、不关闭，再点一次才放行——
    * 遮罩误点、误触 Esc、滚动误判都不该让填了一半的表单消失。
+   *
+   * 2026-10-02 收尾轮：真正关闭改走 useDialogExit 的 close()（先播退场动画
+   * 再回调卸载），clearDraft 挪到退场结束后的回调里执行
    */
+  const { open, close } = useDialogExit(() => {
+    clearDraft()
+    onClose()
+  })
   const requestClose = () => {
     if (hasDraft() && !warned) {
       setWarned(true)
       setBanner({ kind: 'error', text: '有未保存的修改。请点「保存」或「取消」；若确认放弃，请再点一次关闭。' })
       return
     }
-    clearDraft()
-    onClose()
+    close()
   }
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      // 正在填表单时 Esc 一律不关：中文输入法选词也会派发 Escape，
-      // 会直接把弹窗关掉、丢掉填了一半的内容。
-      const el = event.target as HTMLElement | null
-      if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return
-      requestClose()
-    }
-    document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
-  })
+  // 2026-10-02 第二批：原 document 级 keydown 监听已删除，Esc 逻辑移到
+  // Radix Dialog 的 onEscapeKeyDown（保留原来的中文输入法选词保护与未保存提示），
+  // 另外白拿焦点陷阱、焦点归还、背景滚动锁和出入场动画
 
   const load = async () => {
     try {
@@ -225,23 +225,39 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
     setEditForm((f) => ({ ...f, models: f.models.map((m, i) => (i === index ? { ...m, ...patch } : m)) }))
 
   return (
-    <div className="fixed inset-0 z-[80] grid place-items-center bg-black/70 p-4" onClick={requestClose}>
-      <div
-        className="w-full max-w-2xl rounded-xl border border-zinc-700 bg-zinc-900 shadow-2xl"
-        // 只有点在弹窗本体之外（即遮罩）才尝试关闭；且改了内容要先提示，不会误关
-        onClick={(event) => {
-          if (event.target !== event.currentTarget) event.stopPropagation()
-        }}
-      >
-        <header className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
-          <div>
-            <h2 className="font-semibold text-zinc-100">LLM Select</h2>
-            <p className="mt-0.5 text-xs text-zinc-500">切换、修改或新增 LLM 供应商，立即生效，无需重启</p>
-          </div>
-          <button title="关闭" aria-label="关闭" onClick={requestClose} className="icon-button">
-            <X size={18} />
-          </button>
-        </header>
+    <Dialog.Root open={open} onOpenChange={(o) => { if (!o) requestClose() }}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/70 data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out" />
+        <Dialog.Content
+          className="fixed inset-0 z-[80] flex items-center justify-center p-4 data-[state=open]:animate-dialog-in data-[state=closed]:animate-dialog-out"
+          // 点遮罩等同点关闭：同样先过 requestClose 的未保存检查，不会误关
+          onInteractOutside={(event) => {
+            event.preventDefault()
+            requestClose()
+          }}
+          onEscapeKeyDown={(event) => {
+            // 中文输入法选词也会派发 Escape：正在填表单时一律不关，并拦住 Radix 的默认关闭
+            const el = event.target as HTMLElement | null
+            const typing = !!el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)
+            if (typing) {
+              event.preventDefault()
+              return
+            }
+            // 有未保存修改：也拦住默认关闭，改为弹提示，再按一次才放行（requestClose 内部判断）
+            if (hasDraft() && !warned) event.preventDefault()
+            requestClose()
+          }}
+        >
+          <div className="w-full max-w-2xl rounded-xl border border-zinc-700 bg-zinc-900 shadow-2xl">
+            <header className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
+              <div>
+                <Dialog.Title className="font-semibold text-zinc-100">LLM Select</Dialog.Title>
+                <Dialog.Description className="mt-0.5 text-xs text-zinc-400">切换、修改或新增 LLM 供应商，立即生效，无需重启</Dialog.Description>
+              </div>
+              <button title="关闭" aria-label="关闭" onClick={requestClose} className="icon-button">
+                <X size={18} />
+              </button>
+            </header>
 
         <div className="max-h-[60vh] space-y-3 overflow-auto p-5">
           {banner && (
@@ -251,7 +267,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
           )}
 
           {loading ? (
-            <p className="flex items-center gap-2 py-8 text-sm text-zinc-500">
+            <p className="flex items-center gap-2 py-8 text-sm text-zinc-400">
               <Loader2 size={15} className="animate-spin" />加载中...
             </p>
           ) : (
@@ -265,7 +281,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
                     <h3 className="text-sm font-medium text-zinc-100">编辑：{provider.name}</h3>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <label className="block">
-                        <span className="mb-1 block text-xs text-zinc-500">名称</span>
+                        <span className="mb-1 block text-xs text-zinc-400">名称</span>
                         <input
                           value={editForm.name}
                           onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))}
@@ -273,7 +289,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
                         />
                       </label>
                       <label className="block">
-                        <span className="mb-1 block text-xs text-zinc-500">请求地址</span>
+                        <span className="mb-1 block text-xs text-zinc-400">请求地址</span>
                         <input
                           value={editForm.base_url}
                           onChange={(e) => setEditForm((f) => ({ ...f, base_url: e.target.value }))}
@@ -282,9 +298,9 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
                         />
                       </label>
                       <label className="block sm:col-span-2">
-                        <span className="mb-1 block text-xs text-zinc-500">
+                        <span className="mb-1 block text-xs text-zinc-400">
                           API Key
-                          <span className="ml-1 text-zinc-600">（留空表示不修改，当前 {provider.api_key_masked || '未填写'}）</span>
+                          <span className="ml-1 text-zinc-400">（留空表示不修改，当前 {provider.api_key_masked || '未填写'}）</span>
                         </span>
                         <input
                           value={editForm.api_key}
@@ -297,7 +313,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
 
                     {/* 模型逐行编辑：可改名、可单独开关 JSON 输出、可移除 */}
                     <div className="mt-3">
-                      <span className="mb-1 block text-xs text-zinc-500">模型</span>
+                      <span className="mb-1 block text-xs text-zinc-400">模型</span>
                       <div className="space-y-2">
                         {editForm.models.map((model, index) => (
                           <div key={index} className="flex items-center gap-2">
@@ -377,10 +393,10 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 truncate font-mono text-xs text-zinc-500" title={provider.base_url}>
+                      <p className="mt-1 truncate font-mono text-xs text-zinc-400" title={provider.base_url}>
                         {provider.base_url}
                       </p>
-                      <p className="mt-0.5 text-[11px] text-zinc-600">
+                      <p className="mt-0.5 text-[11px] text-zinc-400">
                         API Key：{provider.api_key_masked || '未填写'}
                       </p>
                     </div>
@@ -419,7 +435,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
 
                   {/* 模型标签：点击即选用该模型，非激活供应商会顺带被激活 */}
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {provider.models.length === 0 && <span className="text-xs text-zinc-600">暂无模型</span>}
+                    {provider.models.length === 0 && <span className="text-xs text-zinc-400">暂无模型</span>}
                     {provider.models.map((model) => {
                       const selected = isActive && model.name === activeModel
                       return (
@@ -452,7 +468,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
               <h3 className="text-sm font-medium text-zinc-100">新增 LLM</h3>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <label className="block">
-                  <span className="mb-1 block text-xs text-zinc-500">名称</span>
+                  <span className="mb-1 block text-xs text-zinc-400">名称</span>
                   <input
                     value={form.name}
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -461,7 +477,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-xs text-zinc-500">请求地址</span>
+                  <span className="mb-1 block text-xs text-zinc-400">请求地址</span>
                   <input
                     value={form.base_url}
                     onChange={(e) => setForm((f) => ({ ...f, base_url: e.target.value }))}
@@ -470,7 +486,7 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
                   />
                 </label>
                 <label className="block sm:col-span-2">
-                  <span className="mb-1 block text-xs text-zinc-500">API Key</span>
+                  <span className="mb-1 block text-xs text-zinc-400">API Key</span>
                   <input
                     value={form.api_key}
                     onChange={(e) => setForm((f) => ({ ...f, api_key: e.target.value }))}
@@ -479,9 +495,9 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
                   />
                 </label>
                 <label className="block sm:col-span-2">
-                  <span className="mb-1 block text-xs text-zinc-500">
+                  <span className="mb-1 block text-xs text-zinc-400">
                     模型（每行一个，或用逗号分隔）
-                    <span className="ml-1 text-zinc-600">默认开启 JSON 输出，如需关闭请在保存后点「修改」逐模型调整</span>
+                    <span className="ml-1 text-zinc-400">默认开启 JSON 输出，如需关闭请在保存后点「修改」逐模型调整</span>
                   </span>
                   <textarea
                     value={form.models}
@@ -517,7 +533,9 @@ export default function LlmSelectDialog({ onClose }: { onClose: () => void }) {
             </button>
           )}
         </div>
-      </div>
-    </div>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }

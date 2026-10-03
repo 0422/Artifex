@@ -64,7 +64,7 @@ export default function CategorySelect({
         className="field flex h-9 w-full items-center justify-between gap-2 py-1 text-left"
       >
         <span className="truncate">{selected?.name ?? '全部场景'}</span>
-        <ChevronDown size={15} className={`shrink-0 text-zinc-500 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown size={15} className={`shrink-0 text-zinc-400 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
@@ -119,7 +119,7 @@ function TreeNode({
           type="button"
           title={open ? '收起' : '展开'}
           onClick={toggle}
-          className={`grid h-7 w-7 shrink-0 place-items-center rounded text-zinc-500 hover:text-zinc-200 ${node.children.length ? '' : 'invisible'}`}
+          className={`grid h-7 w-7 shrink-0 place-items-center rounded text-zinc-400 hover:text-zinc-200 ${node.children.length ? '' : 'invisible'}`}
         >
           {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         </button>
@@ -130,7 +130,7 @@ function TreeNode({
         >
           <span className="truncate">{node.name}</span>
           {node.card_count > 0 && (
-            <span className="shrink-0 text-[10px] tabular-nums text-zinc-600">{node.card_count}</span>
+            <span className="shrink-0 text-[10px] tabular-nums text-zinc-400">{node.card_count}</span>
           )}
         </button>
       </div>

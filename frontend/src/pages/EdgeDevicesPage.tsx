@@ -5,6 +5,8 @@ import { EDGE_CHIP_LABEL as CHIP_LABEL } from '../lib/constants'
 import type { DiscoveredDevice, EdgeDevice, EdgeScanResult } from '../lib/types'
 import { edgeDevicesApi } from '../services/api'
 import EdgeDeviceDetail from '../components/EdgeDeviceDetail'
+// 2026-10-02 第三批：空状态统一用共享组件，替换原页面内的本地 EmptyState
+import EmptyState from '../components/EmptyState'
 
 export default function EdgeDevicesPage() {
   const [devices, setDevices] = useState<EdgeDevice[]>([])
@@ -71,13 +73,15 @@ export default function EdgeDevicesPage() {
   const unclaimed = scan?.unclaimed ?? []
 
   return (
-    <div className="flex h-full min-h-0 bg-zinc-900">
-      <section className="flex min-w-0 flex-1 flex-col">
+    // 2026-10-02 全卡片式改版：根容器加 gap-1.5，列表区与详情区各自成卡片（原 flex h-full min-h-0 bg-zinc-900 通栏）
+    <div className="flex h-full min-h-0 gap-1.5 bg-zinc-950">
+      {/* 2026-10-02 全卡片式改版：设备列表区改为独立面板，panel 提供圆角/边框/底色，overflow-hidden 裁切圆角 */}
+      <section className="panel flex min-w-0 flex-1 flex-col overflow-hidden">
         <header className="flex min-h-14 shrink-0 flex-wrap items-center gap-3 border-b border-zinc-800 px-4 py-2 sm:px-6">
           <div className="min-w-0 flex-1">
             {/* 2026-10-01 「边缘管理」更名为「边缘设备」，与侧边栏导航保持一致 */}
             <h1 className="truncate text-sm font-semibold text-zinc-100">边缘设备</h1>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-400">
               {scanning
                 ? '正在扫描局域网...'
                 : scan
@@ -105,7 +109,7 @@ export default function EdgeDevicesPage() {
             <h2 className="text-xs font-medium text-amber-300">
               发现 {unclaimed.length} 个未认领设备
             </h2>
-            <p className="mt-1 text-xs text-zinc-500">
+            <p className="mt-1 text-xs text-zinc-400">
               固件只广播 IP 地址，不带名称与型号。认领后请手动补充设备信息。
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -117,7 +121,7 @@ export default function EdgeDevicesPage() {
                 >
                   <Cpu size={13} />
                   {item.ip}
-                  <span className="text-zinc-600">{item.seen_count} 次广播</span>
+                  <span className="tabular-nums text-zinc-400">{item.seen_count} 次广播</span>
                 </button>
               ))}
             </div>
@@ -125,12 +129,13 @@ export default function EdgeDevicesPage() {
         )}
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
-          {!loading && devices.length === 0 && <EmptyState onAdd={() => setClaiming({ ip: '', payload: '', seen_count: 0 })} />}
+          {!loading && devices.length === 0 && <EmptyState icon={Search} title="还没有绑定任何设备" description="点「搜索设备」扫描局域网，或手动添加一台设备的 IP。" action={<button onClick={() => setClaiming({ ip: '', payload: '', seen_count: 0 })} className="primary-button"><Plus size={15} />手动添加设备</button>} />}
           <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
-            {devices.map((device) => (
+            {devices.map((device, index) => (
               <DeviceCard
                 key={device.id}
                 device={device}
+                index={index}
                 // 扫描结果是本页最新鲜的在线状态，优先于档案里的旧值
                 online={onlineIds.has(device.id)}
                 selected={selected?.id === device.id}
@@ -141,8 +146,12 @@ export default function EdgeDevicesPage() {
         </div>
       </section>
 
+      {/* 2026-10-02 全卡片式改版：设备详情/认领面板改为独立卡片。
+          原 className：fixed inset-y-0 right-0 z-40 w-full max-w-md ... border-l border-zinc-700 bg-zinc-950 shadow-2xl xl:static ...，
+          边框/底色改由 panel 提供；fixed 定位内缩 6px，宽度改为扣除内缩的 calc 避免右缘溢出。
+          2026-10-02 第二批：加入场动画 animate-slide-in-right */}
       <aside
-        className={`${selected || claiming ? 'flex' : 'hidden'} fixed inset-y-0 right-0 z-40 w-full max-w-md flex-col border-l border-zinc-700 bg-zinc-950 shadow-2xl xl:static xl:z-auto xl:w-96 xl:shadow-none`}
+        className={`${selected || claiming ? 'panel flex animate-slide-in-right' : 'hidden'} fixed inset-y-1.5 right-1.5 z-40 w-[calc(100%-0.75rem)] max-w-md flex-col shadow-2xl xl:static xl:z-auto xl:w-96 xl:shadow-none`}
       >
         {selected && (
           <EdgeDeviceDetail
@@ -172,32 +181,41 @@ export default function EdgeDevicesPage() {
 
 function DeviceCard({
   device,
+  index = 0,
   online,
   selected,
   onClick,
 }: {
   device: EdgeDevice
+  index?: number
   online: boolean
   selected: boolean
   onClick: () => void
 }) {
+  // 2026-10-02 第二批：设备卡入场 stagger（与知识库场景卡同一套：索引 35ms 递增、前 12 张封顶）
   return (
+    // 2026-10-02 全卡片式改版：列表面板底色为 zinc-900，原 hover:bg-zinc-900 会与底色重合，改为 zinc-800
+    // 2026-10-02 设备卡片三段式布局（与知识库场景卡一致）：顶部徽章行与底部信息行 shrink-0 固定，
+    // 中间名称+IP 包一层 flex-1 + justify-center 垂直居中，底部「固件/WiFi」各行对齐
     <button
       onClick={onClick}
-      className={`min-h-40 rounded-lg border p-4 text-left transition-colors ${selected ? 'border-teal-700 bg-teal-950/30' : 'border-zinc-800 bg-zinc-950/50 hover:border-zinc-700 hover:bg-zinc-900'}`}
+      style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}
+      className={`animate-rise flex min-h-40 flex-col rounded-lg border p-4 text-left transition-colors ${selected ? 'border-teal-700 bg-teal-950/30' : 'border-zinc-800 bg-zinc-950/50 hover:border-zinc-700 hover:bg-zinc-800'}`}
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex shrink-0 items-start justify-between gap-3">
         <span className="rounded bg-zinc-800 px-2 py-1 text-[10px] text-zinc-400">
           {CHIP_LABEL[device.chip] ?? device.chip}
         </span>
         <span className="flex items-center gap-1.5 text-[10px]">
           <span className={`h-1.5 w-1.5 rounded-full ${online ? 'bg-teal-400' : 'bg-zinc-600'}`} />
-          <span className={online ? 'text-teal-300' : 'text-zinc-500'}>{online ? '在线' : '离线'}</span>
+          <span className={online ? 'text-teal-300' : 'text-zinc-400'}>{online ? '在线' : '离线'}</span>
         </span>
       </div>
-      <h2 className="mt-4 font-medium text-zinc-100">{device.name}</h2>
-      <p className="mt-2 font-mono text-xs text-zinc-500">{device.ip_address ?? '未设置 IP'}</p>
-      <div className="mt-4 flex flex-wrap items-center gap-2 text-[10px] text-zinc-500">
+      <div className="flex flex-1 flex-col justify-center py-4">
+        <h2 className="font-medium text-zinc-100">{device.name}</h2>
+        <p className="mt-2 font-mono text-xs text-zinc-400">{device.ip_address ?? '未设置 IP'}</p>
+      </div>
+      <div className="flex shrink-0 flex-wrap items-center gap-2 text-[10px] text-zinc-400">
         <span>固件 {device.firmware_version ?? '未知'}</span>
         {device.wifi_ssid && (
           <>
@@ -311,21 +329,7 @@ function ClaimForm({
   )
 }
 
-function EmptyState({ onAdd }: { onAdd: () => void }) {
-  return (
-    <div className="mx-auto max-w-sm py-24 text-center">
-      <Search className="mx-auto text-zinc-700" size={34} />
-      <h2 className="mt-4 font-medium text-zinc-300">还没有绑定任何设备</h2>
-      <p className="mt-2 text-sm text-zinc-600">
-        点「搜索设备」扫描局域网，或手动添加一台设备的 IP。
-      </p>
-      <button onClick={onAdd} className="primary-button mt-5">
-        <Plus size={15} />
-        手动添加设备
-      </button>
-    </div>
-  )
-}
+// 2026-10-02 第三批：本地 EmptyState 已删除，改用共享组件 ../components/EmptyState
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <label className="block text-sm text-zinc-300">{label}{children}</label>

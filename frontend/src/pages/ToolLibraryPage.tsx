@@ -5,7 +5,9 @@ import { TOOLS } from '../lib/tools'
 
 export default function ToolLibraryPage() {
   return (
-    <div className="min-h-full bg-zinc-900 px-8 py-8 lg:px-10">
+    // 2026-10-02 全卡片式改版：工具库内容区由通栏（min-h-full bg-zinc-900）改为独立面板，
+    // h-full + overflow-y-auto 让卡片固定占满主区域并内部滚动
+    <div className="panel h-full overflow-y-auto px-8 py-8 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <header className="mb-8">
           <div className="flex items-center gap-2 text-teal-400"><Wrench size={18} /><span className="text-xs font-medium uppercase tracking-wider">Toolkit</span></div>
@@ -17,8 +19,8 @@ export default function ToolLibraryPage() {
             <Link key={id} to={path} className="group flex min-h-52 flex-col rounded-xl border border-zinc-800 bg-zinc-950/60 p-5 transition-all hover:-translate-y-0.5 hover:border-teal-800 hover:bg-zinc-950 hover:shadow-lg hover:shadow-black/20">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-teal-900 bg-teal-950/50 text-teal-300"><Icon size={20} /></div>
               <h2 className="mt-5 font-medium text-zinc-100">{name}</h2>
-              <p className="mt-2 flex-1 text-sm leading-6 text-zinc-500">{description}</p>
-              <span className="mt-5 flex items-center gap-1 text-xs text-zinc-500 transition-colors group-hover:text-teal-300">打开工具<ArrowRight size={14} className="transition-transform group-hover:translate-x-1" /></span>
+              <p className="mt-2 flex-1 text-sm leading-6 text-zinc-400">{description}</p>
+              <span className="mt-5 flex items-center gap-1 text-xs text-zinc-400 transition-colors group-hover:text-teal-300">打开工具<ArrowRight size={14} className="transition-transform group-hover:translate-x-1" /></span>
             </Link>
           ))}
         </section>

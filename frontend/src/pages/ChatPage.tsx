@@ -24,6 +24,16 @@ type SessionState = 'idle' | 'starting' | 'active' | 'ending' | 'reporting'
 const MOOD_LABEL: Record<DigitalHumanMood, string> = {
   neutral: '准备好了', happy: '做得不错', thinking: '正在思考', relaxed: '正在倾听', sad: '再试一次',
 }
+// 2026-10-02 第三批：数字人背后的情绪环境光。数字人是全应用最大的差异资产，
+// 原来只有 CSS halo 圆环，现在背后加一团随 mood 变色的柔光（颜色 700ms 过渡），
+// 状态变化时整个面板的"气温"都在变
+const MOOD_GLOW: Record<DigitalHumanMood, string> = {
+  neutral: 'bg-teal-500/10',
+  happy: 'bg-emerald-500/15',
+  thinking: 'bg-amber-500/15',
+  relaxed: 'bg-teal-400/10',
+  sad: 'bg-rose-500/15',
+}
 const MOODS = Object.keys(MOOD_LABEL) as DigitalHumanMood[]
 const MOTION_LABEL: Record<DigitalHumanMotion, string> = {
   auto: '自动', showcase: '全身展示', greeting: '问候', peace: 'V 手势', shoot: '射击', spin: '旋转', modelPose: '模特姿势', squat: '屈伸',
@@ -373,15 +383,22 @@ export default function ChatPage() {
   }
 
   return (
-    <div ref={chatLayoutRef} className="relative flex h-full min-h-0 overflow-hidden bg-zinc-950">
-      {scenarioOpen && <button aria-label="关闭场景" className="fixed inset-x-0 bottom-14 top-0 z-30 bg-black/70 lg:hidden" onClick={() => setScenarioOpen(false)} />}
-      <div className={`${scenarioOpen ? 'translate-x-0 lg:w-72' : '-translate-x-full lg:w-0 lg:translate-x-0'} fixed bottom-14 left-0 top-0 z-40 w-[min(20rem,88vw)] shrink-0 overflow-hidden transition-[transform,width] lg:static lg:z-auto lg:block lg:h-full`}>
+    // 2026-10-02 全卡片式改版：根容器加 gap-1.5，场景面板/对话区/伙伴面板各自成卡片
+    <div ref={chatLayoutRef} className="relative flex h-full min-h-0 gap-1.5 overflow-hidden bg-zinc-950">
+      {/* 2026-10-02 全卡片式改版：移动端场景抽屉遮罩由贴边区域（fixed inset-x-0 bottom-14 top-0）
+          改为整屏 inset-0，悬浮抽屉和内缩后的底部导航之间露出窗口底色 */}
+      {scenarioOpen && <button aria-label="关闭场景" className="fixed inset-0 z-30 bg-black/70 lg:hidden" onClick={() => setScenarioOpen(false)} />}
+      {/* 2026-10-02 全卡片式改版：移动端抽屉由贴边（fixed bottom-14 left-0 top-0）改为内缩 6px 的悬浮定位，
+          底部 bottom-14 → bottom-[4.5rem] 以避开 Layout 新的悬浮底部导航 */}
+      <div className={`${scenarioOpen ? 'translate-x-0 lg:w-72' : '-translate-x-full lg:w-0 lg:translate-x-0'} fixed bottom-[4.5rem] left-1.5 top-1.5 z-40 w-[min(20rem,88vw)] shrink-0 overflow-hidden transition-[transform,width] lg:static lg:z-auto lg:block lg:h-full`}>
         <div className="relative h-full w-72">
           <ScenarioManager requestedId={requestedScenarioId} selectedId={selected?.id ?? null} disabled={sessionState !== 'idle'} onClose={() => setScenarioOpen(false)} onSelect={(scenario) => { setSelected(scenario); if (window.innerWidth < 1024) setScenarioOpen(false) }} />
         </div>
       </div>
 
-      <main className="flex min-w-0 flex-1 flex-col bg-zinc-900">
+      {/* 2026-10-02 全卡片式改版：对话主区由通栏（flex min-w-0 flex-1 flex-col bg-zinc-900）改为独立面板，
+          panel 类提供圆角/边框/同色底；overflow-hidden 保证底部 footer 的直角被卡片圆角裁切 */}
+      <main className="panel flex min-w-0 flex-1 flex-col overflow-hidden">
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-zinc-800 px-3 sm:px-5">
           <div className="flex min-w-0 items-center gap-2">
             <span className="lg:hidden"><button title="选择场景" onClick={() => setScenarioOpen(true)} className="icon-button"><Menu size={17} /></button></span>
@@ -394,7 +411,7 @@ export default function ChatPage() {
                 {/* 2026-09-30 雅思口语场景库：考官模式下标明 Part，行为差异全靠它区分 */}
                 {selected?.ielts_part ? <span className="shrink-0 rounded bg-teal-950 px-2 py-0.5 text-[10px] text-teal-300">雅思 {IELTS_PART_LABEL[selected.ielts_part]}</span> : null}
               </div>
-              <p className="truncate text-xs text-zinc-500">{selected ? `${LANGUAGE_LABEL[selected.language]} · ${selected.difficulty}` : '请选择练习场景'}</p>
+              <p className="truncate text-xs text-zinc-400">{selected ? `${LANGUAGE_LABEL[selected.language]} · ${selected.difficulty}` : '请选择练习场景'}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -425,7 +442,7 @@ export default function ChatPage() {
               <div className="m-auto max-w-md py-12 text-center">
                 <Sparkles className="mx-auto mb-4 text-teal-400" size={30} />
                 <h2 className="text-lg font-semibold text-zinc-100">{selected ? selected.title : '选择一个练习场景'}</h2>
-                <p className="mt-2 text-sm leading-6 text-zinc-500">{selected?.description ?? '从场景列表中选择情境，AI 会扮演对话角色并在过程中给出纠错建议。'}</p>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">{selected?.description ?? '从场景列表中选择情境，AI 会扮演对话角色并在过程中给出纠错建议。'}</p>
               </div>
             )}
             <div className="space-y-5">
@@ -452,7 +469,7 @@ export default function ChatPage() {
               ))}
             </div>
             {(sessionState === 'starting' || sessionState === 'reporting' || sessionState === 'ending') && (
-              <div className="my-5 flex items-center gap-2 text-sm text-zinc-500"><span className="h-2 w-2 animate-pulse rounded-full bg-teal-400" />{sessionState === 'reporting' ? '正在生成学习报告...' : 'AI 正在准备...'}</div>
+              <div className="my-5 flex items-center gap-2 text-sm text-zinc-400"><span className="h-2 w-2 animate-pulse rounded-full bg-teal-400" />{sessionState === 'reporting' ? '正在生成学习报告...' : 'AI 正在准备...'}</div>
             )}
             {showEndHint && sessionState === 'active' && <div className="my-5 flex items-center justify-between gap-4 border-y border-teal-900 bg-teal-950/30 px-4 py-3 text-sm text-teal-200"><span>已练习 3 分钟，可以结束并生成学情报告。</span><button onClick={end} className="secondary-button">结束会话</button></div>}
             {report && <ReportPanel report={report} />}
@@ -466,7 +483,7 @@ export default function ChatPage() {
             <div className="mx-auto max-w-3xl">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-xs font-medium text-teal-300">Cue card · Part 2</h2>
-                <span className="text-[11px] text-zinc-500">约 1 分钟准备，最长 2 分钟独白</span>
+                <span className="text-[11px] text-zinc-400">约 1 分钟准备，最长 2 分钟独白</span>
               </div>
               <p className="mt-2 whitespace-pre-wrap font-mono text-xs leading-6 text-zinc-200">{selected.cue_card}</p>
             </div>
@@ -476,8 +493,16 @@ export default function ChatPage() {
           <div className="mx-auto flex max-w-3xl items-end gap-2">
             <button
               disabled={sessionState !== 'active' || !speechInputSupported}
-              title={!speechInputSupported ? '当前浏览器不支持语音识别' : isListening ? '停止语音输入' : '开始语音输入'}
-              title={isListening ? '正在聆听，说完再点一下发送' : '点击开始语音输入（说完再点一下发送）'}
+              // 2026-10-02 构建修复：此处原有两条 title（JSX 不允许同名属性，TS17001）。
+              // 存量问题——第二行把第一行覆盖掉，导致"当前浏览器不支持语音识别"的提示从未显示。
+              // 合并为一条：不支持 > 聆听中 > 空闲 三态各有准确提示
+              title={
+                !speechInputSupported
+                  ? '当前浏览器不支持语音识别'
+                  : isListening
+                    ? '正在聆听，说完再点一下发送'
+                    : '点击开始语音输入（说完再点一下发送）'
+              }
               aria-label={isListening ? '停止语音输入并发送' : '开始语音输入'}
               aria-pressed={isListening}
               onClick={toggleListening}
@@ -503,7 +528,11 @@ export default function ChatPage() {
         </footer>
       </main>
 
-      <aside style={avatarMobileOpen ? undefined : { width: avatarWidth }} className={`${avatarMobileOpen ? 'fixed inset-0 z-50 flex w-full' : 'hidden'} relative shrink-0 flex-col bg-zinc-950 xl:relative xl:z-auto xl:flex ${avatarOpen || avatarMobileOpen ? 'border-l border-zinc-800' : 'overflow-hidden border-l-0'} ${avatarResizing ? '' : 'transition-[width]'}`}>
+      {/* 2026-10-02 全卡片式改版：对话伙伴面板改为独立卡片。
+          原写法：移动端浮层 fixed inset-0 z-50 flex w-full + bg-zinc-950，桌面展开时 border-l border-zinc-800、收起时 border-l-0。
+          现改为：展开（含移动端浮层）时套 panel；收起（width=0）时不套，避免残留竖线；
+          移动端浮层由 inset-0 改为 inset-1.5 悬浮圆角卡片。 */}
+      <aside style={avatarMobileOpen ? undefined : { width: avatarWidth }} className={`${avatarMobileOpen ? 'panel fixed inset-1.5 z-50 flex' : `hidden ${avatarOpen ? 'panel' : 'overflow-hidden'} relative`} shrink-0 flex-col xl:relative xl:z-auto xl:flex ${avatarResizing ? '' : 'transition-[width]'}`}>
         {avatarOpen && <div
           role="separator"
           aria-label="调整对话伙伴宽度"
@@ -513,7 +542,8 @@ export default function ChatPage() {
           aria-valuenow={Math.round(avatarWidth)}
           tabIndex={0}
           title="拖动调整对话伙伴宽度"
-          className="group absolute inset-y-0 -left-1 z-50 hidden w-2 cursor-col-resize touch-none outline-none xl:block"
+          // 2026-10-02 全卡片式改版：分隔条 inset-y-0 → inset-y-2，避免 hover/focus 高亮线在面板圆角处探出卡片
+          className="group absolute inset-y-2 -left-1 z-50 hidden w-2 cursor-col-resize touch-none outline-none xl:block"
           onPointerDown={(event) => {
             event.currentTarget.setPointerCapture(event.pointerId)
             setAvatarResizing(true)
@@ -565,6 +595,8 @@ export default function ChatPage() {
         {(avatarOpen || avatarMobileOpen) && (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <div className="relative min-h-80 flex-1">
+              {/* 2026-10-02 第三批：情绪环境光，详见 MOOD_GLOW 注释 */}
+              <div className={`pointer-events-none absolute left-1/2 top-[45%] h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl transition-colors duration-700 ${MOOD_GLOW[mood]}`} />
               <Suspense fallback={<div className="flex h-full items-center justify-center"><span className="h-2 w-2 animate-pulse rounded-full bg-teal-400" /></div>}>
                 <DigitalHumanAvatar mood={mood} isSpeaking={isSpeaking} mouthLevel={mouthLevel} motion={avatarMotion} viewScale={avatarViewScale} onViewScaleChange={updateAvatarViewScale} viewRotation={avatarViewRotation} onViewRotationChange={updateAvatarViewRotation} />
               </Suspense>
@@ -577,15 +609,19 @@ export default function ChatPage() {
         )}
       </aside>
 
-      <aside className={`${avatarSettingsOpen ? 'flex' : 'hidden'} fixed inset-y-0 right-0 z-[60] w-[min(20rem,78vw)] shrink-0 flex-col border-l border-zinc-700 bg-zinc-900 shadow-2xl xl:static xl:z-auto xl:w-80 xl:shadow-none`}>
+      {/* 2026-10-02 全卡片式改版：数字人设置面板改为独立卡片。
+          原 className：fixed inset-y-0 right-0 z-[60] w-[min(20rem,78vw)] ... border-l border-zinc-700 bg-zinc-900 shadow-2xl xl:static ...，
+          边框/底色改由 panel 提供，fixed 定位内缩 6px（宽度为 min(20rem,78vw)，不会溢出右缘）。
+          2026-10-02 第二批：加入场动画 animate-slide-in-right */}
+      <aside className={`${avatarSettingsOpen ? 'panel flex animate-slide-in-right' : 'hidden'} fixed inset-y-1.5 right-1.5 z-[60] w-[min(20rem,78vw)] shrink-0 flex-col shadow-2xl xl:static xl:z-auto xl:w-80 xl:shadow-none`}>
         <div className="flex h-14 shrink-0 items-center border-b border-zinc-700 px-3">
-          <div><h2 className="text-sm font-semibold text-zinc-100">数字人设置</h2><p className="text-[10px] text-zinc-500">表情、语音与 VRMA 动作</p></div>
+          <div><h2 className="text-sm font-semibold text-zinc-100">数字人设置</h2><p className="text-[10px] text-zinc-400">表情、语音与 VRMA 动作</p></div>
           <button title="收起数字人设置" aria-label="收起数字人设置" onClick={() => setAvatarSettingsOpen(false)} className="icon-button ml-auto"><ChevronRight size={17} /></button>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
             <section>
               <div className="flex items-center justify-between gap-3">
-                <div><h3 className="text-sm font-medium text-zinc-200">模型视图</h3><p className="mt-1 text-[11px] text-zinc-600">缩放与观察角度</p></div>
+                <div><h3 className="text-sm font-medium text-zinc-200">模型视图</h3><p className="mt-1 text-[11px] text-zinc-400">缩放与观察角度</p></div>
                 <button title="恢复默认视图" aria-label="恢复默认视图" onClick={() => { updateAvatarViewScale(AVATAR_VIEW_SCALE_DEFAULT); updateAvatarViewRotation(0) }} className="icon-button"><RotateCcw size={15} /></button>
               </div>
               <div className="mt-3 flex items-center gap-3">
@@ -605,20 +641,20 @@ export default function ChatPage() {
 
             <section className="mt-5 border-t border-zinc-800 pt-4">
               <h3 className="text-sm font-medium text-zinc-200">表情系统</h3>
-              <div className="mt-3 flex flex-wrap gap-2">{MOODS.map((item) => <button key={item} onClick={() => setMood(item)} className={`rounded px-2.5 py-1.5 text-xs transition-colors ${item === mood ? 'bg-teal-950 text-teal-300' : 'bg-zinc-950 text-zinc-500 hover:text-zinc-300'}`}>{MOOD_LABEL[item]}</button>)}</div>
+              <div className="mt-3 flex flex-wrap gap-2">{MOODS.map((item) => <button key={item} onClick={() => setMood(item)} className={`rounded px-2.5 py-1.5 text-xs transition-colors ${item === mood ? 'bg-teal-950 text-teal-300' : 'bg-zinc-950 text-zinc-400 hover:text-zinc-300'}`}>{MOOD_LABEL[item]}</button>)}</div>
             </section>
 
             <section className="mt-5 border-t border-zinc-800 pt-4">
               <h3 className="text-sm font-medium text-zinc-200">语音</h3>
-              <div className="mt-2 space-y-1 text-xs leading-5 text-zinc-500"><p>语音输入：{speechInputSupported ? isListening ? '正在聆听' : '可用' : '当前浏览器不支持'}</p><p>AI 语音：{speechOutputSupported ? speechOutputEnabled ? isSpeaking ? '正在播放' : '已开启' : '已关闭' : '当前浏览器不支持'}</p></div>
+              <div className="mt-2 space-y-1 text-xs leading-5 text-zinc-400"><p>语音输入：{speechInputSupported ? isListening ? '正在聆听' : '可用' : '当前浏览器不支持'}</p><p>AI 语音：{speechOutputSupported ? speechOutputEnabled ? isSpeaking ? '正在播放' : '已开启' : '已关闭' : '当前浏览器不支持'}</p></div>
               <button disabled={!speechOutputSupported} onClick={toggleSpeechOutput} title={speechOutputEnabled ? '关闭 AI 语音' : '开启 AI 语音'} className="secondary-button mt-3">{speechOutputEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}{speechOutputEnabled ? '关闭语音' : '开启语音'}</button>
             </section>
 
             <section className="mt-5 border-t border-zinc-800 pt-4">
               <h3 className="text-sm font-medium text-zinc-200">VRMA 动作</h3>
-              <div className="mt-2 grid grid-cols-4 gap-2">{(Object.keys(MOTION_LABEL) as DigitalHumanMotion[]).map((motion) => <button key={motion} onClick={() => setAvatarMotion(motion)} className={`rounded px-2 py-2 text-xs transition-colors ${avatarMotion === motion ? 'bg-teal-950 text-teal-300 ring-1 ring-teal-700' : 'bg-zinc-950 text-zinc-500 hover:text-zinc-300'}`}>{MOTION_LABEL[motion]}</button>)}</div>
-              <p className="mt-2 text-[11px] leading-5 text-zinc-600">自动模式使用模特姿势待机，AI 朗读时切换全身展示，积极反馈时切换问候。</p>
-              <p className="mt-3 text-[10px] leading-4 text-zinc-600">Animation credits to pixiv Inc.'s VRoid Project</p>
+              <div className="mt-2 grid grid-cols-4 gap-2">{(Object.keys(MOTION_LABEL) as DigitalHumanMotion[]).map((motion) => <button key={motion} onClick={() => setAvatarMotion(motion)} className={`rounded px-2 py-2 text-xs transition-colors ${avatarMotion === motion ? 'bg-teal-950 text-teal-300 ring-1 ring-teal-700' : 'bg-zinc-950 text-zinc-400 hover:text-zinc-300'}`}>{MOTION_LABEL[motion]}</button>)}</div>
+              <p className="mt-2 text-[11px] leading-5 text-zinc-400">自动模式使用模特姿势待机，AI 朗读时切换全身展示，积极反馈时切换问候。</p>
+              <p className="mt-3 text-[10px] leading-4 text-zinc-400">Animation credits to pixiv Inc.'s VRoid Project</p>
             </section>
         </div>
       </aside>
@@ -630,14 +666,14 @@ function ReportPanel({ report }: { report: SessionReport }) {
   return (
     <section className="mt-8 border-t border-zinc-700 pt-6">
       <div className="flex items-end justify-between gap-4">
-        <div><p className="text-xs text-zinc-500">本次练习</p><h2 className="mt-1 text-lg font-semibold text-zinc-100">学习报告</h2></div>
-        <div className="text-right"><span className="text-3xl font-semibold text-teal-300">{report.performance_score ?? '--'}</span><span className="text-xs text-zinc-500"> / 100</span></div>
+        <div><p className="text-xs text-zinc-400">本次练习</p><h2 className="mt-1 text-lg font-semibold text-zinc-100">学习报告</h2></div>
+        <div className="text-right"><span className="text-3xl font-semibold tabular-nums text-teal-300">{report.performance_score ?? '--'}</span><span className="text-xs tabular-nums text-zinc-400"> / 100</span></div>
       </div>
       <p className="mt-4 text-sm leading-6 text-zinc-300">{report.summary}</p>
       {report.insufficient_data && <p className="mt-3 text-sm text-amber-300">对话内容较少，本报告仅供参考。</p>}
       {report.weak_points.length > 0 && (
         <div className="mt-6"><h3 className="text-sm font-medium text-zinc-200">需要加强</h3><div className="mt-3 divide-y divide-zinc-800 border-y border-zinc-800">
-          {report.weak_points.map((point) => <div key={point.tag} className="py-4"><div className="flex gap-2"><span className="rounded bg-amber-950 px-2 py-0.5 text-xs text-amber-300">{point.category}</span><p className="text-sm text-zinc-200">{point.description}</p></div><p className="mt-2 text-xs text-zinc-500">示例：{point.example}</p><p className="mt-1 text-xs text-teal-300">建议：{point.suggestion}</p></div>)}
+          {report.weak_points.map((point) => <div key={point.tag} className="py-4"><div className="flex gap-2"><span className="rounded bg-amber-950 px-2 py-0.5 text-xs text-amber-300">{point.category}</span><p className="text-sm text-zinc-200">{point.description}</p></div><p className="mt-2 text-xs text-zinc-400">示例：{point.example}</p><p className="mt-1 text-xs text-teal-300">建议：{point.suggestion}</p></div>)}
         </div></div>
       )}
       <div className="mt-6"><h3 className="text-sm font-medium text-zinc-200">下一步建议</h3><ul className="mt-2 space-y-2 text-sm text-zinc-400">{report.suggestions.map((item, index) => <li key={index} className="flex gap-2"><span className="text-teal-400">{index + 1}.</span>{item}</li>)}</ul></div>
@@ -649,15 +685,25 @@ function TypewriterText({ text }: { text: string }) {
   const [length, setLength] = useState(0)
 
   useEffect(() => {
-    const step = Math.max(1, Math.ceil(text.length / 80))
-    const timer = window.setInterval(() => setLength((current) => {
-      if (current >= text.length) {
-        window.clearInterval(timer)
-        return current
-      }
-      return Math.min(text.length, current + step)
-    }), 22)
-    return () => window.clearInterval(timer)
+    // 2026-10-02 第三批：打字机由 setInterval 定频切片改为 rAF + 时间片。
+    // 原 22ms 定频长文本跳字、短文本一顿一顿；现在按每字约 18ms 折算总时长，
+    // easeOutCubic 前快后慢，读起来像人在说话。reduced-motion 用户直接给全文
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setLength(text.length)
+      return
+    }
+    const duration = Math.max(300, text.length * 18)
+    const start = performance.now()
+    let frame = 0
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / duration)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setLength(Math.floor(eased * text.length))
+      if (progress < 1) frame = window.requestAnimationFrame(tick)
+      else setLength(text.length)
+    }
+    frame = window.requestAnimationFrame(tick)
+    return () => window.cancelAnimationFrame(frame)
   }, [text])
 
   return <>{text.slice(0, length)}{length < text.length && <span className="animate-pulse text-teal-300">|</span>}</>

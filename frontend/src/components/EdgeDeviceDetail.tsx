@@ -6,6 +6,8 @@ import { EDGE_CHIP_LABEL as CHIP_LABEL } from '../lib/constants'
 import type { EdgeDevice, EdgeFirmware, EdgeLlmInput, EdgeOtaTask } from '../lib/types'
 import { EDGE_DEVICE_CHIPS } from '../lib/types'
 import { edgeDevicesApi } from '../services/api'
+// 2026-10-02 第二批：下发成功反馈改走全局 toast，见下方 Feedback 注释
+import { toast } from '../stores/toastStore'
 
 const OTA_STATUS_LABEL: Record<EdgeOtaTask['status'], string> = {
   pending: '等待中',
@@ -20,7 +22,7 @@ const OTA_STATUS_CLASS: Record<EdgeOtaTask['status'], string> = {
   running: 'text-teal-300',
   success: 'text-emerald-400',
   failed: 'text-red-400',
-  canceled: 'text-zinc-500',
+  canceled: 'text-zinc-400',
 }
 
 /** 设备端错误码 -> 中文提示。固件侧接口未实现时用户看到的是可操作的说明，不是裸错误 */
@@ -58,7 +60,7 @@ export default function EdgeDeviceDetail({
       <header className="flex h-14 items-center justify-between border-b border-zinc-800 px-4">
         <div className="min-w-0">
           <span className="block truncate text-sm font-semibold">{device.name}</span>
-          <span className="block truncate font-mono text-[10px] text-zinc-500">
+          <span className="block truncate font-mono text-[10px] text-zinc-400">
             {device.ip_address ?? '未设置 IP'}
           </span>
         </div>
@@ -98,34 +100,27 @@ export default function EdgeDeviceDetail({
   )
 }
 
-/** 统一的「下发」结果反馈条 */
-function Feedback({ error, success }: { error: string; success: string }) {
-  if (error) {
-    return (
-      <p className="rounded border border-red-900 bg-red-950/40 px-3 py-2 text-xs text-red-300">{error}</p>
-    )
-  }
-  if (success) {
-    return (
-      <p className="rounded border border-emerald-900 bg-emerald-950/40 px-3 py-2 text-xs text-emerald-300">
-        {success}
-      </p>
-    )
-  }
-  return null
+/** 统一的「下发」错误反馈条。
+ *
+ * 2026-10-02 第二批：成功反馈已从内联文字迁到全局 toast —— 推 WiFi/LLM 配置/OTA
+ * 要好几秒，用户等的时候常切到别的 tab，原来贴在 tab 里的"已下发"一切走就看不见了。
+ * 错误保留内联：错误信息长、要读，不适合自动消失。 */
+function Feedback({ error }: { error: string }) {
+  if (!error) return null
+  return (
+    <p className="rounded border border-red-900 bg-red-950/40 px-3 py-2 text-xs text-red-300">{error}</p>
+  )
 }
 
 function usePush() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
   const run = async (action: () => Promise<unknown>) => {
     setBusy(true)
     setError('')
-    setSuccess('')
     try {
       await action()
-      setSuccess('已下发到设备')
+      toast.ok('已下发到设备')
       return true
     } catch (err) {
       setError(describeError(extractDetail(err)))
@@ -134,7 +129,7 @@ function usePush() {
       setBusy(false)
     }
   }
-  return { busy, error, success, setError, setSuccess, run }
+  return { busy, error, run }
 }
 
 /** axios 错误体在 response.data.detail，其余情况退回 message */
@@ -263,7 +258,7 @@ function ProfileTab({
 function WifiTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: EdgeDevice) => void }) {
   const [ssid, setSsid] = useState('')
   const [password, setPassword] = useState('')
-  const { busy, error, success, run } = usePush()
+  const { busy, error, run } = usePush()
 
   return (
     <Tabs.Content value="wifi" className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
@@ -273,7 +268,7 @@ function WifiTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: Ed
         此处下发在固件补齐管理接口后即可生效。
       </p>
       {device.wifi_ssid && (
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-zinc-400">
           档案记录的网络：<span className="text-zinc-300">{device.wifi_ssid}</span>
         </p>
       )}
@@ -294,7 +289,7 @@ function WifiTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: Ed
           placeholder="留空表示开放网络"
         />
       </Field>
-      <Feedback error={error} success={success} />
+      <Feedback error={error} />
       <div className="flex justify-end">
         <button
           disabled={busy || !ssid.trim() || !device.ip_address}
@@ -329,7 +324,7 @@ function LlmTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: Edg
   const [temperature, setTemperature] = useState(
     current?.temperature != null ? String(current.temperature) : '',
   )
-  const { busy, error, success, run } = usePush()
+  const { busy, error, run } = usePush()
 
   const submit = () =>
     run(async () => {
@@ -372,7 +367,7 @@ function LlmTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: Edg
           placeholder={current?.api_key ? `已保存（${current.api_key}），留空则不变` : 'sk-...'}
         />
       </Field>
-      <p className="text-[11px] leading-5 text-zinc-600">
+      <p className="text-[11px] leading-5 text-zinc-400">
         密钥只在接口返回时脱敏显示（仅末 4 位）。留空表示沿用设备上已保存的值。
       </p>
       <Field label="Temperature">
@@ -387,7 +382,7 @@ function LlmTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: Edg
           placeholder="0 ~ 2"
         />
       </Field>
-      <Feedback error={error} success={success} />
+      <Feedback error={error} />
       <div className="flex justify-end">
         <button disabled={busy || !device.ip_address} onClick={submit} className="primary-button">
           {busy && <Loader2 size={14} className="animate-spin" />}
@@ -404,22 +399,22 @@ function LlmTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: Edg
 
 function PromptTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: EdgeDevice) => void }) {
   const [prompt, setPrompt] = useState(device.prompt_config?.system_prompt ?? '')
-  const { busy, error, success, setSuccess, run } = usePush()
+  const { busy, error, run } = usePush()
 
   const restoreDefault = async () => {
     try {
       const { system_prompt } = await edgeDevicesApi.defaultPrompt()
       setPrompt(system_prompt)
-      setSuccess('已填入默认模板，点「下发」写人设备')
+      toast.ok('已填入默认模板，点「下发」写入设备')
     } catch {
-      setSuccess('')
+      // 2026-10-02 第二批：拉取默认模板失败无需再清内联提示（成功反馈已走 toast），静默即可
     }
   }
 
   return (
     <Tabs.Content value="prompt" className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-zinc-500">设备端默认系统 Prompt</span>
+        <span className="text-xs text-zinc-400">设备端默认系统 Prompt</span>
         <button onClick={restoreDefault} className="secondary-button h-8 text-xs">
           恢复默认模板
         </button>
@@ -430,7 +425,7 @@ function PromptTab({ device, onSaved }: { device: EdgeDevice; onSaved: (device: 
         onChange={(event) => setPrompt(event.target.value)}
         placeholder="定义设备的角色与回复风格"
       />
-      <Feedback error={error} success={success} />
+      <Feedback error={error} />
       <div className="flex justify-end">
         <button
           disabled={busy || !prompt.trim() || !device.ip_address}
@@ -568,7 +563,7 @@ function OtaTab({ device }: { device: EdgeDevice }) {
       <section className="space-y-2">
         <h3 className="text-xs font-medium text-zinc-400">固件仓库（{firmware.length}）</h3>
         {firmware.length === 0 && (
-          <p className="text-xs text-zinc-600">还没有固件，先上传一个 .bin / .img 文件。</p>
+          <p className="text-xs text-zinc-400">还没有固件，先上传一个 .bin / .img 文件。</p>
         )}
         {firmware.map((item) => (
           <div
@@ -579,7 +574,7 @@ function OtaTab({ device }: { device: EdgeDevice }) {
               <p className="truncate text-xs text-zinc-200">
                 {item.version} · {CHIP_LABEL[item.chip] ?? item.chip}
               </p>
-              <p className="truncate font-mono text-[10px] text-zinc-600">
+              <p className="truncate font-mono text-[10px] text-zinc-400">
                 {item.filename} · {(item.size_bytes / 1024).toFixed(0)} KB · {item.sha256.slice(0, 12)}
               </p>
             </div>
@@ -604,7 +599,7 @@ function OtaTab({ device }: { device: EdgeDevice }) {
 
       <section className="space-y-2">
         <h3 className="text-xs font-medium text-zinc-400">升级记录（{tasks.length}）</h3>
-        {tasks.length === 0 && <p className="text-xs text-zinc-600">暂无升级记录。</p>}
+        {tasks.length === 0 && <p className="text-xs text-zinc-400">暂无升级记录。</p>}
         {tasks.map((task) => (
           <div key={task.id} className="rounded border border-zinc-800 bg-zinc-900/60 px-3 py-2">
             <div className="flex items-center justify-between gap-2">
@@ -622,7 +617,7 @@ function OtaTab({ device }: { device: EdgeDevice }) {
             )}
             {task.error && <p className="mt-1.5 text-[11px] leading-5 text-red-400">{describeError(task.error)}</p>}
             {task.log && (
-              <pre className="mt-1.5 max-h-24 overflow-y-auto whitespace-pre-wrap font-mono text-[10px] leading-4 text-zinc-600">
+              <pre className="mt-1.5 max-h-24 overflow-y-auto whitespace-pre-wrap font-mono text-[10px] leading-4 text-zinc-400">
                 {task.log}
               </pre>
             )}
@@ -649,7 +644,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-4 py-2.5">
-      <dt className="text-zinc-500">{label}</dt>
+      <dt className="text-zinc-400">{label}</dt>
       <dd className="text-right text-zinc-300">{value}</dd>
     </div>
   )
