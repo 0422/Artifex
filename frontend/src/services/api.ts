@@ -17,6 +17,14 @@ import type {
   LLMProviderInput,
   LLMProvidersResponse,
   LLMProviderUpdate,
+  NewsArticlePage,
+  NewsDigest,
+  NewsDigestGenerateInput,
+  NewsDigestPage,
+  NewsDomain,
+  NewsFetchResult,
+  NewsSource,
+  NewsSourceInput,
   Scenario,
   ScenarioInput,
   User,
@@ -162,4 +170,38 @@ export const edgeDevicesApi = {
 
   cancelOtaTask: (id: string) =>
     http.post<EdgeOtaTask>(`/edge-devices/ota-tasks/${id}/cancel`).then((r) => r.data),
+}
+
+// ---- 世势洞察（2026-10-03 新增 M6 模块）----
+// 新闻源 CRUD + 手动抓取 + LLM 日报查询/生成。日报为结构化 JSON，无 markdown 渲染依赖
+export const newsApi = {
+  sources: () => http.get<NewsSource[]>('/news/sources').then((r) => r.data),
+
+  createSource: (input: NewsSourceInput) =>
+    http.post<NewsSource>('/news/sources', input).then((r) => r.data),
+
+  // 局部更新：启停开关只传 { is_enabled }，编辑传 { name, url, domain }
+  updateSource: (id: string, input: Partial<NewsSourceInput & { is_enabled: boolean }>) =>
+    http.patch<NewsSource>(`/news/sources/${id}`, input).then((r) => r.data),
+
+  removeSource: (id: string) => http.delete(`/news/sources/${id}`),
+
+  // 手动触发一轮全量抓取（同步执行，约几秒到几十秒）
+  fetch: () => http.post<NewsFetchResult>('/news/fetch').then((r) => r.data),
+
+  digests: (domain?: NewsDomain, page = 1) =>
+    http
+      .get<NewsDigestPage>('/news/digests', { params: { domain, page, page_size: 20 } })
+      .then((r) => r.data),
+
+  digest: (id: string) => http.get<NewsDigest>(`/news/digests/${id}`).then((r) => r.data),
+
+  // 生成日报：不传 domain 表示六个板块各一份（后端并发执行）
+  generate: (input: NewsDigestGenerateInput = {}) =>
+    http.post<NewsDigest[]>('/news/digests/generate', input).then((r) => r.data),
+
+  articles: (domain?: NewsDomain, page = 1) =>
+    http
+      .get<NewsArticlePage>('/news/articles', { params: { domain, page, page_size: 20 } })
+      .then((r) => r.data),
 }

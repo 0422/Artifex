@@ -338,3 +338,99 @@ export interface EdgeOtaTask {
   created_at: string
   firmware: EdgeFirmware | null
 }
+
+// ---- 世势洞察（2026-10-03 新增 M6 模块）----
+// 新闻板块与后端 app/models/enums.py 的 NewsDomain 对应
+export type NewsDomain = 'ai' | 'tech' | 'finance' | 'education' | 'world' | 'general'
+
+export const NEWS_DOMAIN_LABELS: Record<NewsDomain, string> = {
+  ai: 'AI',
+  tech: '科技',
+  finance: '财经',
+  education: '教育',
+  world: '国际',
+  general: '综合',
+}
+
+export interface NewsSource {
+  id: string
+  name: string
+  url: string
+  domain: NewsDomain
+  is_enabled: boolean
+  last_fetched_at: string | null
+  // 最近一次抓取失败原因（截断 200 字），来源管理弹窗里展示
+  last_error: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface NewsSourceInput {
+  name: string
+  url: string
+  domain: NewsDomain
+}
+
+export interface NewsArticle {
+  id: string
+  source_id: string
+  domain: NewsDomain
+  title: string
+  url: string
+  excerpt: string | null
+  published_at: string | null
+  created_at: string
+  source_name: string
+}
+
+// LLM 日报里的单条策展结果。importance 为 0 表示降级稿的原始标题占位
+export interface NewsDigestItem {
+  headline: string
+  summary_zh: string
+  why_matters: string
+  importance: number
+  url: string
+  source_name: string
+  published_at: string | null
+}
+
+export interface NewsDigestListItem {
+  id: string
+  digest_date: string
+  domain: NewsDomain
+  title: string
+  article_count: number
+  degraded: boolean
+  created_at: string
+}
+
+export interface NewsDigest extends NewsDigestListItem {
+  summary: string
+  items: NewsDigestItem[]
+}
+
+export interface NewsDigestPage {
+  items: NewsDigestListItem[]
+  total: number
+  page: number
+  page_size: number
+}
+
+export interface NewsArticlePage {
+  items: NewsArticle[]
+  total: number
+  page: number
+  page_size: number
+}
+
+export interface NewsFetchResult {
+  total_sources: number
+  succeeded: number
+  failed: number
+  new_articles: number
+}
+
+export interface NewsDigestGenerateInput {
+  domain?: NewsDomain
+  digest_date?: string
+}

@@ -74,3 +74,15 @@ class EdgeOtaTaskStatus(str, enum.Enum):
     SUCCESS = "success"
     FAILED = "failed"
     CANCELED = "canceled"
+
+
+# 2026-10-03 新增世势洞察（M6）模块：新闻板块划分，news_sources / news_articles /
+# news_digests 三张表共用。新增板块时在此追加即可；列上用的是 native_enum=False
+# 的 varchar，不需要动 PG 枚举类型。
+class NewsDomain(str, enum.Enum):
+    AI = "ai"
+    TECH = "tech"
+    FINANCE = "finance"
+    EDUCATION = "education"
+    WORLD = "world"
+    GENERAL = "general"

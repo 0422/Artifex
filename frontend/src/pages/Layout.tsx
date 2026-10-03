@@ -1,4 +1,4 @@
-import { BarChart3, Cpu, Languages, Library, Wrench } from 'lucide-react'
+import { BarChart3, Cpu, Languages, Library, Newspaper, Wrench } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
@@ -13,12 +13,14 @@ import { useAuthStore } from '../stores/authStore'
 
 // 2026-10-01 侧边栏自上而下调整为：仪表盘、情境对话、边缘设备、知识库、工具库；
 // 同时「边缘管理」更名为「边缘设备」。侧边栏与移动端底部导航共用本数组。
+// 2026-10-03 末尾追加「世势洞察」（M6 新闻日报模块），既有顺序未动。
 const NAV = [
   { to: '/dashboard', label: '仪表盘', icon: BarChart3 },
   { to: '/chat', label: '情境对话', icon: Languages },
   { to: '/edge-devices', label: '边缘设备', icon: Cpu },
   { to: '/knowledge', label: '知识库', icon: Library },
   { to: '/tools', label: '工具库', icon: Wrench },
+  { to: '/news', label: '世势洞察', icon: Newspaper },
 ]
 
 const SIDEBAR_WIDTH_KEY = 'artifex_sidebar_width'

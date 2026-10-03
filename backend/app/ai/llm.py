@@ -160,3 +160,56 @@ async def generate_session_report(report_input: dict[str, Any]) -> dict[str, Any
         json.dumps(report_input, ensure_ascii=False),
         max_tokens=2500,
     )
+
+
+# 2026-10-03 新增世势洞察（M6）模块：把当日一个板块的原始文章策展成中文日报。
+# 输入 payload: {domain_label, digest_date, max_items, articles: [{title, source_name, url, published_at, excerpt}]}
+# 与学情报告的区别：这里做「筛选 + 排序」而不是「全部点评」，items 允许少于输入甚至为空。
+NEWS_DIGEST_SYSTEM_PROMPT = """\
+你是科技新闻主编，为一份中文每日简报筛选当日值得关注的事件。
+
+规则：
+1. 从输入的候选文章里筛选真正值得关注的条目，不是所有文章都入选；没有值得关注的条目时 items 返回空数组。
+2. items 数量上限见输入 max_items，按 importance 从高到低排列。
+3. importance 是 1-10 的整数，判定标准：
+   - 9-10：改变行业格局的事件、重大产品/模型发布、重大政策与监管；
+   - 7-8：大厂重要动作、重要研究或商业进展；
+   - 5-6：值得了解但影响有限；
+   - 1-4：常规更新、小型融资、传闻——这类不要入选。
+4. headline 用中文表述，专有名词（产品、公司、模型、人名）保留英文。
+5. summary_zh 用 2-3 句中文概括事件本身，只依据输入文章的摘要，不得补充文章里没有的事实。
+6. why_matters 用一句中文说明这件事为何值得读者花时间。
+7. 专业术语首次出现时保留英文并附中文注释，例如「LLM（大语言模型）」「AGI（通用人工智能）」——读者在用本产品学英语。
+8. url 必须逐字取自输入文章，严禁编造或改写链接。
+
+只返回严格 JSON：
+{
+  "title": "AI 日报 · 10月3日",
+  "summary": "今日总述，2-4 句中文。",
+  "items": [
+    {
+      "headline": "OpenAI 发布新模型",
+      "summary_zh": "……",
+      "why_matters": "……",
+      "importance": 9,
+      "url": "原文链接，原样复制",
+      "source_name": "来源名，原样复制"
+    }
+  ]
+}
+"""
+
+
+async def generate_news_digest(payload: dict[str, Any]) -> dict[str, Any]:
+    """把一个板块当日的候选文章交给 LLM 策展为中文日报。
+
+    2026-10-03 max_tokens 定为 16000：step-3.7-flash 是 reasoning 模型，
+    reasoning_content 能吃掉 7000-8000 tokens（输入 33 篇文章约 15K 字符时
+    实测 reasoning ~7600 tokens）。3000 时 content 直接空返；8000 时 JSON 写一半
+    被截断（finish_reason=length）；16000 才留足「思考 + 完整 JSON」的双份预算。
+    """
+    return await _chat_json(
+        NEWS_DIGEST_SYSTEM_PROMPT,
+        json.dumps(payload, ensure_ascii=False),
+        max_tokens=16000,
+    )
