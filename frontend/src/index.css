@@ -15,6 +15,10 @@
   --animate-toast-in: toast-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-toast-out: toast-out 0.18s cubic-bezier(0.4, 0, 1, 1) both;
   --animate-shimmer: shimmer 1.6s linear infinite;
+  /* 2026-10-03 摘星阁（M7）新增：星体呼吸。周期由 JS 按 star id 哈希后写进
+     inline style 的 animation-duration，相位用负的 animation-delay 错开，
+     200 颗星各自错峰闪烁而不必跑一个 rAF 循环。 */
+  --animate-twinkle: twinkle 3s ease-in-out infinite;
   /* 海拔令牌：此前分层全靠 1px 边框，画面偏平。panel 给常驻面板、float 给浮层 */
   --shadow-panel: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px -16px rgb(0 0 0 / 0.65);
   --shadow-float: 0 2px 4px rgb(0 0 0 / 0.4), 0 16px 40px -12px rgb(0 0 0 / 0.7);
@@ -31,6 +35,11 @@
 @keyframes toast-in { from { opacity: 0; transform: translateX(16px) scale(0.96) } to { opacity: 1; transform: none } }
 @keyframes toast-out { from { opacity: 1; transform: none } to { opacity: 0; transform: translateX(16px) scale(0.96) } }
 @keyframes shimmer { from { transform: translateX(-100%) } to { transform: translateX(100%) } }
+/* 2026-10-03 摘星阁（M7）星体呼吸：只动 opacity，不动 transform——
+   每颗星已经在用 transform 做 hover 缩放与定位，两个 transform 动画会互相覆盖。
+   下限 0.55 而不是 0：完全暗下去的星会被用户当成"加载完了就没这颗"。
+   reduced-motion 下由文末的全局规则压成静止，星体变成常亮的点，语义不丢。 */
+@keyframes twinkle { 0%, 100% { opacity: 0.55 } 50% { opacity: 1 } }
 
 :root {
   color-scheme: dark;

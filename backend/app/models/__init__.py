@@ -9,6 +9,8 @@ from app.models.knowledge import KnowledgeCategory
 # 2026-10-03 新增世势洞察（M6）模块的模型，需在此注册，否则 alembic autogenerate 会漏表
 from app.models.news import NewsArticle, NewsDigest, NewsSource
 from app.models.scenario import ScenarioCard
+# 2026-10-03 新增摘星阁（M7）模块的模型，需在此注册，否则 alembic autogenerate 会漏表
+from app.models.star import Star
 from app.models.user import User, UserProfile
 
 __all__ = [
@@ -27,6 +29,7 @@ __all__ = [
     "NewsSource",
     "ReviewLog",
     "ScenarioCard",
+    "Star",
     "User",
     "UserProfile",
 ]

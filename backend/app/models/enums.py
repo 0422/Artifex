@@ -86,3 +86,34 @@ class NewsDomain(str, enum.Enum):
     EDUCATION = "education"
     WORLD = "world"
     GENERAL = "general"
+
+
+# 2026-10-03 新增摘星阁（M7）模块：星星的来源。manual=页面手写、import=批量导入，
+# 这两个是 v1 实际会写入的值；news/chat 为跨模块转存预留（世势洞察日报、
+# 情境对话消息「存为星」），列上是普通 varchar，新增来源不改表结构。
+class StarSource(str, enum.Enum):
+    MANUAL = "manual"
+    IMPORT = "import"
+    NEWS = "news"
+    CHAT = "chat"
+
+
+# 2026-10-03 新增摘星阁（M7）模块：时间范围筛选。
+# 边界按固定 UTC+8 计算（与 news_service.FIXED_TZ 同一约定，避免 Windows 上
+# zoneinfo 缺 tz 数据库抛错），earlier 表示「早于 30 天」的沉底老星。
+class StarRange(str, enum.Enum):
+    ALL = "all"
+    TODAY = "today"
+    WEEK = "week"
+    MONTH = "month"
+    EARLIER = "earlier"
+
+
+# 2026-10-03 新增摘星阁（M7）模块：星图排序。
+# recent    新收录的在前（默认）。写下来的那一刻离得最近，先看见刚抓的念头。
+# revisited 最近"回味"过的在前。last_grabbed_at 为空（从没被抓过）的沉到最后，
+#           顺序为 NULLS LAST——PG 里 desc 默认把 NULL 排最前，那会让从没读过的星
+#           霸占整个"最常回味"视图，与这个排序想解决的问题正好相反。
+class StarSort(str, enum.Enum):
+    RECENT = "recent"
+    REVISITED = "revisited"

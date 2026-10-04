@@ -1,4 +1,4 @@
-import { Newspaper, RefreshCw, Sparkles } from 'lucide-react'
+import { Newspaper, RefreshCw, Sparkles, Star } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 
@@ -6,11 +6,14 @@ import EmptyState from '../components/EmptyState'
 // 2026-10-03 修复 ReferenceError: NewsSourcesDialog is not defined——使用时漏了 import，
 // 因 {sourcesOpen && ...} 短路求值，只在点开「来源管理」时才暴露
 import NewsSourcesDialog from '../components/NewsSourcesDialog'
-import { newsApi } from '../services/api'
+// 2026-10-03 跨模块转存（M7 第 7 节 #2）：世势洞察的条目可以一键存成摘星阁的一颗星。
+// source='news' + origin_ref=日报 id 都是后端 StarCreate 已支持的字段，无需改表
+import { newsApi, starApi } from '../services/api'
 import { toast } from '../stores/toastStore'
 import {
   NEWS_DOMAIN_LABELS,
   type NewsDigest,
+  type NewsDigestItem,
   type NewsDigestListItem,
   type NewsDomain,
 } from '../lib/types'
@@ -231,6 +234,30 @@ function DigestCard({
   onToggle: () => void
 }) {
   const published = formatDateTime(item.created_at)
+  // 已存为星的条目（同一份日报里按 index 记）。不复用的话连点两下
+  // 会在摘星阁里落进两颗一模一样的星
+  const [saved, setSaved] = useState<Set<number>>(() => new Set<number>())
+
+  const saveAsStar = async (entry: NewsDigestItem, index: number) => {
+    if (saved.has(index)) return
+    // 备忘录里要能自己读明白，所以不止抄标题：标题 + 中文摘要 + 出处与链接
+    const parts = [entry.headline]
+    if (entry.summary_zh) parts.push('', entry.summary_zh)
+    parts.push('', `—— ${entry.source_name || '世势洞察'}${entry.url ? ` · ${entry.url}` : ''}`)
+    try {
+      await starApi.create({
+        content: parts.join('\n'),
+        tags: ['世势洞察', NEWS_DOMAIN_LABELS[item.domain]],
+        source: 'news',
+        origin_ref: item.id,
+      })
+      setSaved((current) => new Set(current).add(index))
+      toast.ok('已存为摘星阁的一颗星')
+    } catch {
+      toast.error('存星失败，请稍后重试')
+    }
+  }
+
   return (
     <article className="panel overflow-hidden">
       <button
@@ -285,13 +312,32 @@ function DigestCard({
                             entry.headline
                           )}
                         </h3>
-                        {entry.importance > 0 && (
-                          <span
-                            className={`shrink-0 rounded-md border px-1.5 py-0.5 text-[11px] font-medium ${importanceBadgeClass(entry.importance)}`}
+                        <span className="flex shrink-0 items-center gap-2">
+                          {entry.importance > 0 && (
+                            <span
+                              className={`rounded-md border px-1.5 py-0.5 text-[11px] font-medium ${importanceBadgeClass(entry.importance)}`}
+                            >
+                              重要度 {entry.importance}
+                            </span>
+                          )}
+                          {/* 2026-10-03 存为星：读报时想留下某一条的入口。
+                              存过就变成静态标记，避免连点出两颗一样的星 */}
+                          <button
+                            type="button"
+                            onClick={() => void saveAsStar(entry, index)}
+                            disabled={saved.has(index)}
+                            title={saved.has(index) ? '已存为摘星阁的一颗星' : '存为摘星阁的一颗星'}
+                            aria-label="存为摘星阁的一颗星"
+                            className={`flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] transition-colors ${
+                              saved.has(index)
+                                ? 'border-amber-700 bg-amber-950 text-amber-300'
+                                : 'border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-teal-600 hover:text-teal-300'
+                            }`}
                           >
-                            重要度 {entry.importance}
-                          </span>
-                        )}
+                            <Star size={11} fill={saved.has(index) ? 'currentColor' : 'none'} />
+                            {saved.has(index) ? '已存星' : '存星'}
+                          </button>
+                        </span>
                       </div>
                       {entry.summary_zh && (
                         <p className="mt-1 text-sm leading-6 text-zinc-300">{entry.summary_zh}</p>

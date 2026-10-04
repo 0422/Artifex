@@ -27,6 +27,15 @@ import type {
   NewsSourceInput,
   Scenario,
   ScenarioInput,
+  Star,
+  StarImportInput,
+  StarInput,
+  StarPage,
+  StarRandomInput,
+  StarRange,
+  StarSort,
+  StarTagCount,
+  StarUpdate,
   User,
 } from '../lib/types'
 
@@ -204,4 +213,65 @@ export const newsApi = {
     http
       .get<NewsArticlePage>('/news/articles', { params: { domain, page, page_size: 20 } })
       .then((r) => r.data),
+}
+
+// ---- 摘星阁（2026-10-03 新增 M7 模块）----
+// 零散语句/想法/备忘录。列表只回 preview，详情按 id 拉全文；
+// random 是"伸手抓一把"，import 是"从别处搬旧备忘录进来"（一行一颗）。
+export const starApi = {
+  list: (filters: {
+    tag?: string
+    range?: StarRange
+    sort?: StarSort
+    favorite?: boolean
+    pinned?: boolean
+    archived?: boolean
+    q?: string
+    page?: number
+  } = {}) =>
+    http
+      .get<StarPage>('/stars', {
+        params: {
+          tag: filters.tag,
+          range: filters.range ?? 'all',
+          sort: filters.sort ?? 'recent',
+          favorite: filters.favorite || undefined,
+          pinned: filters.pinned || undefined,
+          archived: filters.archived || undefined,
+          q: filters.q?.trim() || undefined,
+          page: filters.page ?? 1,
+          page_size: 200,
+        },
+      })
+      .then((r) => r.data),
+
+  detail: (id: string) => http.get<Star>(`/stars/${id}`).then((r) => r.data),
+
+  create: (input: StarInput) => http.post<Star>('/stars', input).then((r) => r.data),
+
+  // 局部更新：收藏/置顶/归档只传 { is_favorite: true } 这样的单键
+  update: (id: string, input: StarUpdate) =>
+    http.patch<Star>(`/stars/${id}`, input).then((r) => r.data),
+
+  remove: (id: string) => http.delete(`/stars/${id}`),
+
+  // 伸手抓一把：随机取 count 颗全文，直接进抽屉可读
+  random: (input: StarRandomInput = {}) =>
+    http.post<Star[]>('/stars/random', { count: input.count ?? 3 }).then((r) => r.data),
+
+  tags: () => http.get<StarTagCount[]>('/stars/tags').then((r) => r.data),
+
+  // 整片夜空打包下载。走 blob + 临时 a 标签，Authorization 头由 axios 拦截器带上
+  exportFile: async (fmt: 'md' | 'json') => {
+    const resp = await http.get('/stars/export', { params: { fmt }, responseType: 'blob' })
+    const url = URL.createObjectURL(new Blob([resp.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `artifex-stars.${fmt}`
+    link.click()
+    URL.revokeObjectURL(url)
+  },
+
+  importLines: (input: StarImportInput) =>
+    http.post<StarImportResult>('/stars/import', input).then((r) => r.data),
 }

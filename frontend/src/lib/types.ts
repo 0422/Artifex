@@ -434,3 +434,88 @@ export interface NewsDigestGenerateInput {
   domain?: NewsDomain
   digest_date?: string
 }
+
+// ---- 摘星阁（2026-10-03 新增 M7 模块）----
+// 与后端 schemas/star.py 一一对应。星星是零散的语句/想法/备忘录，星图列表只拿
+// preview（80 字摘要），点开才拉全文——"列表轻、详情按需"。
+
+export type StarSource = 'manual' | 'import' | 'news' | 'chat'
+
+export type StarRange = 'all' | 'today' | 'week' | 'month' | 'earlier'
+
+/** 星图排序：recent=新收录在前；revisited=最近回味（打开过详情）的在前 */
+export type StarSort = 'recent' | 'revisited'
+
+/** 星图列表项：不含 content。星上一颗最多渲染 200 个，不带正文才能保证响应体可控 */
+export interface StarBrief {
+  id: string
+  preview: string
+  source: StarSource
+  tags: string[]
+  is_pinned: boolean
+  is_favorite: boolean
+  created_at: string
+}
+
+/** 详情：全文 + 归档态 + 更新时间（编辑过的星要在抽屉里露出"改于"） */
+export interface Star extends StarBrief {
+  content: string
+  origin_ref: string | null
+  is_archived: boolean
+  last_grabbed_at: string | null
+  updated_at: string
+}
+
+export interface StarInput {
+  content: string
+  tags?: string[]
+  is_pinned?: boolean
+  is_favorite?: boolean
+  /** 跨模块转存时带上来源与出处（世势洞察日报 / 情境对话），默认 manual */
+  source?: StarSource
+  origin_ref?: string | null
+}
+
+/** 局部更新：开关类字段只传要改的那一个 */
+export type StarUpdate = Partial<StarInput> & { is_archived?: boolean }
+
+export interface StarPage {
+  items: StarBrief[]
+  total: number
+  page: number
+  page_size: number
+}
+
+export interface StarTagCount {
+  name: string
+  count: number
+}
+
+export interface StarRandomInput {
+  count?: number
+}
+
+export interface StarImportInput {
+  lines: string[]
+  tags?: string[]
+}
+
+export interface StarImportResult {
+  created: number
+  skipped: number
+}
+
+export const STAR_SOURCE_LABELS: Record<StarSource, string> = {
+  manual: '手写',
+  import: '导入',
+  news: '世势洞察',
+  chat: '情境对话',
+}
+
+export const STAR_RANGE_LABELS: Record<StarRange, string> = {
+  all: '全部',
+  today: '今天',
+  week: '本周',
+  month: '本月',
+  earlier: '更早',
+}

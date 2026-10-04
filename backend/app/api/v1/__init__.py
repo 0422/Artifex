@@ -10,6 +10,8 @@ from app.api.v1.llm import router as llm_router
 # 2026-10-03 新增世势洞察（M6）模块
 from app.api.v1.news import router as news_router
 from app.api.v1.scenarios import router as scenarios_router
+# 2026-10-03 新增摘星阁（M7）模块
+from app.api.v1.star import router as star_router
 
 api_router = APIRouter()
 api_router.include_router(auth_router)
@@ -20,3 +22,4 @@ api_router.include_router(knowledge_router)
 api_router.include_router(llm_router)
 api_router.include_router(news_router)
 api_router.include_router(scenarios_router)
+api_router.include_router(star_router)

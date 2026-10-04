@@ -11,6 +11,8 @@ import ContainerLoadingCalculatorPage from './pages/ContainerLoadingCalculatorPa
 import DashboardPage from './pages/DashboardPage'
 import Layout from './pages/Layout'
 import KnowledgePage from './pages/KnowledgePage'
+// 2026-10-03 新增摘星阁（M7）模块
+import StarPavilionPage from './pages/StarPavilionPage'
 import ToolLibraryPage from './pages/ToolLibraryPage'
 // 2026-10-03 新增世势洞察（M6）模块
 import NewsInsightPage from './pages/NewsInsightPage'
@@ -49,6 +51,8 @@ export default function App() {
           <Route path="/tools/container-loading-calculator" element={<ContainerLoadingCalculatorPage />} />
           {/* 2026-10-03 新增世势洞察（M6）模块 */}
           <Route path="/news" element={<NewsInsightPage />} />
+          {/* 2026-10-03 新增摘星阁（M7）模块：零散语句/想法/备忘录 */}
+          <Route path="/stars" element={<StarPavilionPage />} />
           {/* 2026-10-01 移除学习路径/内容捕获/引导流程及三个轻量工具，
               原 /tools/learning-path、/tools/content-capture、/tools/:toolId、
               /onboarding、/capture、/path 路由随之删除 */}

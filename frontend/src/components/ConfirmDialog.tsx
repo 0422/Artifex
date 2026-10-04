@@ -17,6 +17,7 @@ export default function ConfirmDialog({
   title,
   message,
   confirmLabel = '删除',
+  note,
   busy = false,
   onConfirm,
   onCancel,
@@ -24,6 +25,10 @@ export default function ConfirmDialog({
   title: string
   message: string
   confirmLabel?: string
+  /** 2026-10-03 摘星阁（M7）接入时补的可选注脚。原先是写死在组件里的知识库话术，
+   * 但"官方题库不可删除 / 联系开发者改库"对星星这类用户私有数据完全不通，
+   * 各模块的兜底说明本来就该由调用方给。默认值保持旧行为不变。 */
+  note?: string
   busy?: boolean
   onConfirm: () => void
   onCancel: () => void
@@ -47,7 +52,7 @@ export default function ConfirmDialog({
                 <p className="whitespace-pre-wrap text-sm leading-6 text-zinc-300">{message}</p>
               </Dialog.Description>
               <p className="text-xs leading-5 text-zinc-400">
-                删除后该内容将不再显示，官方题库不可删除。如需找回，请联系开发者直接改库。
+                {note ?? '删除后该内容将不再显示，官方题库不可删除。如需找回，请联系开发者直接改库。'}
               </p>
             </div>
             <footer className="flex justify-end gap-2 border-t border-zinc-800 p-4">
